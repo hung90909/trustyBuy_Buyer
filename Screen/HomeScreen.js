@@ -374,6 +374,7 @@ const HomeScreen = () => {
         </View>
 
         <FlatList
+          scrollEnabled={false}
           data={danhmuc}
           keyExtractor={item => item.id}
           numColumns={4} // Set the number of columns to 2
@@ -403,6 +404,7 @@ const HomeScreen = () => {
         </View>
         <View>
           <FlatList
+            scrollEnabled={false}
             data={sanpham}
             keyExtractor={item => item.id}
             renderItem={renderSanpham}
