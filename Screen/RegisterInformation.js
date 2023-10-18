@@ -11,6 +11,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Dropdown} from 'react-native-element-dropdown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {useNavigation} from '@react-navigation/native';
 
 const data = [
   {label: 'Nam', value: '1'},
@@ -31,6 +32,7 @@ const RegisterInformation = () => {
   const [phoneError, setPhoneError] = useState('');
   const [genderError, setGenderError] = useState('');
   const [tuoiError, setTuoiError] = useState('');
+  const navigation = useNavigation();
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -39,7 +41,9 @@ const RegisterInformation = () => {
   };
 
   const handleSubmit = () => {
-    // Xóa thông báo lỗi nếu người dùng cố gắng gửi lại
+    const birthDate = new Date(date);
+    const currentDate = new Date();
+    const age = currentDate.getFullYear() - birthDate.getFullYear();
     setNameError('');
     setUsernameError('');
     setEmailError('');
@@ -47,7 +51,6 @@ const RegisterInformation = () => {
     setGenderError('');
     setTuoiError('');
 
-    // Kiểm tra xem các trường thông tin bị thiếu hoặc không hợp lệ
     if (!name) {
       setNameError('Vui lòng nhập họ và tên');
     }
@@ -67,34 +70,21 @@ const RegisterInformation = () => {
     if (!value) {
       setGenderError('Vui lòng chọn giới tính');
     }
-
-    // Kiểm tra tuổi
-    const birthDate = new Date(date);
-    const currentDate = new Date();
-    const age = currentDate.getFullYear() - birthDate.getFullYear();
-
     if (
       currentDate.getMonth() < birthDate.getMonth() ||
       (currentDate.getMonth() === birthDate.getMonth() &&
         currentDate.getDate() < birthDate.getDate())
     ) {
-      age--; // Chưa đến ngày sinh trong năm nay
+      age--; // Not yet reached birthday this year
     }
 
     if (age < 18) {
       setTuoiError('Bạn phải đủ 18 tuổi');
     }
 
-    // Nếu không có lỗi, thực hiện hành động tiếp theo
-    if (
-      !nameError &&
-      !usernameError &&
-      !emailError &&
-      !phoneError &&
-      !genderError &&
-      !tuoiError
-    ) {
-      // Thực hiện hành động tiếp theo sau khi thông tin hợp lệ
+    // Only navigate to "Main" if there are no errors
+    else {
+      navigation.navigate('Main'); // Navigate to the "Main" screen
     }
   };
 
