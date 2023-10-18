@@ -63,14 +63,13 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Main"
-          component={BotBottomTabNavigator}
-          options={{headerShown: false}}
-        />
-
-        <Stack.Screen
           name="RegisterInformation"
           component={RegisterInformation}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Main"
+          component={BotBottomTabNavigator}
           options={{headerShown: false}}
         />
 

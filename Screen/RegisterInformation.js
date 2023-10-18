@@ -41,9 +41,16 @@ const RegisterInformation = () => {
   };
 
   const handleSubmit = () => {
-    const birthDate = new Date(date);
-    const currentDate = new Date();
-    const age = currentDate.getFullYear() - birthDate.getFullYear();
+    // Kiểm tra xem có lỗi nào không
+    const hasErrors =
+      !!nameError ||
+      !!usernameError ||
+      !!emailError ||
+      !!phoneError ||
+      !!genderError ||
+      !!tuoiError;
+
+    // Làm sạch các thông báo lỗi trước khi kiểm tra điều kiện
     setNameError('');
     setUsernameError('');
     setEmailError('');
@@ -51,15 +58,17 @@ const RegisterInformation = () => {
     setGenderError('');
     setTuoiError('');
 
+    // Kiểm tra các điều kiện và đặt các thông báo lỗi khi cần thiết
     if (!name) {
       setNameError('Vui lòng nhập họ và tên');
     }
     if (!username) {
       setUsernameError('Vui lòng nhập tên tài khoản');
     }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
       setEmailError('Vui lòng nhập email');
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
+    } else if (!emailRegex.test(email)) {
       setEmailError('Email không hợp lệ');
     }
     if (!phone) {
@@ -70,21 +79,25 @@ const RegisterInformation = () => {
     if (!value) {
       setGenderError('Vui lòng chọn giới tính');
     }
+
+    const birthDate = new Date(date);
+    const currentDate = new Date();
+    let age = currentDate.getFullYear() - birthDate.getFullYear();
     if (
       currentDate.getMonth() < birthDate.getMonth() ||
       (currentDate.getMonth() === birthDate.getMonth() &&
         currentDate.getDate() < birthDate.getDate())
     ) {
-      age--; // Not yet reached birthday this year
+      age--; // Chưa đến ngày sinh nhật trong năm nay
     }
 
     if (age < 18) {
       setTuoiError('Bạn phải đủ 18 tuổi');
     }
 
-    // Only navigate to "Main" if there are no errors
-    else {
-      navigation.navigate('Main'); // Navigate to the "Main" screen
+    // Chuyển hướng đến màn hình "Main" chỉ khi không có lỗi
+    else if (!hasErrors) {
+      navigation.navigate('Main');
     }
   };
 
