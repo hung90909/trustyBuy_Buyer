@@ -310,6 +310,7 @@ const HomeScreen = () => {
               name="notifications-outline"
               size={26}
               color="#1B2028"
+              onPress={() => navigation.navigate('NotificationScreen')}
             />
             <Ionicons name="chatbubbles-outline" size={26} color="#1B2028" />
           </View>

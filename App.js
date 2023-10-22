@@ -9,6 +9,7 @@ import CartScreen from './Screen/CartScreen';
 import OrderScreen from './Screen/OrderScreen';
 import ProfileScreen from './Screen/ProfileScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons'; // Import the icons you want to use
+import NotificationScreen from './Screen/NotificationScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -63,16 +64,20 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="RegisterInformation"
-          component={RegisterInformation}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
           name="Main"
           component={BotBottomTabNavigator}
           options={{headerShown: false}}
         />
-
+        <Stack.Screen
+          name="NotificationScreen"
+          component={NotificationScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="RegisterInformation"
+          component={RegisterInformation}
+          options={{headerShown: false}}
+        />
         <Stack.Screen
           name="Welcome"
           component={Welcome}
