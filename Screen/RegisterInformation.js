@@ -114,7 +114,12 @@ const RegisterInformation = () => {
             marginLeft: 20,
             alignItems: 'center',
           }}>
-          <Ionicons name="arrow-back" size={28} color="#000000" />
+          <Ionicons
+            name="arrow-back"
+            size={28}
+            color="#000000"
+            onPress={() => navigation.navigate('Register')}
+          />
           <View style={{flex: 1, alignItems: 'center', marginRight: 20}}>
             <Text style={{color: '#000000', fontWeight: '600', fontSize: 18}}>
               Thông tin cá nhân

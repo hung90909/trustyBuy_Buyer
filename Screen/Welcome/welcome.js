@@ -1,7 +1,12 @@
 import { Text, View, StyleSheet, ImageBackground } from "react-native";
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
 
 const Welcome = () => {
+  const nav = useNavigation()
+  setTimeout(()=>{
+    nav.navigate("Welcome1")
+  },3000)
   return (
     <View style={styles.container}>
       <ImageBackground

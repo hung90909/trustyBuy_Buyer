@@ -2,13 +2,17 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Welcome from './Screen/Welcome/welcome';
-import RegisterInformation from './Screen/RegisterInformation';
 import HomeScreen from './Screen/HomeScreen';
 import CartScreen from './Screen/CartScreen';
 import OrderScreen from './Screen/OrderScreen';
 import ProfileScreen from './Screen/ProfileScreen';
-import Ionicons from 'react-native-vector-icons/Ionicons'; // Import the icons you want to use
+import Welcome from './Screen/Welcome/welcome';
+import Welcome1 from './Screen/Welcome/welcome1';
+import Login from './Screen/Login/login';
+import register from './Screen/Login/register';
+import login2 from './Screen/Login/login2';
+import RegisterInformation from './Screen/RegisterInformation';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
@@ -63,6 +67,31 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
+          name="Welcome"
+          component={Welcome}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Welcome1"
+          component={Welcome1}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Register"
+          component={register}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Login2"
+          component={login2}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
           name="RegisterInformation"
           component={RegisterInformation}
           options={{headerShown: false}}
@@ -70,12 +99,6 @@ const App = () => {
         <Stack.Screen
           name="Main"
           component={BotBottomTabNavigator}
-          options={{headerShown: false}}
-        />
-
-        <Stack.Screen
-          name="Welcome"
-          component={Welcome}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
