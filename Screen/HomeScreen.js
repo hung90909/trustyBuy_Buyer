@@ -324,13 +324,12 @@ const HomeScreen = () => {
               height: 40,
               paddingHorizontal: 10,
               borderWidth: 1,
-              borderColor: '#EDEDED',
-            }}>
+              borderColor: '#878787',
+              borderRadius: 10,
+            }}
+            onPress={() => navigation.navigate('Search')}>
             <Ionicons name="search-outline" size={26} color="#878787" />
             <Text style={{marginLeft: 10}}>Tìm kiếm</Text>
-            <Pressable style={{justifyContent: 'center', marginLeft: 230}}>
-              <FontAwesome name="unsorted" size={26} color="black" />
-            </Pressable>
           </Pressable>
         </View>
 

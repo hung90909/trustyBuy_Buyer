@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -11,6 +10,11 @@ import OrderScreen from './Screen/OrderScreen';
 import ProfileScreen from './Screen/ProfileScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons'; // Import the icons you want to use
 import NotificationScreen from './Screen/NotificationScreen';
+import Welcome1 from './Screen/Welcome/welcome1';
+import Login from './Screen/Login/login';
+import register from './Screen/Login/register';
+import login2 from './Screen/Login/login2';
+import SearchScreen from './Screen/SearchScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -57,15 +61,6 @@ const BotBottomTabNavigator = () => {
     </Tab.Navigator>
   );
 };
-import { Text, View } from "react-native";
-import React from "react";
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Welcome from "./Screen/Welcome/welcome";
-import Welcome1 from "./Screen/Welcome/welcome1";
-import Register from "./Screen/Login/register";
-import Login from "./Screen/Login/login";
-import Login2 from "./Screen/Login/login2";
 
 const Stack = createNativeStackNavigator();
 
@@ -73,7 +68,6 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-
         <Stack.Screen
           name="Main"
           component={BotBottomTabNavigator}
@@ -94,13 +88,32 @@ const App = () => {
           component={Welcome}
           options={{headerShown: false}}
         />
-        <Stack.Screen name="Welcome" component={Welcome} options={{headerShown:false}}/>
-        <Stack.Screen name="Welcome1" component={Welcome1} options={{headerShown:false}}/>
-        <Stack.Screen name="Login" component={Login} options={{headerShown:false}}/>
-        <Stack.Screen name="Register" component={Register} options={{headerShown:false}}/>
-        <Stack.Screen name="Login2" component={Login2} options={{headerShown:false}}/>
-        </Stack.Navigator>
-
+        <Stack.Screen
+          name="Welcome1"
+          component={Welcome1}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Register"
+          component={register}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Login2"
+          component={login2}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Search"
+          component={SearchScreen}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
