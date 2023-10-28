@@ -5,15 +5,12 @@ import {
   Image,
   TextInput,
   Pressable,
-  KeyboardAvoidingView,
   StatusBar,
-  TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Dropdown} from 'react-native-element-dropdown';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 const data = [
   {label: 'Nam', value: '1'},

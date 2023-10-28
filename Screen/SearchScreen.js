@@ -1,9 +1,7 @@
-import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
   StatusBar,
   TextInput,
   FlatList,
@@ -12,9 +10,14 @@ import {
   ScrollView,
   Pressable,
 } from 'react-native';
+import React, {useRef, useState} from 'react';
+// Khai báo icon
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {useNavigation} from '@react-navigation/native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+// Khai báo bottom sheet
+
 const SearchScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredSanpham, setFilteredSanpham] = useState(sanpham);
@@ -90,11 +93,12 @@ const SearchScreen = () => {
       soldSP: 464356,
     },
   ]);
-  const navigation = useNavigation();
+
   const handleRetrySearch = () => {
     setSearchQuery(''); // Clear the search query
     // You can also reset any other state variables related to search if needed.
   };
+
   const formatPrice = priceSP => {
     const formatter = new Intl.NumberFormat('vi-VN', {
       style: 'currency',
@@ -103,6 +107,7 @@ const SearchScreen = () => {
     });
     return `₫${priceSP.toLocaleString('vi-VN')}`;
   };
+
   const handleSearch = query => {
     setSearchQuery(query);
     if (query === '') {
@@ -116,6 +121,7 @@ const SearchScreen = () => {
       setFilteredSanpham(filteredProducts);
     }
   };
+
   const renderSanpham = ({item}) => {
     const formatSoldSP = value => {
       if (value >= 1000000) {
@@ -161,89 +167,130 @@ const SearchScreen = () => {
       </TouchableOpacity>
     );
   };
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar />
-      <View style={styles.textInputContainer}>
-        <Ionicons
-          name="search-outline"
-          size={26}
-          color="#666"
-          style={styles.inputIconLeft}
-        />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Tìm kiếm"
-          value={searchQuery}
-          onChangeText={handleSearch}
-        />
-        <FontAwesome
-          name="unsorted"
-          size={26}
-          color="#666"
-          style={styles.inputIconRight}
-        />
-      </View>
 
-      {searchQuery !== '' && filteredSanpham.length === 0 && (
-        <ScrollView>
-          <View style={styles.noResultsContainer}>
-            <Image
-              resizeMode="contain"
-              style={{
-                width: 100,
-                height: 100,
-                opacity: 0.5,
-              }}
-              source={require('../Resource/Image/search-results.png')}
+  // Khai báo cho bottom sheet
+  const [isOpen, setIsOpen] = useState(false);
+  const bottomSheetModalRef = useRef(null);
+
+  // Chiều dài bottom
+  const snapPoints = ['25%', '48%', '75%', '100%'];
+
+  // Sự kiện kéo
+  function handlePresentModal() {
+    bottomSheetModalRef.current?.present();
+    setTimeout(() => {
+      setIsOpen(true);
+    }, 100);
+  }
+
+  return (
+    <GestureHandlerRootView style={{flex: 1}}>
+      <BottomSheetModalProvider>
+        <View
+          style={[
+            styles.container,
+            {backgroundColor: isOpen ? 'gray' : 'white'},
+          ]}>
+          <StatusBar />
+          {/* Thanh tìm kiếm */}
+          <View style={styles.textInputContainer}>
+            <Ionicons
+              name="search-outline"
+              size={26}
+              color="#666"
+              style={styles.inputIconLeft}
             />
-            <Text style={styles.noResultsText}>Không tìm thấy kết quả nào</Text>
-            <Text style={styles.noResultsText1}>
-              Hãy thử sử dụng các từ khóa chung chung hơn
-            </Text>
-            <Pressable
-              style={{
-                borderWidth: 1,
-                height: 40,
-                paddingHorizontal: 20,
-                backgroundColor: 'black',
-                borderRadius: 10,
-                justifyContent: 'center',
-              }}
-              onPress={handleRetrySearch}>
-              <Text style={{color: 'white', fontWeight: '500'}}>
-                Thử lại với từ khóa khác
-              </Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Tìm kiếm"
+              value={searchQuery}
+              onChangeText={handleSearch}
+            />
+            {/* Ấn hiện bottom tại đây */}
+            <Pressable onPress={handlePresentModal}>
+              <FontAwesome
+                name="unsorted"
+                size={26}
+                color="#666"
+                style={styles.inputIconRight}
+              />
             </Pressable>
           </View>
-          <Text style={{fontWeight: 'bold', color: 'black', marginLeft: 10}}>
-            Có thể bạn cũng thích
-          </Text>
+
+          {searchQuery !== '' && filteredSanpham.length === 0 && (
+            <ScrollView>
+              <View style={styles.noResultsContainer}>
+                <Image
+                  resizeMode="contain"
+                  style={{
+                    width: 100,
+                    height: 100,
+                    opacity: 0.5,
+                  }}
+                  source={require('../Resource/Image/search-results.png')}
+                />
+                <Text style={styles.noResultsText}>
+                  Không tìm thấy kết quả nào
+                </Text>
+                <Text style={styles.noResultsText1}>
+                  Hãy thử sử dụng các từ khóa chung chung hơn
+                </Text>
+                <Pressable
+                  style={{
+                    borderWidth: 1,
+                    height: 40,
+                    paddingHorizontal: 20,
+                    backgroundColor: 'black',
+                    borderRadius: 10,
+                    justifyContent: 'center',
+                  }}
+                  onPress={handleRetrySearch}>
+                  <Text style={{color: 'white', fontWeight: '500'}}>
+                    Thử lại với từ khóa khác
+                  </Text>
+                </Pressable>
+              </View>
+              <Text
+                style={{fontWeight: 'bold', color: 'black', marginLeft: 10}}>
+                Có thể bạn cũng thích
+              </Text>
+              <FlatList
+                data={sanpham}
+                keyExtractor={item => item.id}
+                renderItem={renderSanpham}
+                numColumns={2}
+                scrollEnabled={false}
+              />
+            </ScrollView>
+          )}
+          {/* FlatList item */}
           <FlatList
-            data={sanpham}
+            data={filteredSanpham}
             keyExtractor={item => item.id}
             renderItem={renderSanpham}
             numColumns={2}
-            scrollEnabled={false}
+            style={{marginBottom: 10}}
           />
-        </ScrollView>
-      )}
-
-      <FlatList
-        data={filteredSanpham}
-        keyExtractor={item => item.id}
-        renderItem={renderSanpham}
-        numColumns={2}
-        style={{marginBottom: 10}}
-      />
-    </SafeAreaView>
+          {/* Bottom Sheet */}
+          <BottomSheetModal
+            ref={bottomSheetModalRef}
+            index={2}
+            snapPoints={snapPoints}
+            backgroundStyle={{borderRadius: 25}}
+            onDismiss={() => setIsOpen(false)}>
+            <View style={styles.container}>
+              {/* Viết tiếp cho bottom sheet tại đây */}
+            </View>
+          </BottomSheetModal>
+        </View>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   textInputContainer: {
     flexDirection: 'row',
