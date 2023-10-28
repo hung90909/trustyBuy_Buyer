@@ -87,7 +87,7 @@ const HomeScreen = () => {
       soldSP: 123456,
     },
     {
-      id: '1',
+      id: '2',
       nameSP:
         'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
       imageSP:
@@ -107,7 +107,7 @@ const HomeScreen = () => {
       soldSP: 123456,
     },
     {
-      id: '1',
+      id: '2',
       nameSP:
         'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
       imageSP:
@@ -127,7 +127,7 @@ const HomeScreen = () => {
       soldSP: 123456,
     },
     {
-      id: '1',
+      id: '2',
       nameSP:
         'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
       imageSP:
@@ -147,7 +147,7 @@ const HomeScreen = () => {
       soldSP: 123456,
     },
     {
-      id: '1',
+      id: '2',
       nameSP:
         'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
       imageSP:
@@ -167,7 +167,7 @@ const HomeScreen = () => {
       soldSP: 123456,
     },
     {
-      id: '1',
+      id: '2',
       nameSP:
         'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
       imageSP:
@@ -187,7 +187,7 @@ const HomeScreen = () => {
       soldSP: 123456,
     },
     {
-      id: '1',
+      id: '2',
       nameSP:
         'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
       imageSP:
@@ -207,7 +207,7 @@ const HomeScreen = () => {
       soldSP: 123456,
     },
     {
-      id: '1',
+      id: '2',
       nameSP:
         'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
       imageSP:
@@ -227,7 +227,7 @@ const HomeScreen = () => {
       soldSP: 123456,
     },
     {
-      id: '1',
+      id: '2',
       nameSP:
         'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
       imageSP:
