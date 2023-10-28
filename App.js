@@ -15,6 +15,8 @@ import Login from './Screen/Login/login';
 import register from './Screen/Login/register';
 import login2 from './Screen/Login/login2';
 import SearchScreen from './Screen/SearchScreen';
+import ListProduct from './Screen/ListProduct';
+import ShopInformation from './Screen/ShopInformation';
 
 const Tab = createBottomTabNavigator();
 
@@ -67,7 +69,7 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Main">
         <Stack.Screen
           name="Main"
           component={BotBottomTabNavigator}
@@ -111,6 +113,16 @@ const App = () => {
         <Stack.Screen
           name="Search"
           component={SearchScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ListProduct"
+          component={ListProduct}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ShopInformation"
+          component={ShopInformation}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

@@ -32,43 +32,212 @@ const HomeScreen = () => {
       id: '1',
       name: 'Áo',
       image: require('../Resource/Image/ao.png'),
+      products: sanPhamAo,
     },
     {
       id: '2',
       name: 'Quần',
       image: require('../Resource/Image/quan.png'),
+      products: sanPhamQuan,
     },
     {
       id: '3',
       name: 'Mũ',
       image: require('../Resource/Image/mu.png'),
+      products: sanPhamMu,
     },
     {
       id: '4',
       name: 'Trang sức',
       image: require('../Resource/Image/trangsuc.png'),
+      products: sanPhamTrangsuc,
     },
     {
       id: '5',
       name: 'Túi',
       image: require('../Resource/Image/tui.png'),
+      products: sanPhamTui,
     },
     {
       id: '6',
       name: 'Đồng hồ',
       image: require('../Resource/Image/dongho.png'),
+      products: sanPhamDongho,
     },
     {
       id: '7',
       name: 'Nước hoa',
       image: require('../Resource/Image/nuochoa.png'),
+      products: sanPhamNuochoa,
     },
     {
       id: '8',
       name: 'Giày',
       image: require('../Resource/Image/giay.png'),
+      products: sanPhamGiay,
     },
   ]);
+  const sanPhamAo = [
+    {
+      id: '1',
+      nameSP:
+        'Áo Polo Teelab Special chất cá sấu thoáng mát co dãn local brand | Miễn phí đổi trả 7 ngày',
+      imageSP:
+        'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
+      priceSP: 346476,
+      soldSP: 123456,
+    },
+    {
+      id: '1',
+      nameSP:
+        'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
+      imageSP:
+        'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
+      priceSP: 345332,
+      soldSP: 876824345,
+    },
+  ];
+  const sanPhamQuan = [
+    {
+      id: '1',
+      nameSP:
+        'Áo Polo Teelab Special chất cá sấu thoáng mát co dãn local brand | Miễn phí đổi trả 7 ngày',
+      imageSP:
+        'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
+      priceSP: 346476,
+      soldSP: 123456,
+    },
+    {
+      id: '1',
+      nameSP:
+        'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
+      imageSP:
+        'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
+      priceSP: 345332,
+      soldSP: 876824345,
+    },
+  ];
+  const sanPhamMu = [
+    {
+      id: '1',
+      nameSP:
+        'Áo Polo Teelab Special chất cá sấu thoáng mát co dãn local brand | Miễn phí đổi trả 7 ngày',
+      imageSP:
+        'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
+      priceSP: 346476,
+      soldSP: 123456,
+    },
+    {
+      id: '1',
+      nameSP:
+        'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
+      imageSP:
+        'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
+      priceSP: 345332,
+      soldSP: 876824345,
+    },
+  ];
+  const sanPhamTrangsuc = [
+    {
+      id: '1',
+      nameSP:
+        'Áo Polo Teelab Special chất cá sấu thoáng mát co dãn local brand | Miễn phí đổi trả 7 ngày',
+      imageSP:
+        'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
+      priceSP: 346476,
+      soldSP: 123456,
+    },
+    {
+      id: '1',
+      nameSP:
+        'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
+      imageSP:
+        'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
+      priceSP: 345332,
+      soldSP: 876824345,
+    },
+  ];
+  const sanPhamTui = [
+    {
+      id: '1',
+      nameSP:
+        'Áo Polo Teelab Special chất cá sấu thoáng mát co dãn local brand | Miễn phí đổi trả 7 ngày',
+      imageSP:
+        'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
+      priceSP: 346476,
+      soldSP: 123456,
+    },
+    {
+      id: '1',
+      nameSP:
+        'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
+      imageSP:
+        'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
+      priceSP: 345332,
+      soldSP: 876824345,
+    },
+  ];
+  const sanPhamDongho = [
+    {
+      id: '1',
+      nameSP:
+        'Áo Polo Teelab Special chất cá sấu thoáng mát co dãn local brand | Miễn phí đổi trả 7 ngày',
+      imageSP:
+        'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
+      priceSP: 346476,
+      soldSP: 123456,
+    },
+    {
+      id: '1',
+      nameSP:
+        'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
+      imageSP:
+        'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
+      priceSP: 345332,
+      soldSP: 876824345,
+    },
+  ];
+  const sanPhamNuochoa = [
+    {
+      id: '1',
+      nameSP:
+        'Áo Polo Teelab Special chất cá sấu thoáng mát co dãn local brand | Miễn phí đổi trả 7 ngày',
+      imageSP:
+        'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
+      priceSP: 346476,
+      soldSP: 123456,
+    },
+    {
+      id: '1',
+      nameSP:
+        'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
+      imageSP:
+        'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
+      priceSP: 345332,
+      soldSP: 876824345,
+    },
+  ];
+  const sanPhamGiay = [
+    {
+      id: '1',
+      nameSP:
+        'Áo Polo Teelab Special chất cá sấu thoáng mát co dãn local brand | Miễn phí đổi trả 7 ngày',
+      imageSP:
+        'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
+      priceSP: 346476,
+      soldSP: 123456,
+    },
+    {
+      id: '1',
+      nameSP:
+        'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
+      imageSP:
+        'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
+      priceSP: 345332,
+      soldSP: 876824345,
+    },
+  ];
+
   const [danhmucphobien, setDanhmucphobien] = useState([
     {
       id: '9',
@@ -179,6 +348,7 @@ const HomeScreen = () => {
       soldSP: 464356,
     },
   ]);
+
   const renderItem = ({item}) => {
     const isSelected = selectedItem && selectedItem.id === item.id;
     return (
@@ -189,7 +359,9 @@ const HomeScreen = () => {
           justifyContent: 'center',
           alignItems: 'center',
         }}
-        onPress={() => setSelectedItem(item)}>
+        onPress={() => {
+          setSelectedItem(item);
+        }}>
         <Image source={item.image} />
         <Text style={{marginTop: 10, fontWeight: 'bold', color: 'black'}}>
           {item.name}
@@ -270,7 +442,7 @@ const HomeScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{backgroundColor: '#FFFFFF'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <StatusBar />
         <View

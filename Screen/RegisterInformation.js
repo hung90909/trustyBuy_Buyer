@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   StatusBar,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -103,7 +104,7 @@ const RegisterInformation = () => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       <View
         style={{
@@ -219,7 +220,7 @@ const RegisterInformation = () => {
       <Pressable style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Tiếp Tục</Text>
       </Pressable>
-    </View>
+    </SafeAreaView>
   );
 };
 
