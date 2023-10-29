@@ -6,6 +6,7 @@ import {
   TextInput,
   Pressable,
   KeyboardAvoidingView,
+  ScrollView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -102,6 +103,7 @@ const RegisterInformation = () => {
   };
 
   return (
+    <ScrollView>
     <KeyboardAvoidingView
       style={{flex: 1}}
       behavior="padding" // Choose the behavior you need (padding, position, height)
@@ -230,6 +232,7 @@ const RegisterInformation = () => {
         </Pressable>
       </View>
     </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 

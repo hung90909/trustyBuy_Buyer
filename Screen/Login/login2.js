@@ -1,20 +1,22 @@
-import { Text, View, StyleSheet, TouchableOpacity, Image, TextInput } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Image, TextInput  } from "react-native";
 import React, { useState } from "react";
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 import CheckBox from '@react-native-community/checkbox';
 import { checkEmail, checkPassword } from "../../compoment/checkValidate";
+import { API_Login } from "../../API/getAPI";
 
 export default Login2 = () => {
     const [toggleCheckBox, setToggleCheckBox] = useState(false)
     const [errorEmail, setErrorEmail] = useState("")
     const [errorPassword, setErrorPassword] = useState("")
     const [email, setEmail] = useState("")
-    const [password , setPassword] = useState("")
+    const [password, setPassword] = useState("")
     const nav = useNavigation()
 
 
-    const checkValidateLogin = () =>{
+    const checkValidateLogin = () => {
         if (email.length === 0 && password.length === 0) {
             setErrorEmail("Vui lòng nhập đầy đủ thông tin")
             setErrorPassword("Vui lòng nhập đầy đủ thông tin")
@@ -28,10 +30,29 @@ export default Login2 = () => {
             setErrorPassword("Vui lòng nhập đầy đủ thông tin")
             return
         }
-        if(errorEmail.length !== 0 || errorPassword.length !== 0){
+        if (errorEmail.length !== 0 || errorPassword.length !== 0) {
             return
         }
-        console.log("Login successful")
+        // nav.navigate("Main")
+        fetch(API_Login, {
+            method: 'POST',
+            body: JSON.stringify({ email, password }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json()) // Chuyển phản hồi thành JSON
+        .then(data  => {
+            const accessToken = data.message.accessToken;
+            // Lưu token vào AsyncStorage
+            nav.navigate("Main")
+            AsyncStorage.setItem('access_token', JSON.stringify(accessToken))
+                .then(() => {
+                    console.log('Token đã được lưu vào AsyncStorage.');
+                })
+                .catch(err => console.log('Lỗi khi lưu token vào AsyncStorage:', err));
+        })
+        .catch(err => console.log(err));
     }
     return (
         <View style={styles.container}>
@@ -81,18 +102,18 @@ export default Login2 = () => {
                     <Image style={{
                         width: 25, height: 25, marginStart: 20
                     }} source={require("../../Resource/icon/clock.png")} />
-                    <TextInput 
-                    onChangeText={(text) =>{
-                        if(checkPassword(text)){
-                            setPassword(text);
-                            setErrorPassword("")
-                        }else{
-                            setErrorPassword("Password không quá 15 ký tự")
-                        }
-                    }}
-                    style={{
-                        marginStart: 10
-                    }} placeholder="Mật khẩu" />
+                    <TextInput
+                        onChangeText={(text) => {
+                            if (checkPassword(text)) {
+                                setPassword(text);
+                                setErrorPassword("")
+                            } else {
+                                setErrorPassword("Password không quá 15 ký tự")
+                            }
+                        }}
+                        style={{
+                            marginStart: 10
+                        }} placeholder="Mật khẩu" />
                 </View>
                 {errorPassword && <Text style={{
                     color: "red", marginTop: 5, marginStart: 15
@@ -107,19 +128,19 @@ export default Login2 = () => {
                     <Text style={{ fontSize: 16 }}>Ghi nhớ</Text>
                 </View>
                 <TouchableOpacity
-                onPress={() =>{
-                    checkValidateLogin()
-                }}
-                 style={{
-                    width: "100%",
-                    height: 40,
-                    backgroundColor: "black",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginTop: errorPassword ? 20 : 40,
-                    borderRadius: 20,
-                    elevation: 3
-                }}>
+                    onPress={() => {
+                        checkValidateLogin()
+                    }}
+                    style={{
+                        width: "100%",
+                        height: 40,
+                        backgroundColor: "black",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginTop: errorPassword ? 20 : 40,
+                        borderRadius: 20,
+                        elevation: 3
+                    }}>
                     <Text style={{ color: "white" }}>Đăng nhập</Text>
                 </TouchableOpacity>
             </View>
