@@ -94,6 +94,32 @@ const SearchScreen = () => {
     },
   ]);
 
+  const [isPressed, setIsPressed] = useState(false);
+
+  const handlePress = () => {
+    setIsPressed(!isPressed);
+  };
+  const [inputValue, setInputValue] = useState('');
+
+  const formatCurrency = value => {
+    // Loại bỏ các ký tự không phải số từ chuỗi nhập vào
+    const numericValue = value.replace(/\D/g, '');
+
+    // Chuyển đổi chuỗi thành số nguyên
+    let intValue = parseInt(numericValue, 10);
+
+    // Định dạng số thành giá trị tiền tệ (ví dụ: 1000000 -> 1,000,000)
+    const formattedValue = intValue.toLocaleString('vi-VN', {
+      style: 'currency',
+      currency: 'VND', // Đổi thành tiền tệ mong muốn nếu cần
+    });
+
+    return formattedValue;
+  };
+
+  const handleInputChange = text => {
+    setInputValue(formatCurrency(text));
+  };
   const handleRetrySearch = () => {
     setSearchQuery(''); // Clear the search query
     // You can also reset any other state variables related to search if needed.
@@ -173,7 +199,7 @@ const SearchScreen = () => {
   const bottomSheetModalRef = useRef(null);
 
   // Chiều dài bottom
-  const snapPoints = ['25%', '48%', '75%', '100%'];
+  const snapPoints = ['25%', '80%', '100%'];
 
   // Sự kiện kéo
   function handlePresentModal() {
@@ -274,12 +300,141 @@ const SearchScreen = () => {
           {/* Bottom Sheet */}
           <BottomSheetModal
             ref={bottomSheetModalRef}
-            index={2}
+            index={1}
             snapPoints={snapPoints}
             backgroundStyle={{borderRadius: 25}}
             onDismiss={() => setIsOpen(false)}>
             <View style={styles.container}>
-              {/* Viết tiếp cho bottom sheet tại đây */}
+              <View style={{justifyContent: 'center', alignSelf: 'center'}}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: 'black',
+                    fontWeight: 'bold',
+                  }}>
+                  Tùy chọn tìm kiếm
+                </Text>
+              </View>
+              <View>
+                <Text style={styles.textSheet}>Theo mùa</Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                  }}>
+                  <Pressable style={styles.butonSheetl}>
+                    <Text style={styles.textButonShet}>Mùa xuân</Text>
+                  </Pressable>
+                  <Pressable style={styles.butonSheetl}>
+                    <Text style={styles.textButonShet}>Mùa hạ</Text>
+                  </Pressable>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                    marginVertical: 10,
+                  }}>
+                  <Pressable style={styles.butonSheetl}>
+                    <Text style={styles.textButonShet}>Mùa thu</Text>
+                  </Pressable>
+                  <Pressable style={styles.butonSheetl}>
+                    <Text style={styles.textButonShet}>Mùa đông</Text>
+                  </Pressable>
+                </View>
+                <View>
+                  <Text style={styles.textSheet}>Sắp xếp</Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-around',
+                      marginVertical: 10,
+                    }}>
+                    <Pressable style={styles.butonSheetl}>
+                      <Text style={styles.textButonShet}>Bán chạy</Text>
+                    </Pressable>
+                    <Pressable style={styles.butonSheetl}>
+                      <Text style={styles.textButonShet}>Giá cao thấp</Text>
+                    </Pressable>
+                    <Pressable style={styles.butonSheetl}>
+                      <Text style={styles.textButonShet}>Giá thấp cao</Text>
+                    </Pressable>
+                  </View>
+                </View>
+                <View>
+                  <Text style={styles.textSheet}>Khoảng giá</Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-around',
+                      marginVertical: 10,
+                    }}>
+                    <TextInput
+                      style={styles.edtGia}
+                      placeholder="TỐI THIỂU"
+                      keyboardType="numeric"
+                    />
+                    <View
+                      style={{
+                        height: 0.5,
+                        backgroundColor: 'black',
+                        width: 20,
+                        alignSelf: 'center',
+                      }}></View>
+                    <TextInput
+                      style={styles.edtGia}
+                      placeholder="TỐI ĐA"
+                      onChangeText={handleInputChange}
+                      value={inputValue}
+                      keyboardType="numeric"
+                    />
+                  </View>
+                </View>
+              </View>
+              <View>
+                <Text style={styles.textSheet}>Đánh giá</Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                  }}>
+                  <Pressable style={styles.butonSheetl}>
+                    <Text style={styles.textButonShet}>5 sao</Text>
+                  </Pressable>
+                  <Pressable style={styles.butonSheetl}>
+                    <Text style={styles.textButonShet}>4 sao</Text>
+                  </Pressable>
+                  <Pressable style={styles.butonSheetl}>
+                    <Text style={styles.textButonShet}>3 sao</Text>
+                  </Pressable>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-evenly',
+                    marginVertical: 20,
+                  }}>
+                  <Pressable style={styles.butonSheetl}>
+                    <Text style={styles.textButonShet}>2 sao</Text>
+                  </Pressable>
+                  <Pressable style={styles.butonSheetl}>
+                    <Text style={styles.textButonShet}>1 sao</Text>
+                  </Pressable>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                    marginTop: 50,
+                  }}>
+                  <Pressable style={styles.butonSheetl}>
+                    <Text style={styles.textButonShet}>Thiết lập lại</Text>
+                  </Pressable>
+                  <Pressable style={styles.butonSheetl1}>
+                    <Text style={styles.textButonShet1}>Áp dụng</Text>
+                  </Pressable>
+                </View>
+              </View>
             </View>
           </BottomSheetModal>
         </View>
@@ -354,6 +509,46 @@ const styles = StyleSheet.create({
     color: 'black',
     opacity: 0.5,
     marginVertical: 10,
+  },
+  butonSheetl: {
+    borderWidth: 1,
+    borderRadius: 10,
+    height: 40,
+    width: 120,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textSheet: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'black',
+    marginHorizontal: 20,
+    marginVertical: 10,
+  },
+  textButonShet: {
+    color: 'black',
+    fontWeight: 'bold',
+  },
+  edtGia: {
+    borderWidth: 1,
+    width: 150,
+    height: 40,
+    borderRadius: 10,
+    padding: 10,
+    textAlign: 'center',
+  },
+  butonSheetl1: {
+    borderWidth: 1,
+    borderRadius: 10,
+    height: 40,
+    width: 120,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
+  textButonShet1: {
+    fontWeight: 'bold',
+    color: 'white',
   },
 });
 
