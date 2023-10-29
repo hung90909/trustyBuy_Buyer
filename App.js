@@ -66,6 +66,13 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+
+      <Stack.Screen
+          name="Main"
+          component={BotBottomTabNavigator}
+          options={{headerShown: false}}
+        />
+        
         <Stack.Screen
           name="Welcome"
           component={Welcome}
@@ -81,7 +88,7 @@ const App = () => {
           component={Login}
           options={{headerShown: false}}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Register"
           component={register}
           options={{headerShown: false}}
@@ -90,17 +97,8 @@ const App = () => {
           name="Login2"
           component={login2}
           options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="RegisterInformation"
-          component={RegisterInformation}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Main"
-          component={BotBottomTabNavigator}
-          options={{headerShown: false}}
-        />
+        /> */}
+        
       </Stack.Navigator>
     </NavigationContainer>
   );
