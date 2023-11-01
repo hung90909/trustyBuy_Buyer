@@ -14,6 +14,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
+import {danhmucsp} from './data';
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [selectedItem, setSelectedItem] = useState(null);
@@ -25,217 +26,6 @@ const HomeScreen = () => {
     });
     return `₫${priceSP.toLocaleString('vi-VN')}`;
   };
-
-  const [danhmuc, setDanhmuc] = useState([
-    {
-      id: '1',
-      name: 'Áo',
-      image: require('../Resource/Image/ao.png'),
-      products: sanPhamAo,
-    },
-    {
-      id: '2',
-      name: 'Quần',
-      image: require('../Resource/Image/quan.png'),
-      products: sanPhamQuan,
-    },
-    {
-      id: '3',
-      name: 'Mũ',
-      image: require('../Resource/Image/mu.png'),
-      products: sanPhamMu,
-    },
-    {
-      id: '4',
-      name: 'Trang sức',
-      image: require('../Resource/Image/trangsuc.png'),
-      products: sanPhamTrangsuc,
-    },
-    {
-      id: '5',
-      name: 'Túi',
-      image: require('../Resource/Image/tui.png'),
-      products: sanPhamTui,
-    },
-    {
-      id: '6',
-      name: 'Đồng hồ',
-      image: require('../Resource/Image/dongho.png'),
-      products: sanPhamDongho,
-    },
-    {
-      id: '7',
-      name: 'Nước hoa',
-      image: require('../Resource/Image/nuochoa.png'),
-      products: sanPhamNuochoa,
-    },
-    {
-      id: '8',
-      name: 'Giày',
-      image: require('../Resource/Image/giay.png'),
-      products: sanPhamGiay,
-    },
-  ]);
-  const sanPhamAo = [
-    {
-      id: '1',
-      nameSP:
-        'Áo Polo Teelab Special chất cá sấu thoáng mát co dãn local brand | Miễn phí đổi trả 7 ngày',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
-      priceSP: 346476,
-      soldSP: 123456,
-    },
-    {
-      id: '2',
-      nameSP:
-        'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
-      priceSP: 345332,
-      soldSP: 876824345,
-    },
-  ];
-  const sanPhamQuan = [
-    {
-      id: '1',
-      nameSP:
-        'Áo Polo Teelab Special chất cá sấu thoáng mát co dãn local brand | Miễn phí đổi trả 7 ngày',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
-      priceSP: 346476,
-      soldSP: 123456,
-    },
-    {
-      id: '2',
-      nameSP:
-        'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
-      priceSP: 345332,
-      soldSP: 876824345,
-    },
-  ];
-  const sanPhamMu = [
-    {
-      id: '1',
-      nameSP:
-        'Áo Polo Teelab Special chất cá sấu thoáng mát co dãn local brand | Miễn phí đổi trả 7 ngày',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
-      priceSP: 346476,
-      soldSP: 123456,
-    },
-    {
-      id: '2',
-      nameSP:
-        'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
-      priceSP: 345332,
-      soldSP: 876824345,
-    },
-  ];
-  const sanPhamTrangsuc = [
-    {
-      id: '1',
-      nameSP:
-        'Áo Polo Teelab Special chất cá sấu thoáng mát co dãn local brand | Miễn phí đổi trả 7 ngày',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
-      priceSP: 346476,
-      soldSP: 123456,
-    },
-    {
-      id: '2',
-      nameSP:
-        'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
-      priceSP: 345332,
-      soldSP: 876824345,
-    },
-  ];
-  const sanPhamTui = [
-    {
-      id: '1',
-      nameSP:
-        'Áo Polo Teelab Special chất cá sấu thoáng mát co dãn local brand | Miễn phí đổi trả 7 ngày',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
-      priceSP: 346476,
-      soldSP: 123456,
-    },
-    {
-      id: '2',
-      nameSP:
-        'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
-      priceSP: 345332,
-      soldSP: 876824345,
-    },
-  ];
-  const sanPhamDongho = [
-    {
-      id: '1',
-      nameSP:
-        'Áo Polo Teelab Special chất cá sấu thoáng mát co dãn local brand | Miễn phí đổi trả 7 ngày',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
-      priceSP: 346476,
-      soldSP: 123456,
-    },
-    {
-      id: '2',
-      nameSP:
-        'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
-      priceSP: 345332,
-      soldSP: 876824345,
-    },
-  ];
-  const sanPhamNuochoa = [
-    {
-      id: '1',
-      nameSP:
-        'Áo Polo Teelab Special chất cá sấu thoáng mát co dãn local brand | Miễn phí đổi trả 7 ngày',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
-      priceSP: 346476,
-      soldSP: 123456,
-    },
-    {
-      id: '2',
-      nameSP:
-        'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
-      priceSP: 345332,
-      soldSP: 876824345,
-    },
-  ];
-  const sanPhamGiay = [
-    {
-      id: '1',
-      nameSP:
-        'Áo Polo Teelab Special chất cá sấu thoáng mát co dãn local brand | Miễn phí đổi trả 7 ngày',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
-      priceSP: 346476,
-      soldSP: 123456,
-    },
-    {
-      id: '2',
-      nameSP:
-        'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
-      priceSP: 345332,
-      soldSP: 876824345,
-    },
-  ];
 
   const [danhmucphobien, setDanhmucphobien] = useState([
     {
@@ -360,6 +150,9 @@ const HomeScreen = () => {
         }}
         onPress={() => {
           setSelectedItem(item);
+          navigation.navigate('ListProduct', {
+            danhmucspId: item.id,
+          });
         }}>
         <Image source={item.image} />
         <Text style={{marginTop: 10, fontWeight: 'bold', color: 'black'}}>
@@ -546,12 +339,11 @@ const HomeScreen = () => {
 
         <FlatList
           scrollEnabled={false}
-          data={danhmuc}
-          keyExtractor={item => item.id}
+          data={danhmucsp}
+          keyExtractor={item => item.id.toString()}
           numColumns={4} // Set the number of columns to 2
           renderItem={renderItem}
           style={{marginHorizontal: 25, marginVertical: 20}}
-          nestedScrollEnabled={true} // Adjust spacing between columns
         />
         <View>
           <Text

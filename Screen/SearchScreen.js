@@ -16,6 +16,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import {sanphamdanhmuc} from './data';
 // Khai báo bottom sheet
 
 const SearchScreen = () => {
@@ -112,7 +113,7 @@ const SearchScreen = () => {
     setSearchQuery(query);
     if (query === '') {
       // Nếu không có tìm kiếm, hiển thị tất cả sản phẩm
-      setFilteredSanpham(sanpham);
+      setFilteredSanpham(sanphamdanhmuc);
     } else {
       // Nếu có tìm kiếm, lọc danh sách sản phẩm
       const filteredProducts = sanpham.filter(product =>
