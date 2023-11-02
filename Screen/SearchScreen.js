@@ -17,6 +17,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {sanpham} from './data';
+import Bottomsheet from './Bottomsheet';
 // Khai báo bottom sheet
 
 const SearchScreen = () => {
@@ -233,140 +234,7 @@ const SearchScreen = () => {
             snapPoints={snapPoints}
             backgroundStyle={{borderRadius: 25}}
             onDismiss={() => setIsOpen(false)}>
-            <View style={styles.container}>
-              <ScrollView>
-                <View style={{justifyContent: 'center', alignSelf: 'center'}}>
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      color: 'black',
-                      fontWeight: 'bold',
-                    }}>
-                    Tùy chọn tìm kiếm
-                  </Text>
-                </View>
-                <View>
-                  <Text style={styles.textSheet}>Theo mùa</Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-around',
-                    }}>
-                    <Pressable style={styles.butonSheetl}>
-                      <Text style={styles.textButonShet}>Mùa xuân</Text>
-                    </Pressable>
-                    <Pressable style={styles.butonSheetl}>
-                      <Text style={styles.textButonShet}>Mùa hạ</Text>
-                    </Pressable>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-around',
-                      marginVertical: 10,
-                    }}>
-                    <Pressable style={styles.butonSheetl}>
-                      <Text style={styles.textButonShet}>Mùa thu</Text>
-                    </Pressable>
-                    <Pressable style={styles.butonSheetl}>
-                      <Text style={styles.textButonShet}>Mùa đông</Text>
-                    </Pressable>
-                  </View>
-                  <View>
-                    <Text style={styles.textSheet}>Sắp xếp</Text>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-around',
-                        marginVertical: 10,
-                      }}>
-                      <Pressable style={styles.butonSheetl}>
-                        <Text style={styles.textButonShet}>Bán chạy</Text>
-                      </Pressable>
-                      <Pressable style={styles.butonSheetl}>
-                        <Text style={styles.textButonShet}>Giá cao thấp</Text>
-                      </Pressable>
-                      <Pressable style={styles.butonSheetl}>
-                        <Text style={styles.textButonShet}>Giá thấp cao</Text>
-                      </Pressable>
-                    </View>
-                  </View>
-                  <View>
-                    <Text style={styles.textSheet}>Khoảng giá</Text>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-around',
-                        marginVertical: 10,
-                      }}>
-                      <TextInput
-                        style={styles.edtGia}
-                        placeholder="TỐI THIỂU"
-                        keyboardType="numeric"
-                      />
-                      <View
-                        style={{
-                          height: 0.5,
-                          backgroundColor: 'black',
-                          width: 20,
-                          alignSelf: 'center',
-                        }}></View>
-                      <TextInput
-                        style={styles.edtGia}
-                        placeholder="TỐI ĐA"
-                        onChangeText={handleInputChange}
-                        value={inputValue}
-                        keyboardType="numeric"
-                      />
-                    </View>
-                  </View>
-                </View>
-                <View>
-                  <Text style={styles.textSheet}>Đánh giá</Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-around',
-                    }}>
-                    <Pressable style={styles.butonSheetl}>
-                      <Text style={styles.textButonShet}>5 sao</Text>
-                    </Pressable>
-                    <Pressable style={styles.butonSheetl}>
-                      <Text style={styles.textButonShet}>4 sao</Text>
-                    </Pressable>
-                    <Pressable style={styles.butonSheetl}>
-                      <Text style={styles.textButonShet}>3 sao</Text>
-                    </Pressable>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-evenly',
-                      marginVertical: 20,
-                    }}>
-                    <Pressable style={styles.butonSheetl}>
-                      <Text style={styles.textButonShet}>2 sao</Text>
-                    </Pressable>
-                    <Pressable style={styles.butonSheetl}>
-                      <Text style={styles.textButonShet}>1 sao</Text>
-                    </Pressable>
-                  </View>
-                </View>
-              </ScrollView>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-around',
-                  marginBottom: 30,
-                }}>
-                <Pressable style={styles.butonSheetl}>
-                  <Text style={styles.textButonShet}>Thiết lập lại</Text>
-                </Pressable>
-                <Pressable style={styles.butonSheetl1}>
-                  <Text style={styles.textButonShet1}>Áp dụng</Text>
-                </Pressable>
-              </View>
-            </View>
+            <Bottomsheet />
           </BottomSheetModal>
         </View>
       </BottomSheetModalProvider>
