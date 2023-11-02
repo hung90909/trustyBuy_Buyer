@@ -11,12 +11,10 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import {danhmucsp} from './data';
-const HomeScreen = () => {
-  const navigation = useNavigation();
+const HomeScreen = ({navigation}) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const formatPrice = priceSP => {
     const formatter = new Intl.NumberFormat('vi-VN', {
@@ -168,7 +166,7 @@ const HomeScreen = () => {
         style={{
           width: 80,
           height: 30,
-          borderWidth: 1,
+          borderWidth: isSelected ? 1 : 0,
           alignItems: 'center',
           justifyContent: 'center',
           marginRight: 20,
@@ -286,13 +284,9 @@ const HomeScreen = () => {
               flexDirection: 'row',
               alignItems: 'center',
               height: 40,
-              paddingHorizontal: 10,
-              borderWidth: 1,
-              borderColor: '#878787',
-              borderRadius: 10,
             }}
             onPress={() => navigation.navigate('Search')}>
-            <Ionicons name="search-outline" size={26} color="#878787" />
+            <Ionicons name="search-outline" size={20} color="#878787" />
             <Text style={{marginLeft: 10}}>Tìm kiếm</Text>
           </Pressable>
         </View>
