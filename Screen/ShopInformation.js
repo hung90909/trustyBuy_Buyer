@@ -7,133 +7,19 @@ import {
   ScrollView,
   Pressable,
   Image,
-  FlatList,
-  TouchableOpacity,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
+import Listproducts from './Listproducts';
 
 const ShopInformation = () => {
   const navigation = useNavigation();
   const [isFollowing, setIsFollowing] = useState(false);
 
-  const [products, setProducts] = useState([
-    {
-      id: '18',
-      nameSP:
-        'Áo Polo Teelab Special chất cá sấu thoáng mát co dãn local brand | Miễn phí đổi trả 7 ngày',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
-      priceSP: 346476,
-      soldSP: 123456,
-    },
-    {
-      id: '19',
-      nameSP:
-        'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
-      priceSP: 345332,
-      soldSP: 876824345,
-    },
-    {
-      id: '20',
-      nameSP:
-        'Đồng Hồ Thông Minh SKMEI Ip68 4G Rom + 1G Ram Có Kết Nối Bluetooth 400MAh',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/sg-11134201-22120-kzglycl3unlvf4',
-      priceSP: 124323,
-      soldSP: 456645,
-    },
-    {
-      id: '21',
-      nameSP: 'Giày Boot Nam THE WOLF Minimal Chelsea Boot - Tan',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/1c6db1d5260f99d6a0a8f55002ba7412',
-      priceSP: 234574,
-      soldSP: 464356,
-    },
-    {
-      id: '22',
-      nameSP:
-        'Áo Polo Teelab Special chất cá sấu thoáng mát co dãn local brand | Miễn phí đổi trả 7 ngày',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
-      priceSP: 346476,
-      soldSP: 123456,
-    },
-    {
-      id: '23',
-      nameSP:
-        'Quần AOKANG ống rộng thời trang phong cách Nhật Bản tùy chọn màu sắc cho nam',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
-      priceSP: 345332,
-      soldSP: 876824345,
-    },
-    {
-      id: '24',
-      nameSP:
-        'Đồng Hồ Thông Minh SKMEI Ip68 4G Rom + 1G Ram Có Kết Nối Bluetooth 400MAh',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/sg-11134201-22120-kzglycl3unlvf4',
-      priceSP: 124323,
-      soldSP: 456645,
-    },
-    {
-      id: '25',
-      nameSP: 'Giày Boot Nam THE WOLF Minimal Chelsea Boot - Tan',
-      imageSP:
-        'https://down-vn.img.susercontent.com/file/1c6db1d5260f99d6a0a8f55002ba7412',
-      priceSP: 234574,
-      soldSP: 464356,
-    },
-  ]);
-  const formatPrice = price => {
-    const formatter = new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-      currencyDisplay: 'symbol',
-    });
-    return formatter.format(price);
-  };
-
-  const formatSold = value => {
-    if (value >= 1000000) {
-      return `${(value / 1000000).toFixed(1)}M`;
-    } else if (value >= 1000) {
-      return `${(value / 1000).toFixed(1)}k`;
-    } else {
-      return value.toString();
-    }
-  };
-
-  const renderProductItem = ({item}) => {
-    return (
-      <TouchableOpacity style={styles.productItem}>
-        <Image
-          style={styles.productImage}
-          source={{uri: item.imageSP}}
-          resizeMode="contain"
-        />
-        <Text style={styles.productName} numberOfLines={2}>
-          {item.nameSP}
-        </Text>
-        <View style={styles.productInfo}>
-          <Text style={styles.productPrice}>{formatPrice(item.priceSP)}</Text>
-          <Text style={styles.productSold}>
-            Đã bán {formatSold(item.soldSP)}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        {/* Phần Header */}
         <View style={styles.header}>
           <Ionicons name="arrow-back" size={26} color="black" />
           <Pressable
@@ -192,25 +78,13 @@ const ShopInformation = () => {
         {/* Sản phẩm bán chạy nhất */}
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Sản phẩm bán chạy</Text>
-          <FlatList
-            scrollEnabled={false}
-            data={products}
-            keyExtractor={item => item.id}
-            renderItem={renderProductItem}
-            numColumns={2}
-          />
+          <Listproducts />
         </View>
 
         {/* Tất cả sản phẩm */}
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Tất cả sản phẩm</Text>
-          <FlatList
-            scrollEnabled={false}
-            data={products}
-            keyExtractor={item => item.id}
-            renderItem={renderProductItem}
-            numColumns={2}
-          />
+          <Listproducts />
         </View>
       </ScrollView>
     </SafeAreaView>

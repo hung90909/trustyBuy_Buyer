@@ -17,6 +17,7 @@ import login2 from './Screen/Login/login2';
 import SearchScreen from './Screen/SearchScreen';
 import ListProduct from './Screen/ListProduct';
 import ShopInformation from './Screen/ShopInformation';
+import Listcategorys from './Screen/Listcategorys';
 
 const Tab = createBottomTabNavigator();
 

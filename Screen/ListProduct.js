@@ -125,14 +125,6 @@ const ListProduct = ({
         />
         <TextInput style={styles.textInput} placeholder="Tìm kiếm" />
         {/* Ấn hiện bottom tại đây */}
-        <Pressable>
-          <FontAwesome
-            name="unsorted"
-            size={26}
-            color="#666"
-            style={styles.inputIconRight}
-          />
-        </Pressable>
       </View>
       <FlatList
         numColumns={2}
