@@ -7,9 +7,12 @@ import {
   TextInput,
 } from 'react-native';
 import React, {useState} from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import CheckBox from '@react-native-community/checkbox';
 import {checkEmail, checkPassword} from '../../compoment/checkValidate';
+import {API_Login} from '../../API/getAPI';
 
 export default Login2 = () => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
@@ -36,8 +39,42 @@ export default Login2 = () => {
     if (errorEmail.length !== 0 || errorPassword.length !== 0) {
       return;
     }
-    console.log('Login successful');
+    // nav.navigate("Main")
+    fetch(API_Login, {
+      method: 'POST',
+      body: JSON.stringify({email, password}),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => response.json()) // Chuyển phản hồi thành JSON
+      .then(data => {
+        const accessToken = data.message.accessToken;
+        // Lưu token vào AsyncStorage
+        nav.navigate('Main');
+        AsyncStorage.setItem('access_token', JSON.stringify(accessToken))
+          .then(() => {
+            console.log('Token đã được lưu vào AsyncStorage.');
+          })
+          .catch(err =>
+            console.log('Lỗi khi lưu token vào AsyncStorage:', err),
+          );
+      })
+      .catch(err => console.log(err));
   };
+  if (email.length === 0) {
+    setErrorEmail('Vui lòng nhập đầy đủ thông tin');
+    return;
+  }
+  if (password.length === 0) {
+    setErrorPassword('Vui lòng nhập đầy đủ thông tin');
+    return;
+  }
+  if (errorEmail.length !== 0 || errorPassword.length !== 0) {
+    return;
+  }
+  console.log('Login successful');
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>

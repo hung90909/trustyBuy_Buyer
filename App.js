@@ -2,11 +2,8 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Welcome from './Screen/Welcome/welcome';
-import RegisterInformation from './Screen/RegisterInformation';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import HomeScreen from './Screen/HomeScreen';
-import CartScreen from './Screen/CartScreen';
-import OrderScreen from './Screen/OrderScreen';
 import ProfileScreen from './Screen/ProfileScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons'; // Import the icons you want to use
 import NotificationScreen from './Screen/NotificationScreen';
@@ -17,11 +14,21 @@ import login2 from './Screen/Login/login2';
 import SearchScreen from './Screen/SearchScreen';
 import ListProduct from './Screen/ListProduct';
 import ShopInformation from './Screen/ShopInformation';
-import Listcategorys from './Screen/Listcategorys';
+import Welcome from './Screen/Welcome/welcome';
+import RegisterInformation from './Screen/RegisterInformation';
+import XuLy from './Screen/statusOrder/xuLy';
+import DangGiao from './Screen/statusOrder/dangGiao';
+import DaGiao from './Screen/statusOrder/daGiao';
+import DaHuy from './Screen/statusOrder/daHuy';
+import ChatScreen from './Screen/Chat';
+import {useIsFocused} from '@react-navigation/native';
+import CartScreen from './Screen/CartScreen';
 
 const Tab = createBottomTabNavigator();
 
 const BotBottomTabNavigator = () => {
+  const isFocused = useIsFocused();
+
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -30,8 +37,8 @@ const BotBottomTabNavigator = () => {
 
           if (route.name === 'Home') {
             iconName = 'home-outline';
-          } else if (route.name === 'Cart') {
-            iconName = 'cart-outline';
+          } else if (route.name === 'Chat') {
+            iconName = 'chatbubble-ellipses-outline';
           } else if (route.name === 'Order') {
             iconName = 'document-text-outline';
           } else if (route.name === 'Profile') {
@@ -47,13 +54,13 @@ const BotBottomTabNavigator = () => {
         options={{title: 'Home', headerShown: false}}
       />
       <Tab.Screen
-        name="Cart"
-        component={CartScreen}
-        options={{title: 'Cart', headerShown: false}}
+        name="Chat"
+        component={ChatScreen}
+        options={{title: 'Chat', headerShown: false}}
       />
       <Tab.Screen
         name="Order"
-        component={OrderScreen}
+        component={MyTabs}
         options={{title: 'Order', headerShown: false}}
       />
       <Tab.Screen
@@ -64,8 +71,44 @@ const BotBottomTabNavigator = () => {
     </Tab.Navigator>
   );
 };
-
 const Stack = createNativeStackNavigator();
+
+const TabTop = createMaterialTopTabNavigator();
+
+const MyTabs = () => {
+  return (
+    <TabTop.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: 'black',
+        tabBarInactiveTintColor: 'gray',
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: 'bold',
+        },
+        tabBarItemStyle: {},
+        tabBarIndicatorStyle: {
+          backgroundColor: 'black',
+        },
+      }}>
+      <TabTop.Screen name="XuLy" component={XuLy} options={{title: 'Xử lý'}} />
+      <TabTop.Screen
+        name="DangGiao"
+        component={DangGiao}
+        options={{title: 'Đang giao'}}
+      />
+      <TabTop.Screen
+        name="DaGiao"
+        component={DaGiao}
+        options={{title: 'Đã giao'}}
+      />
+      <TabTop.Screen
+        name="DaHuy"
+        component={DaHuy}
+        options={{title: 'Đã hủy'}}
+      />
+    </TabTop.Navigator>
+  );
+};
 
 const App = () => {
   return (
@@ -124,6 +167,11 @@ const App = () => {
         <Stack.Screen
           name="ShopInformation"
           component={ShopInformation}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Cart"
+          component={CartScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

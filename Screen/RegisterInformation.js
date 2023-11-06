@@ -7,6 +7,8 @@ import {
   Pressable,
   StatusBar,
   SafeAreaView,
+  KeyboardAvoidingView,
+  ScrollView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -101,20 +103,30 @@ const RegisterInformation = () => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-      <View
-        style={{
-          flexDirection: 'row',
-          marginTop: 20,
-          marginLeft: 20,
-          alignItems: 'center',
-        }}>
-        <Ionicons name="arrow-back" size={28} color="#000000" />
-        <View style={{flex: 1, alignItems: 'center', marginRight: 20}}>
-          <Text style={{color: '#000000', fontWeight: '600', fontSize: 18}}>
-            Thông tin cá nhân
-          </Text>
+    <ScrollView>
+    <KeyboardAvoidingView
+      style={{flex: 1}}
+      behavior="padding" // Choose the behavior you need (padding, position, height)
+    >
+      <View style={{flex: 1}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 20,
+            marginLeft: 20,
+            alignItems: 'center',
+          }}>
+          <Ionicons
+            name="arrow-back"
+            size={28}
+            color="#000000"
+            onPress={() => navigation.navigate('Register')}
+          />
+          <View style={{flex: 1, alignItems: 'center', marginRight: 20}}>
+            <Text style={{color: '#000000', fontWeight: '600', fontSize: 18}}>
+              Thông tin cá nhân
+            </Text>
+          </View>
         </View>
       </View>
       <View
@@ -217,7 +229,8 @@ const RegisterInformation = () => {
       <Pressable style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Tiếp Tục</Text>
       </Pressable>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 

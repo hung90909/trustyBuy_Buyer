@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -16,6 +17,15 @@ import Listproducts from './Listproducts';
 import Listcategorys from './Listcategorys';
 
 const HomeScreen = ({navigation}) => {
+  // async function getToken() {
+  //   const token = await AsyncStorage.getItem('access_token');
+  //   const tokenUser = token ? JSON.parse(token) : null;
+  //   console.log('Token save : ', tokenUser);
+  // }
+
+  // useEffect(() => {
+  //   getToken();
+  // }, []);
   const navigateToProfile = () => {
     navigation.navigate('Profile');
   };
@@ -54,7 +64,12 @@ const HomeScreen = ({navigation}) => {
               color="#1B2028"
               onPress={navigateToNotification}
             />
-            <Ionicons name="chatbubbles-outline" size={26} color="#1B2028" />
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Cart');
+              }}>
+              <Ionicons name="cart-outline" size={26} color="#1B2028" />
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.searchBar}>

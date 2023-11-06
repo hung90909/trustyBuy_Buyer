@@ -7,8 +7,11 @@ import {
   TextInput,
 } from 'react-native';
 import React, {useState} from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation} from '@react-navigation/native';
+import CheckBox from '@react-native-community/checkbox';
 import {checkEmail, checkPassword} from '../../compoment/checkValidate';
+import {API_Signup} from '../../API/getAPI';
 
 export default Register = () => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
@@ -35,8 +38,30 @@ export default Register = () => {
     if (errorEmail.length !== 0 || errorPassword.length !== 0) {
       return;
     }
-    console.log('Login successful');
+
+    const data = {
+      email,
+      password,
+      role: 'User',
+    };
+    fetch(API_Signup, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(reponse => {
+        console.log(reponse.json());
+        nav.navigate('RegisterInformation');
+      })
+      .catch(err => console.log(err));
+    // nav.navigate('RegisterInformation')
   };
+  // const onRegister = () => {
+  //   console.log("jdsbcjs")
+
+  // }
   return (
     <View style={styles.container}>
       <View style={styles.header}>
