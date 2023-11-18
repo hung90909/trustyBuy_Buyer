@@ -20,85 +20,12 @@ import DaGiao from './Screen/statusOrder/daGiao';
 import DaHuy from './Screen/statusOrder/daHuy';
 import ChatScreen from './Screen/Chat';
 import { useIsFocused } from '@react-navigation/native';
-
-
-const Tab = createBottomTabNavigator();
-
-const BotBottomTabNavigator = () => {
-  const isFocused = useIsFocused();
-
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-
-          if (route.name === 'Home') {
-            iconName = 'home-outline';
-          } else if (route.name === 'Chat') {
-            iconName = 'chatbubble-ellipses-outline';
-          } else if (route.name === 'Order') {
-            iconName = 'document-text-outline';
-          } else if (route.name === 'Profile') {
-            iconName = 'person-outline';
-          }
-
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-      })}>
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ title: 'Home', headerShown: false}}
-      />
-      <Tab.Screen
-        name="Chat"
-        component={ChatScreen}
-        options={{ title: 'Chat', headerShown: false }}
-      />
-      <Tab.Screen
-        name="Order"
-        component={MyTabs}
-        options={{ title: 'Order', headerShown: false }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{ title: 'Profile', headerShown: false }}
-      />
-    </Tab.Navigator>
-  );
-};
-
-const LoginNavigator = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name='Welcome' component={Welcome} options={{ headerShown: false }} />
-      <Stack.Screen name='Welcome1' component={Welcome1} options={{ headerShown: false }} />
-      <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} />
-      <Stack.Screen name='Login2' component={Login2} options={{ headerShown: false }} />
-      <Stack.Screen name='Register' component={Register} options={{ headerShown: false }} />
-      <Stack.Screen name='RegisterInformation' component={RegisterInformation} options={{ headerShown: false }} />
-    </Stack.Navigator>
-  )
-}
-
-
-const HomeNavigator = () =>{
-  return(
-    <Stack.Navigator>
-      {/* <Stack.Screen name='Home' component={HomeScreen} options={{headerShown:false}}/> */}
-      <Stack.Screen name='Cart' component={CartScreen} options={{headerShown:false}}/>
-    </Stack.Navigator>
-  )
-}
-
-const Stack = createNativeStackNavigator();
-
+import DetailProducts from './Screen/detailProduct';
+import register from './Screen/Login/register';
+import login2 from './Screen/Login/login2';
 
 const TabTop = createMaterialTopTabNavigator();
-
-const MyTabs = () => {
+const TabOrder = () => {
   return (
     <TabTop.Navigator
       screenOptions={{
@@ -112,32 +39,130 @@ const MyTabs = () => {
         tabBarIndicatorStyle: {
           backgroundColor: 'black',
         },
-      }}
-    >
-      <TabTop.Screen name="XuLy" component={XuLy} options={{ title: "Xử lý" }} />
-      <TabTop.Screen name="DangGiao" component={DangGiao} options={{ title: "Đang giao" }} />
-      <TabTop.Screen name="DaGiao" component={DaGiao} options={{ title: "Đã giao" }} />
-      <TabTop.Screen name="DaHuy" component={DaHuy} options={{ title: "Đã hủy" }} />
+      }}>
+      <TabTop.Screen name="XuLy" component={XuLy} options={{ title: 'Xử lý' }} />
+      <TabTop.Screen
+        name="DangGiao"
+        component={DangGiao}
+        options={{ title: 'Đang giao' }}
+      />
+      <TabTop.Screen
+        name="DaGiao"
+        component={DaGiao}
+        options={{ title: 'Đã giao' }}
+      />
+      <TabTop.Screen
+        name="DaHuy"
+        component={DaHuy}
+        options={{ title: 'Đã hủy' }}
+      />
     </TabTop.Navigator>
   );
-}
+};
 
+
+const Tab = createBottomTabNavigator();
+
+const BotBottomTabNavigator = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === 'Home') {
+            iconName = 'home-outline';
+          } else if (route.name === 'Chat') {
+            iconName = 'chatbubble-ellipses-outline';
+          } else if (route.name === 'TabOrder') {
+            iconName = 'document-text-outline';
+          } else if (route.name === 'Profile') {
+            iconName = 'person-outline';
+          }
+
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+      })}>
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ title: 'Home', headerShown: false }}
+      />
+      <Tab.Screen
+        name="Chat"
+        component={ChatScreen}
+        options={{ title: 'Chat', headerShown: false }}
+      />
+      <Tab.Screen
+        name="TabOrder"
+        component={TabOrder}
+        options={{ title: 'Order', headerShown: false }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ title: 'Profile', headerShown: false }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator >
-        {/* <Stack.Screen
-          name='LoginNavigator'
-          options={{ headerShown: false }}
-          component={LoginNavigator}
-        /> */}
+      <Stack.Navigator initialRouteName="Main">
         <Stack.Screen
           name="Main"
           component={BotBottomTabNavigator}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name='HomeNavigator' component={HomeNavigator}/>
+        <Stack.Screen
+          name="DetailProducts"
+          component={DetailProducts}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="RegisterInformation"
+          component={RegisterInformation}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Welcome"
+          component={Welcome}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Welcome1"
+          component={Welcome1}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="TabOrder"
+          component={TabOrder}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={register}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Login2"
+          component={login2}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Cart"
+          component={CartScreen}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

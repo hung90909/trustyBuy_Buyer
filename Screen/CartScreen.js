@@ -3,7 +3,51 @@ import React, { useEffect, useState } from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { CheckBox } from '@rneui/themed';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
 const CartScreen = () => {
+
+
+  const [listCart, setListCart] = useState([])
+  const nav = useNavigation()
+
+  const getCart = async () => {
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTM2OGYzM2VmNWJkZjE3MGM2NzgxNzciLCJlbWFpbCI6Ikh1bmdAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmIkMTAkakxuaGRUdjFuTDU0VXBMUGVFVTV6dTkudXl1TzRWS0sxbHNCR3k1ay9yZXBaRk41ZnFTQmUiLCJpYXQiOjE2OTg1OTA0NTIsImV4cCI6MTY5OTQ1NDQ1Mn0.qM4BH_mULdGuC9fYEnJ8kj0oSwoKHbXCgTELA36dpUM"; // Thay thế bằng mã token thực tế của bạn
+
+    try {
+      const response = await fetch("https://1f79-116-96-46-69.ngrok-free.app/v1/api/cart/getCart", {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          "x-xclient-id": "65368f33ef5bdf170c678177",
+          ahthorization: token // Sửa lỗi chính tả, sử dụng "Authorization" thay vì "ahthorization"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Lỗi khi gọi API');
+      }
+
+      const data = await response.json();
+      const productList = data.message;
+      setListCart(productList.cart.products);
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    getCart();
+  }, []);
+
+  const formatPrice = priceSP => {
+    if (typeof priceSP === 'number') {
+      return `₫${priceSP.toLocaleString('vi-VN')}`;
+    } else {
+      return 'Giá không hợp lệ';
+    }
+  };
+
 
   const dataCart = [
     {
@@ -55,12 +99,15 @@ const CartScreen = () => {
   const [quantity, setQuantity] = useState(0)
   const [selectedItems, setSelectedItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0)
-  const [cart, setCart] = useState(dataCart)
+  const [isUpdatePrice, setUpdatePrice] = useState(false)
+
   const handleCheckboxChange = (item) => {
-    const ids = selectedItems.map(item => item.id)
-    if (ids.includes(item.id)) {
+    console.log("new cart: " + item)
+    setUpdatePrice(!isUpdatePrice)
+    const ids = selectedItems.map(item => item.product_id)
+    if (ids.includes(item.product_id)) {
       // Nếu sản phẩm đã được chọn, loại bỏ khỏi danh sách
-      setSelectedItems(selectedItems.filter((i) => i.id !== item.id));
+      setSelectedItems(selectedItems.filter((i) => i.product_id !== item.product_id));
     } else {
       // Nếu sản phẩm chưa được chọn, thêm vào danh sách
       setSelectedItems([...selectedItems, item]);
@@ -68,55 +115,66 @@ const CartScreen = () => {
   };
 
   useEffect(() => {
-    setTotalPrice(selectedItems.reduce((total, item) => item.price + total, 0))
-  }, [selectedItems])
+    setTotalPrice(selectedItems.reduce((total, item) => (item.product_price * item.product_quantity) + total, 0))
+  }, [isUpdatePrice])
 
-  const formatPrice = priceSP => {
-    return `₫${priceSP.toLocaleString('vi-VN')}`;
-  };
 
   const handleDecreaseQuantity = (productID) => {
-    setCart(item => 
-      item.map(product => 
-        product.id === productID ? { ...product, quantity: product.quantity - 1 }
+    setUpdatePrice(!isUpdatePrice)
+    setListCart(item =>
+      item.map(product =>
+        product.product_id === productID ? { ...product, product_quantity: product.product_quantity - 1 }
           : product
+
       )
-     
+
     )
   }
   const handleIncreaseQuantity = (productID) => {
-    setCart(item => 
-      item.map(product => 
-        product.id === productID ? { ...product, quantity: product.quantity + 1 }
+    setUpdatePrice(!isUpdatePrice)
+    setListCart(item =>
+      item.map(product =>
+        product.product_id === productID ? { ...product, product_quantity: product.product_quantity + 1 }
           : product
       )
-     
+
     )
   }
 
   return (
     <View style={styles.container} >
       <View style={styles.header}>
-        <Text style={{
-          fontSize: 25, fontWeight: "bold",
-          alignSelf: "center"
-        }}>Giỏ hàng</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}>
+          <TouchableOpacity onPress={() =>{
+            nav.goBack()
+          }}>
+            <Ionicons name='chevron-back-outline' size={30} />
+          </TouchableOpacity>
+          <View style={{marginLeft:85}}>
+            <Text style={{
+              fontSize: 25, fontWeight: "bold",
+              alignSelf: "center"
+            }}>Giỏ hàng</Text>
+          </View>
+
+        </View>
+
 
         <TextInput style={styles.inputSearch}
           placeholder='Search' />
         <View style={{
           position: "absolute",
-          left: 30, bottom: 18
+          left: 30, top: 63
         }}>
           <Ionicons name="search-outline" size={26} color="#878787" />
         </View>
 
       </View>
       <View style={styles.listProduct}>
-        <FlatList
-          data={cart}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => {
+        {listCart.length > 0 ? <FlatList
+          data={listCart}
+          keyExtractor={item => item.product_id}
+          renderItem={({ item, index }) => {
             return (
               <View style={styles.product}>
                 <View style={{
@@ -125,10 +183,10 @@ const CartScreen = () => {
                 }}>
                   <Image style={{
                     height: 30, width: 30, borderRadius: 25
-                  }} source={{ uri: item.avatarShop }} />
+                  }} source={{ uri: item.avatar_shop }} />
                   <Text style={{
                     marginLeft: 6, fontWeight: "bold", color: "black"
-                  }}>{item.nameShop}</Text>
+                  }}>{item.name_shop}</Text>
                 </View>
                 <View style={{
                   flexDirection: "row", marginTop: 15,
@@ -138,40 +196,41 @@ const CartScreen = () => {
                       checkedColor='black'
                       value={selectedItems.includes(item)}
                       onValueChange={() => handleCheckboxChange(item)}
-                      checked={selectedItems.filter((selectedItem) => selectedItem.id === item.id).length > 0}
-
+                      checked={selectedItems.filter((selectedItem) => selectedItem.product_id === item.product_id).length > 0}
                       onPress={() => handleCheckboxChange(item)}
                     />
                   </View>
 
-                  <Image style={{
-                    width: 100, height: 90,
-                  }} source={{ uri: item.image }} />
+                  <Image
+                    resizeMode='stretch'
+                    style={{
+                      width: 100, height: 90,
+                    }} source={{ uri: item.product_thumb }} />
                   <View style={{ marginStart: 7, width: 140, }}>
-                    <Text numberOfLines={2}>{item.name}</Text>
+                    <Text numberOfLines={2}>{item.product_name}</Text>
                     <View style={{ flexDirection: "row", marginTop: 5, }}>
                       <Text>{item.color} | </Text>
                       <Text>{item.size}</Text>
                     </View>
-                    <Text style={{ marginTop: 5, color: "red" }}>{formatPrice(item.price)}</Text>
+                    <Text style={{ marginTop: 5, color: "red" }}>{formatPrice(item.product_price)}</Text>
                     <View style={{
                       flexDirection: "row", width: item.quantity > 9 ? 90 : 80, height: 25, borderRadius: 6,
                       borderWidth: 1, marginTop: 5, alignItems: "center",
                     }}>
                       <TouchableOpacity
                         onPress={() => {
-                          if (item.quantity > 1) {
-                            handleDecreaseQuantity(item.id)
+                          if (item.product_quantity > 1) {
+                            handleDecreaseQuantity(item.product_id)
                           }
 
                         }}
                         style={{ borderRightWidth: 1, paddingHorizontal: 5 }}>
                         <Ionicons name="remove-outline" color="black" size={15} />
                       </TouchableOpacity>
-                      <Text style={{ marginHorizontal: 8 }}>{item.quantity}</Text>
+                      <Text style={{ marginHorizontal: 8 }}>{item.product_quantity}</Text>
                       <TouchableOpacity
                         onPress={() => {
-                          handleIncreaseQuantity(item.id)
+                          handleIncreaseQuantity(item.product_id)
                         }}
                         style={{ borderLeftWidth: 1, paddingHorizontal: 5 }}>
                         <Ionicons name="add-outline" color="black" size={15} />
@@ -182,14 +241,15 @@ const CartScreen = () => {
               </View>
             )
           }}
-        />
+        /> : <Text>Chua co du lieu</Text>}
       </View>
       <View style={{
         height: 60, backgroundColor: "white",
         borderTopWidth: 1, alignItems: "center",
-        flexDirection: "row"
+        flexDirection: "row", 
       }}>
-        <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+        <View style={{ flexDirection: "row",
+         justifyContent: "center", alignItems: "center" ,}}>
           <CheckBox
             checkedColor='black'
             onValueChange={() => setSelection(!isSelected)}
@@ -197,9 +257,11 @@ const CartScreen = () => {
             onPress={() => {
               setSelection(!isSelected)
               if (isSelected) {
+                setUpdatePrice(!isSelected)
                 setSelectedItems([])
               } else {
-                setSelectedItems(dataCart)
+                setUpdatePrice(!isSelected)
+                setSelectedItems(listCart)
               }
             }}
           />
@@ -248,8 +310,6 @@ const styles = StyleSheet.create({
   },
   listProduct: {
     paddingHorizontal: 20,
-    height: "68%",
-
-
+    height: "70%",
   }
 });
