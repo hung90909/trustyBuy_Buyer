@@ -129,6 +129,7 @@ const HomeScreen = () => {
         'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
       priceSP: 346476,
       soldSP: 123456,
+      star:4
     },
     {
       id: '19',
@@ -192,7 +193,7 @@ const HomeScreen = () => {
       soldSP: 464356,
     },
   ]);
-  const renderItem = ({ item }) => {
+   const renderItem = ({ item }) => {
     const isSelected = selectedItem && selectedItem.id === item.id;
     return (
       <TouchableOpacity
@@ -249,10 +250,12 @@ const HomeScreen = () => {
 
     return (
       <TouchableOpacity
+      onPress={() => navigation.navigate("DetailProducts",{item})}
         style={{
           width: '50%',
           justifyContent: 'center',
           padding: '3%',
+        
         }}>
         <Image
           style={{
