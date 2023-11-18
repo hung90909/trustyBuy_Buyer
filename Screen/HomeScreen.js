@@ -9,26 +9,23 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Swiper from 'react-native-swiper';
 const HomeScreen = () => {
-
-  async function getToken () {
-    const token = await AsyncStorage.getItem("access_token")
-    const tokenUser = token ? JSON.parse(token) : null
-    console.log("Token save : ", tokenUser)
+  async function getToken() {
+    const token = await AsyncStorage.getItem('access_token');
+    const tokenUser = token ? JSON.parse(token) : null;
+    console.log('Token save : ', tokenUser);
   }
 
   useEffect(() => {
-
-     getToken()
-
-  }, [])
+    getToken();
+  }, []);
   const navigation = useNavigation();
   const [selectedItem, setSelectedItem] = useState(null);
   const formatPrice = priceSP => {
@@ -192,7 +189,7 @@ const HomeScreen = () => {
       soldSP: 464356,
     },
   ]);
-  const renderItem = ({ item }) => {
+  const renderItem = ({item}) => {
     const isSelected = selectedItem && selectedItem.id === item.id;
     return (
       <TouchableOpacity
@@ -204,13 +201,13 @@ const HomeScreen = () => {
         }}
         onPress={() => setSelectedItem(item)}>
         <Image source={item.image} />
-        <Text style={{ marginTop: 10, fontWeight: 'bold', color: 'black' }}>
+        <Text style={{marginTop: 10, fontWeight: 'bold', color: 'black'}}>
           {item.name}
         </Text>
       </TouchableOpacity>
     );
   };
-  const renderName = ({ item }) => {
+  const renderName = ({item}) => {
     const isSelected = selectedItem && selectedItem.id === item.id;
     return (
       <TouchableOpacity
@@ -235,7 +232,7 @@ const HomeScreen = () => {
       </TouchableOpacity>
     );
   };
-  const renderSanpham = ({ item }) => {
+  const renderSanpham = ({item}) => {
     const isSelected = selectedItem && selectedItem.id === item.id;
     const formatSoldSP = value => {
       if (value >= 1000000) {
@@ -258,10 +255,10 @@ const HomeScreen = () => {
           style={{
             height: 200,
           }}
-          source={{ uri: item.imageSP }}
+          source={{uri: item.imageSP}}
           resizeMode="contain"
         />
-        <Text style={{ color: '#1B2028', fontSize: 14 }} numberOfLines={2}>
+        <Text style={{color: '#1B2028', fontSize: 14}} numberOfLines={2}>
           {item.nameSP}
         </Text>
         <View
@@ -271,10 +268,10 @@ const HomeScreen = () => {
             marginTop: 25,
             alignItems: 'center',
           }}>
-          <Text style={{ color: '#FC6D26', fontSize: 14 }}>
+          <Text style={{color: '#FC6D26', fontSize: 14}}>
             {formatPrice(item.priceSP)}
           </Text>
-          <Text style={{ color: '#1B2028', fontSize: 10 }}>
+          <Text style={{color: '#1B2028', fontSize: 10}}>
             Đã bán {formatSoldSP(item.soldSP)}
           </Text>
         </View>
@@ -283,7 +280,7 @@ const HomeScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{ backgroundColor: '#FFFFFF' }}>
+    <SafeAreaView style={{backgroundColor: '#FFFFFF'}}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <StatusBar />
         <View
@@ -293,9 +290,9 @@ const HomeScreen = () => {
             marginHorizontal: '4%',
             marginVertical: '5%',
           }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Pressable
-              style={{ width: 50, height: 50, borderRadius: 50 }}
+              style={{width: 50, height: 50, borderRadius: 50}}
               onPress={() => navigation.navigate('Profile')}>
               <Image
                 style={{
@@ -309,31 +306,31 @@ const HomeScreen = () => {
               />
             </Pressable>
 
-            <View style={{ marginLeft: 25, justifyContent: 'center' }}>
-              <Text style={{ fontSize: 14, color: '#1B2028' }}>Xin chào 👋</Text>
+            <View style={{marginLeft: 25, justifyContent: 'center'}}>
+              <Text style={{fontSize: 14, color: '#1B2028'}}>Xin chào 👋</Text>
               <Text
-                style={{ fontSize: 16, fontWeight: 'bold', color: '#1B2028' }}>
+                style={{fontSize: 16, fontWeight: 'bold', color: '#1B2028'}}>
                 Iron Man
               </Text>
             </View>
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Ionicons
-              style={{ marginRight: 10 }}
+              style={{marginRight: 10}}
               name="notifications-outline"
               size={26}
               color="#1B2028"
             />
-            <TouchableOpacity onPress={() =>{
-              navigation.navigate("Cart")
-            }}>
-                <Ionicons name="cart-outline" size={26} color="#1B2028" />
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Cart');
+              }}>
+              <Ionicons name="cart-outline" size={26} color="#1B2028" />
             </TouchableOpacity>
-          
           </View>
         </View>
 
-        <View style={{ marginHorizontal: 25, marginTop: 20 }}>
+        <View style={{marginHorizontal: 25, marginTop: 20}}>
           <Pressable
             style={{
               flexDirection: 'row',
@@ -344,8 +341,8 @@ const HomeScreen = () => {
               borderColor: '#EDEDED',
             }}>
             <Ionicons name="search-outline" size={26} color="#878787" />
-            <Text style={{ marginLeft: 10 }}>Tìm kiếm</Text>
-            <Pressable style={{ justifyContent: 'center', marginLeft: 230 }}>
+            <Text style={{marginLeft: 10}}>Tìm kiếm</Text>
+            <Pressable style={{justifyContent: 'center', marginLeft: 230}}>
               <FontAwesome name="unsorted" size={26} color="black" />
             </Pressable>
           </Pressable>
@@ -361,7 +358,7 @@ const HomeScreen = () => {
             overflow: 'hidden',
           }}>
           <Swiper autoplay={true} autoplayTimeout={3}>
-            <View style={{ flex: 1 }}>
+            <View style={{flex: 1}}>
               <Image
                 style={styles.slideshow}
                 resizeMode="stretch"
@@ -370,7 +367,7 @@ const HomeScreen = () => {
                 }}
               />
             </View>
-            <View style={{ flex: 1 }}>
+            <View style={{flex: 1}}>
               <Image
                 style={styles.slideshow}
                 resizeMode="stretch"
@@ -379,7 +376,7 @@ const HomeScreen = () => {
                 }}
               />
             </View>
-            <View style={{ flex: 1 }}>
+            <View style={{flex: 1}}>
               <Image
                 style={styles.slideshow}
                 resizeMode="stretch"
@@ -397,7 +394,7 @@ const HomeScreen = () => {
           keyExtractor={item => item.id}
           numColumns={4} // Set the number of columns to 2
           renderItem={renderItem}
-          style={{ marginHorizontal: 25, marginVertical: 20 }}
+          style={{marginHorizontal: 25, marginVertical: 20}}
           nestedScrollEnabled={true} // Adjust spacing between columns
         />
         <View>
@@ -416,7 +413,7 @@ const HomeScreen = () => {
             renderItem={renderName}
             horizontal={true} // Lướt ngang
             showsHorizontalScrollIndicator={false} // Ẩn thanh cuộn ngang
-            style={{ marginVertical: 20, marginLeft: 20 }}
+            style={{marginVertical: 20, marginLeft: 20}}
             nestedScrollEnabled={true}
           />
         </View>
@@ -427,7 +424,7 @@ const HomeScreen = () => {
             keyExtractor={item => item.id}
             renderItem={renderSanpham}
             numColumns={2}
-            style={{ marginBottom: 10 }}
+            style={{marginBottom: 10}}
           />
         </View>
       </ScrollView>
