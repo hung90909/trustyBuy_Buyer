@@ -1,12 +1,11 @@
 import {
-  StyleSheet,
-  Text,
   View,
+  Text,
   Image,
   Pressable,
   ScrollView,
   StatusBar,
-  FlatList,
+  StyleSheet,
   TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -295,12 +294,7 @@ const HomeScreen = () => {
               style={{width: 50, height: 50, borderRadius: 50}}
               onPress={() => navigation.navigate('Profile')}>
               <Image
-                style={{
-                  width: 60,
-                  height: 60,
-                  marginRight: '6%',
-                  borderRadius: 50,
-                }}
+                style={styles.profileImage}
                 source={require('../Resource/Image/img.png')}
                 resizeMode="contain"
               />
@@ -320,6 +314,7 @@ const HomeScreen = () => {
               name="notifications-outline"
               size={26}
               color="#1B2028"
+              onPress={navigateToNotification}
             />
             <TouchableOpacity
               onPress={() => {
@@ -432,12 +427,60 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
-
 const styles = StyleSheet.create({
-  slideshow: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: '4%',
+    marginVertical: '5%',
+  },
+  profile: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  profileButton: {
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+  },
+  profileImage: {
+    width: 60,
+    height: 60,
+    marginRight: '6%',
+    borderRadius: 50,
+  },
+  profileInfo: {
+    marginLeft: 25,
+    justifyContent: 'center',
+  },
+  profileText: {
+    fontSize: 14,
+    color: '#1B2028',
+  },
+  profileTextBold: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#1B2028',
+  },
+  headerIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerIcon: {
+    marginRight: 10,
+  },
+  searchBar: {
+    marginHorizontal: 25,
+    marginTop: 20,
+  },
+  searchButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 40,
+  },
+  searchText: {
+    marginLeft: 10,
   },
 });
+
+export default HomeScreen;

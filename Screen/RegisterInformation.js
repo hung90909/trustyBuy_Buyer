@@ -5,15 +5,15 @@ import {
   Image,
   TextInput,
   Pressable,
+  StatusBar,
+  SafeAreaView,
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Dropdown} from 'react-native-element-dropdown';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
-
 const data = [
   {label: 'Nam', value: '1'},
   {label: 'Nữ', value: '2'},
@@ -98,7 +98,7 @@ const RegisterInformation = () => {
 
     // Chuyển hướng đến màn hình "Main" chỉ khi không có lỗi
     else if (!hasErrors) {
-      navigation.navigate('Main');
+      navigation.repale('Main');
     }
   };
 
@@ -128,109 +128,107 @@ const RegisterInformation = () => {
             </Text>
           </View>
         </View>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: 20,
-          }}>
-          <Pressable>
-            <Image
-              style={styles.profileImage}
-              source={require('../Resource/Image/imgpro.png')}
-            />
-          </Pressable>
-        </View>
-        <View style={{marginTop: 20}}>
-          <TextInput
-            style={styles.textinput}
-            placeholder="Họ và tên"
-            value={name}
-            onChangeText={text => {
-              setName(text);
-              setNameError('');
-            }}
+      </View>
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: 20,
+        }}>
+        <Pressable>
+          <Image
+            style={styles.profileImage}
+            source={require('../Resource/Image/imgpro.png')}
           />
-          {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
-          <TextInput
-            style={styles.textinput}
-            placeholder="Tên tài khoản"
-            value={username}
-            onChangeText={text => {
-              setUsername(text);
-              setUsernameError('');
-            }}
-          />
-          {usernameError ? (
-            <Text style={styles.errorText}>{usernameError}</Text>
-          ) : null}
-          <TextInput
-            style={styles.textinput}
-            placeholder="Ngày sinh"
-            value={date.toLocaleDateString()}
-            onFocus={() => setShowDatePicker(true)}
-          />
-          {tuoiError ? <Text style={styles.errorText}>{tuoiError}</Text> : null}
-          {showDatePicker && (
-            <DateTimePicker
-              value={date}
-              mode="date"
-              display="calendar"
-              onChange={onChange}
-            />
-          )}
-          <TextInput
-            style={styles.textinput}
-            placeholder="Email"
-            value={email}
-            onChangeText={text => {
-              setEmail(text);
-              setEmailError('');
-            }}
-          />
-          {emailError ? (
-            <Text style={styles.errorText}>{emailError}</Text>
-          ) : null}
-          <TextInput
-            style={styles.textinput}
-            placeholder="Số điện thoại"
-            value={phone}
-            onChangeText={text => {
-              setPhone(text);
-              setPhoneError('');
-            }}
-          />
-          {phoneError ? (
-            <Text style={styles.errorText}>{phoneError}</Text>
-          ) : null}
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Dropdown
-              style={styles.dropdown}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              data={data}
-              maxHeight={150}
-              labelField="label"
-              valueField="value"
-              placeholder="Giới tính"
-              value={value}
-              onChange={item => {
-                setValue(item.value);
-                setGenderError('');
-              }}
-            />
-          </View>
-          {genderError ? (
-            <Text style={styles.errorText}>{genderError}</Text>
-          ) : null}
-        </View>
-
-        <Pressable style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Tiếp Tục</Text>
         </Pressable>
       </View>
+      <View style={{marginTop: 20}}>
+        <TextInput
+          style={styles.textinput}
+          placeholder="Họ và tên"
+          value={name}
+          onChangeText={text => {
+            setName(text);
+            setNameError('');
+          }}
+        />
+        {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
+
+        <TextInput
+          style={styles.textinput}
+          placeholder="Tên tài khoản"
+          value={username}
+          onChangeText={text => {
+            setUsername(text);
+            setUsernameError('');
+          }}
+        />
+        {usernameError ? (
+          <Text style={styles.errorText}>{usernameError}</Text>
+        ) : null}
+        <TextInput
+          style={styles.textinput}
+          placeholder="Ngày sinh"
+          value={date.toLocaleDateString()}
+          onFocus={() => setShowDatePicker(true)}
+        />
+        {tuoiError ? <Text style={styles.errorText}>{tuoiError}</Text> : null}
+        {showDatePicker && (
+          <DateTimePicker
+            value={date}
+            mode="date"
+            display="calendar"
+            onChange={onChange}
+          />
+        )}
+        <TextInput
+          style={styles.textinput}
+          placeholder="Email"
+          value={email}
+          onChangeText={text => {
+            setEmail(text);
+            setEmailError('');
+          }}
+        />
+
+        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+        <TextInput
+          style={styles.textinput}
+          placeholder="Số điện thoại"
+          value={phone}
+          onChangeText={text => {
+            setPhone(text);
+            setPhoneError('');
+          }}
+        />
+        {phoneError ? <Text style={styles.errorText}>{phoneError}</Text> : null}
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            data={data}
+            maxHeight={150}
+            labelField="label"
+            valueField="value"
+            placeholder="Giới tính"
+            value={value}
+            onChange={item => {
+              setValue(item.value);
+              setGenderError('');
+            }}
+          />
+        </View>
+        {genderError ? (
+          <Text style={styles.errorText}>{genderError}</Text>
+        ) : null}
+      </View>
+
+      <Pressable style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Tiếp Tục</Text>
+      </Pressable>
     </KeyboardAvoidingView>
     </ScrollView>
   );
@@ -238,8 +236,8 @@ const RegisterInformation = () => {
 
 const styles = {
   profileImage: {
-    height: 130,
-    width: 130,
+    height: 100,
+    width: 100,
     resizeMode: 'contain',
     borderRadius: 130,
     borderWidth: 2,
@@ -251,15 +249,13 @@ const styles = {
     borderRadius: 10,
     paddingHorizontal: 15,
     fontSize: 16,
-    borderWidth: 1,
-    borderColor: 'gray',
   },
   dropdown: {
     margin: 16,
     height: 50,
     borderBottomColor: 'gray',
-    width: '80%',
-    paddingHorizontal: '2%',
+    width: '90%',
+    paddingHorizontal: 15,
   },
   placeholderStyle: {
     fontSize: 16,
@@ -291,6 +287,7 @@ const styles = {
   errorText: {
     color: 'red',
     marginHorizontal: 20,
+    paddingHorizontal: 15,
   },
 };
 
