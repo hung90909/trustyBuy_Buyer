@@ -98,138 +98,142 @@ const RegisterInformation = () => {
 
     // Chuyển hướng đến màn hình "Main" chỉ khi không có lỗi
     else if (!hasErrors) {
-      navigation.repale('Main');
+      navigation.navigate('Main');
     }
   };
 
   return (
     <ScrollView>
-    <KeyboardAvoidingView
-      style={{flex: 1}}
-      behavior="padding" // Choose the behavior you need (padding, position, height)
-    >
-      <View style={{flex: 1}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 20,
-            marginLeft: 20,
-            alignItems: 'center',
-          }}>
-          <Ionicons
-            name="arrow-back"
-            size={28}
-            color="#000000"
-            onPress={() => navigation.navigate('Register')}
-          />
-          <View style={{flex: 1, alignItems: 'center', marginRight: 20}}>
-            <Text style={{color: '#000000', fontWeight: '600', fontSize: 18}}>
-              Thông tin cá nhân
-            </Text>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior="padding" // Choose the behavior you need (padding, position, height)
+      >
+        <View style={{flex: 1}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: 20,
+              marginLeft: 20,
+              alignItems: 'center',
+            }}>
+            <Ionicons
+              name="arrow-back"
+              size={28}
+              color="#000000"
+              onPress={() => navigation.navigate('Register')}
+            />
+            <View style={{flex: 1, alignItems: 'center', marginRight: 20}}>
+              <Text style={{color: '#000000', fontWeight: '600', fontSize: 18}}>
+                Thông tin cá nhân
+              </Text>
+            </View>
           </View>
         </View>
-      </View>
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: 20,
-        }}>
-        <Pressable>
-          <Image
-            style={styles.profileImage}
-            source={require('../Resource/Image/imgpro.png')}
-          />
-        </Pressable>
-      </View>
-      <View style={{marginTop: 20}}>
-        <TextInput
-          style={styles.textinput}
-          placeholder="Họ và tên"
-          value={name}
-          onChangeText={text => {
-            setName(text);
-            setNameError('');
-          }}
-        />
-        {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
-
-        <TextInput
-          style={styles.textinput}
-          placeholder="Tên tài khoản"
-          value={username}
-          onChangeText={text => {
-            setUsername(text);
-            setUsernameError('');
-          }}
-        />
-        {usernameError ? (
-          <Text style={styles.errorText}>{usernameError}</Text>
-        ) : null}
-        <TextInput
-          style={styles.textinput}
-          placeholder="Ngày sinh"
-          value={date.toLocaleDateString()}
-          onFocus={() => setShowDatePicker(true)}
-        />
-        {tuoiError ? <Text style={styles.errorText}>{tuoiError}</Text> : null}
-        {showDatePicker && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            display="calendar"
-            onChange={onChange}
-          />
-        )}
-        <TextInput
-          style={styles.textinput}
-          placeholder="Email"
-          value={email}
-          onChangeText={text => {
-            setEmail(text);
-            setEmailError('');
-          }}
-        />
-
-        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-        <TextInput
-          style={styles.textinput}
-          placeholder="Số điện thoại"
-          value={phone}
-          onChangeText={text => {
-            setPhone(text);
-            setPhoneError('');
-          }}
-        />
-        {phoneError ? <Text style={styles.errorText}>{phoneError}</Text> : null}
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <Dropdown
-            style={styles.dropdown}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={data}
-            maxHeight={150}
-            labelField="label"
-            valueField="value"
-            placeholder="Giới tính"
-            value={value}
-            onChange={item => {
-              setValue(item.value);
-              setGenderError('');
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 20,
+          }}>
+          <Pressable>
+            <Image
+              style={styles.profileImage}
+              source={require('../Resource/Image/imgpro.png')}
+            />
+          </Pressable>
+        </View>
+        <View style={{marginTop: 20}}>
+          <TextInput
+            style={styles.textinput}
+            placeholder="Họ và tên"
+            value={name}
+            onChangeText={text => {
+              setName(text);
+              setNameError('');
             }}
           />
-        </View>
-        {genderError ? (
-          <Text style={styles.errorText}>{genderError}</Text>
-        ) : null}
-      </View>
+          {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-      <Pressable style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Tiếp Tục</Text>
-      </Pressable>
-    </KeyboardAvoidingView>
+          <TextInput
+            style={styles.textinput}
+            placeholder="Tên tài khoản"
+            value={username}
+            onChangeText={text => {
+              setUsername(text);
+              setUsernameError('');
+            }}
+          />
+          {usernameError ? (
+            <Text style={styles.errorText}>{usernameError}</Text>
+          ) : null}
+          <TextInput
+            style={styles.textinput}
+            placeholder="Ngày sinh"
+            value={date.toLocaleDateString()}
+            onFocus={() => setShowDatePicker(true)}
+          />
+          {tuoiError ? <Text style={styles.errorText}>{tuoiError}</Text> : null}
+          {showDatePicker && (
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display="calendar"
+              onChange={onChange}
+            />
+          )}
+          <TextInput
+            style={styles.textinput}
+            placeholder="Email"
+            value={email}
+            onChangeText={text => {
+              setEmail(text);
+              setEmailError('');
+            }}
+          />
+
+          {emailError ? (
+            <Text style={styles.errorText}>{emailError}</Text>
+          ) : null}
+          <TextInput
+            style={styles.textinput}
+            placeholder="Số điện thoại"
+            value={phone}
+            onChangeText={text => {
+              setPhone(text);
+              setPhoneError('');
+            }}
+          />
+          {phoneError ? (
+            <Text style={styles.errorText}>{phoneError}</Text>
+          ) : null}
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Dropdown
+              style={styles.dropdown}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={data}
+              maxHeight={150}
+              labelField="label"
+              valueField="value"
+              placeholder="Giới tính"
+              value={value}
+              onChange={item => {
+                setValue(item.value);
+                setGenderError('');
+              }}
+            />
+          </View>
+          {genderError ? (
+            <Text style={styles.errorText}>{genderError}</Text>
+          ) : null}
+        </View>
+
+        <Pressable style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Tiếp Tục</Text>
+        </Pressable>
+      </KeyboardAvoidingView>
     </ScrollView>
   );
 };

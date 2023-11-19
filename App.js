@@ -23,6 +23,7 @@ import DaHuy from './Screen/statusOrder/daHuy';
 import ChatScreen from './Screen/Chat';
 import {useIsFocused} from '@react-navigation/native';
 import CartScreen from './Screen/CartScreen';
+import DetailProducts from './Screen/detailProduct';
 
 const TabTop = createMaterialTopTabNavigator();
 const TabOrder = () => {
@@ -170,6 +171,11 @@ const App = () => {
         <Stack.Screen
           name="Cart"
           component={CartScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="DetailProducts"
+          component={DetailProducts}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

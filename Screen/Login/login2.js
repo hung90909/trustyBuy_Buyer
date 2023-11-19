@@ -62,19 +62,6 @@ export default Login2 = () => {
       })
       .catch(err => console.log(err));
   };
-  if (email.length === 0) {
-    setErrorEmail('Vui lòng nhập đầy đủ thông tin');
-    return;
-  }
-  if (password.length === 0) {
-    setErrorPassword('Vui lòng nhập đầy đủ thông tin');
-    return;
-  }
-  if (errorEmail.length !== 0 || errorPassword.length !== 0) {
-    return;
-  }
-  console.log('Login successful');
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -301,9 +288,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // backgroundColor:"red"
   },
-  notAcount: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 20,
-  },
+  notAcount: {flexDirection: 'row', justifyContent: 'center', marginTop: 20},
 });

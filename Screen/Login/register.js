@@ -21,43 +21,43 @@ export default Register = () => {
   const [password, setPassword] = useState('');
   const nav = useNavigation();
 
-  const checkValidateLogin = () => {
-    if (email.length === 0 && password.length === 0) {
-      setErrorEmail('Vui lòng nhập đầy đủ thông tin');
-      setErrorPassword('Vui lòng nhập đầy đủ thông tin');
-      return;
-    }
-    if (email.length === 0) {
-      setErrorEmail('Vui lòng nhập đầy đủ thông tin');
-      return;
-    }
-    if (password.length === 0) {
-      setErrorPassword('Vui lòng nhập đầy đủ thông tin');
-      return;
-    }
-    if (errorEmail.length !== 0 || errorPassword.length !== 0) {
-      return;
-    }
+  // const checkValidateLogin = () => {
+  //   if (email.length === 0 && password.length === 0) {
+  //     setErrorEmail('Vui lòng nhập đầy đủ thông tin');
+  //     setErrorPassword('Vui lòng nhập đầy đủ thông tin');
+  //     return;
+  //   }
+  //   if (email.length === 0) {
+  //     setErrorEmail('Vui lòng nhập đầy đủ thông tin');
+  //     return;
+  //   }
+  //   if (password.length === 0) {
+  //     setErrorPassword('Vui lòng nhập đầy đủ thông tin');
+  //     return;
+  //   }
+  //   if (errorEmail.length !== 0 || errorPassword.length !== 0) {
+  //     return;
+  //   }
 
-    const data = {
-      email,
-      password,
-      role: 'User',
-    };
-    fetch(API_Signup, {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(reponse => {
-        console.log(reponse.json());
-        nav.navigate('RegisterInformation');
-      })
-      .catch(err => console.log(err));
-    // nav.navigate('RegisterInformation')
-  };
+  //   const data = {
+  //     email,
+  //     password,
+  //     role: 'User',
+  //   };
+  //   fetch(API_Signup, {
+  //     method: 'POST',
+  //     body: JSON.stringify(data),
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //   })
+  //     .then(reponse => {
+  //       console.log(reponse.json());
+  //       nav.navigate('RegisterInformation');
+  //     })
+  //     .catch(err => console.log(err));
+  //   // nav.navigate('RegisterInformation')
+  // };
   // const onRegister = () => {
   //   console.log("jdsbcjs")
 
@@ -163,7 +163,7 @@ export default Register = () => {
 
         <TouchableOpacity
           onPress={() => {
-            checkValidateLogin();
+            nav.navigate('RegisterInformation');
           }}
           style={{
             width: '100%',
