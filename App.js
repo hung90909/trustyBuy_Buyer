@@ -24,58 +24,8 @@ import ChatScreen from './Screen/Chat';
 import {useIsFocused} from '@react-navigation/native';
 import CartScreen from './Screen/CartScreen';
 
-const Tab = createBottomTabNavigator();
-
-const BotBottomTabNavigator = () => {
-  const isFocused = useIsFocused();
-
-  return (
-    <Tab.Navigator
-      screenOptions={({route}) => ({
-        tabBarIcon: ({focused, color, size}) => {
-          let iconName;
-
-          if (route.name === 'Home') {
-            iconName = 'home-outline';
-          } else if (route.name === 'Chat') {
-            iconName = 'chatbubble-ellipses-outline';
-          } else if (route.name === 'Order') {
-            iconName = 'document-text-outline';
-          } else if (route.name === 'Profile') {
-            iconName = 'person-outline';
-          }
-
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-      })}>
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{title: 'Home', headerShown: false}}
-      />
-      <Tab.Screen
-        name="Chat"
-        component={ChatScreen}
-        options={{title: 'Chat', headerShown: false}}
-      />
-      <Tab.Screen
-        name="Order"
-        component={MyTabs}
-        options={{title: 'Order', headerShown: false}}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{title: 'Profile', headerShown: false}}
-      />
-    </Tab.Navigator>
-  );
-};
-const Stack = createNativeStackNavigator();
-
 const TabTop = createMaterialTopTabNavigator();
-
-const MyTabs = () => {
+const TabOrder = () => {
   return (
     <TabTop.Navigator
       screenOptions={{
@@ -109,6 +59,54 @@ const MyTabs = () => {
     </TabTop.Navigator>
   );
 };
+
+const Tab = createBottomTabNavigator();
+
+const BotBottomTabNavigator = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={({route}) => ({
+        tabBarIcon: ({focused, color, size}) => {
+          let iconName;
+
+          if (route.name === 'Home') {
+            iconName = 'home-outline';
+          } else if (route.name === 'Chat') {
+            iconName = 'chatbubble-ellipses-outline';
+          } else if (route.name === 'TabOrder') {
+            iconName = 'document-text-outline';
+          } else if (route.name === 'Profile') {
+            iconName = 'person-outline';
+          }
+
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+      })}>
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{title: 'Home', headerShown: false}}
+      />
+      <Tab.Screen
+        name="Chat"
+        component={ChatScreen}
+        options={{title: 'Chat', headerShown: false}}
+      />
+      <Tab.Screen
+        name="TabOrder"
+        component={TabOrder}
+        options={{title: 'Order', headerShown: false}}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{title: 'Profile', headerShown: false}}
+      />
+    </Tab.Navigator>
+  );
+};
+
+const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (

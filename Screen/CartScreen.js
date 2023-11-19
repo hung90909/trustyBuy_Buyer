@@ -11,6 +11,7 @@ import React, {useEffect, useState} from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {CheckBox} from '@rneui/themed';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
 const CartScreen = () => {
   const dataCart = [
     {
@@ -86,9 +87,6 @@ const CartScreen = () => {
     setTotalPrice(selectedItems.reduce((total, item) => item.price + total, 0));
   }, [selectedItems]);
 
-  const formatPrice = priceSP => {
-    return `₫${priceSP.toLocaleString('vi-VN')}`;
-  };
 
   const handleDecreaseQuantity = productID => {
     setCart(item =>
@@ -233,7 +231,7 @@ const CartScreen = () => {
               </View>
             );
           }}
-        />
+        /> : <Text>Chua co du lieu</Text>
       </View>
       <View
         style={{
