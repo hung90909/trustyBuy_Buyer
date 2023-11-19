@@ -21,7 +21,12 @@ const ShopInformation = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.header}>
-          <Ionicons name="arrow-back" size={26} color="black" />
+          <Ionicons
+            name="arrow-back"
+            size={26}
+            color="black"
+            onPress={() => navigation.goBack()}
+          />
           <Pressable
             style={styles.searchBar}
             onPress={() => navigation.navigate('Search')}>
