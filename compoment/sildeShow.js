@@ -1,21 +1,14 @@
-import React, { Component } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import React from 'react';
 
-
-export default function SlideShow({image, text}) {
-
+const sildeShow = () => {
   return (
-      <View>
-        
-      </View>
-  )
-}
+    <View>
+      <Text>sildeShow</Text>
+    </View>
+  );
+};
 
-const styles = StyleSheet.create({
-  text:{
-    color: "black",
-    fontSize: 27,
-    fontWeight: "bold",
-    textAlign: "center"
-  }
-})
+export default sildeShow;
+
+const styles = StyleSheet.create({});

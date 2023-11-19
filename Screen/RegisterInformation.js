@@ -5,15 +5,15 @@ import {
   Image,
   TextInput,
   Pressable,
+  StatusBar,
+  SafeAreaView,
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Dropdown} from 'react-native-element-dropdown';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
-
 const data = [
   {label: 'Nam', value: '1'},
   {label: 'Nữ', value: '2'},
@@ -104,28 +104,29 @@ const RegisterInformation = () => {
 
   return (
     <ScrollView>
-    <KeyboardAvoidingView
-      style={{flex: 1}}
-      behavior="padding" // Choose the behavior you need (padding, position, height)
-    >
-      <View style={{flex: 1}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 20,
-            marginLeft: 20,
-            alignItems: 'center',
-          }}>
-          <Ionicons
-            name="arrow-back"
-            size={28}
-            color="#000000"
-            onPress={() => navigation.navigate('Register')}
-          />
-          <View style={{flex: 1, alignItems: 'center', marginRight: 20}}>
-            <Text style={{color: '#000000', fontWeight: '600', fontSize: 18}}>
-              Thông tin cá nhân
-            </Text>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior="padding" // Choose the behavior you need (padding, position, height)
+      >
+        <View style={{flex: 1}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: 20,
+              marginLeft: 20,
+              alignItems: 'center',
+            }}>
+            <Ionicons
+              name="arrow-back"
+              size={28}
+              color="#000000"
+              onPress={() => navigation.navigate('Register')}
+            />
+            <View style={{flex: 1, alignItems: 'center', marginRight: 20}}>
+              <Text style={{color: '#000000', fontWeight: '600', fontSize: 18}}>
+                Thông tin cá nhân
+              </Text>
+            </View>
           </View>
         </View>
         <View
@@ -152,6 +153,7 @@ const RegisterInformation = () => {
             }}
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
+
           <TextInput
             style={styles.textinput}
             placeholder="Tên tài khoản"
@@ -188,6 +190,7 @@ const RegisterInformation = () => {
               setEmailError('');
             }}
           />
+
           {emailError ? (
             <Text style={styles.errorText}>{emailError}</Text>
           ) : null}
@@ -230,16 +233,15 @@ const RegisterInformation = () => {
         <Pressable style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Tiếp Tục</Text>
         </Pressable>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
     </ScrollView>
   );
 };
 
 const styles = {
   profileImage: {
-    height: 130,
-    width: 130,
+    height: 100,
+    width: 100,
     resizeMode: 'contain',
     borderRadius: 130,
     borderWidth: 2,
@@ -251,15 +253,13 @@ const styles = {
     borderRadius: 10,
     paddingHorizontal: 15,
     fontSize: 16,
-    borderWidth: 1,
-    borderColor: 'gray',
   },
   dropdown: {
     margin: 16,
     height: 50,
     borderBottomColor: 'gray',
-    width: '80%',
-    paddingHorizontal: '2%',
+    width: '90%',
+    paddingHorizontal: 15,
   },
   placeholderStyle: {
     fontSize: 16,
@@ -291,6 +291,7 @@ const styles = {
   errorText: {
     color: 'red',
     marginHorizontal: 20,
+    paddingHorizontal: 15,
   },
 };
 

@@ -6,12 +6,12 @@ import {
   Image,
   TextInput,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import CheckBox from '@react-native-community/checkbox';
-import { checkEmail, checkPassword } from '../../compoment/checkValidate';
-import { API_Signup } from '../../API/getAPI';
+import {checkEmail, checkPassword} from '../../compoment/checkValidate';
+import {API_Signup} from '../../API/getAPI';
 
 export default Register = () => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
@@ -21,39 +21,43 @@ export default Register = () => {
   const [password, setPassword] = useState('');
   const nav = useNavigation();
 
-  const checkValidateLogin = () => {
-    if (email.length === 0 && password.length === 0) {
-      setErrorEmail('Vui lòng nhập đầy đủ thông tin');
-      setErrorPassword('Vui lòng nhập đầy đủ thông tin');
-      return;
-    }
-    if (email.length === 0) {
-      setErrorEmail('Vui lòng nhập đầy đủ thông tin');
-      return;
-    }
-    if (password.length === 0) {
-      setErrorPassword('Vui lòng nhập đầy đủ thông tin');
-      return;
-    }
-    if (errorEmail.length !== 0 || errorPassword.length !== 0) {
-      return;
-    }
+  // const checkValidateLogin = () => {
+  //   if (email.length === 0 && password.length === 0) {
+  //     setErrorEmail('Vui lòng nhập đầy đủ thông tin');
+  //     setErrorPassword('Vui lòng nhập đầy đủ thông tin');
+  //     return;
+  //   }
+  //   if (email.length === 0) {
+  //     setErrorEmail('Vui lòng nhập đầy đủ thông tin');
+  //     return;
+  //   }
+  //   if (password.length === 0) {
+  //     setErrorPassword('Vui lòng nhập đầy đủ thông tin');
+  //     return;
+  //   }
+  //   if (errorEmail.length !== 0 || errorPassword.length !== 0) {
+  //     return;
+  //   }
 
-    const data = {
-      email, password, role: "User"
-    }
-    fetch(API_Signup, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    }).then(reponse => {
-      console.log(reponse.json())
-      nav.navigate("RegisterInformation")
-    }).catch(err => console.log(err))
-    // nav.navigate('RegisterInformation')
-  };
+  //   const data = {
+  //     email,
+  //     password,
+  //     role: 'User',
+  //   };
+  //   fetch(API_Signup, {
+  //     method: 'POST',
+  //     body: JSON.stringify(data),
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //   })
+  //     .then(reponse => {
+  //       console.log(reponse.json());
+  //       nav.navigate('RegisterInformation');
+  //     })
+  //     .catch(err => console.log(err));
+  //   // nav.navigate('RegisterInformation')
+  // };
   // const onRegister = () => {
   //   console.log("jdsbcjs")
 
@@ -159,7 +163,7 @@ export default Register = () => {
 
         <TouchableOpacity
           onPress={() => {
-            checkValidateLogin()
+            nav.navigate('RegisterInformation');
           }}
           style={{
             width: '100%',
@@ -171,14 +175,14 @@ export default Register = () => {
             borderRadius: 20,
             elevation: 3,
           }}>
-          <Text style={{ color: 'white' }}>Đăng ký</Text>
+          <Text style={{color: 'white'}}>Đăng ký</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.footer}>
         <View style={styles.line}>
-          <View style={{ height: 1, width: '40%', backgroundColor: '#D9D9D9' }} />
-          <Text style={{ marginHorizontal: 10, color: 'black' }}>Hoặc</Text>
-          <View style={{ height: 1, width: '40%', backgroundColor: '#D9D9D9' }} />
+          <View style={{height: 1, width: '40%', backgroundColor: '#D9D9D9'}} />
+          <Text style={{marginHorizontal: 10, color: 'black'}}>Hoặc</Text>
+          <View style={{height: 1, width: '40%', backgroundColor: '#D9D9D9'}} />
         </View>
         <View
           style={{
@@ -197,7 +201,7 @@ export default Register = () => {
               source={require('../../Resource/icon/facebook.png')}
             />
           </TouchableOpacity>
-          <View style={{ width: 20 }} />
+          <View style={{width: 20}} />
           <TouchableOpacity style={styles.btn}>
             <Image
               style={{
@@ -215,7 +219,7 @@ export default Register = () => {
             onPress={() => {
               nav.navigate('Login2');
             }}>
-            <Text style={{ fontWeight: 'bold', color: 'black' }}>Đăng nhập</Text>
+            <Text style={{fontWeight: 'bold', color: 'black'}}>Đăng nhập</Text>
           </TouchableOpacity>
         </View>
       </View>
