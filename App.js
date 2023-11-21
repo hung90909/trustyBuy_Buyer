@@ -21,11 +21,10 @@ import DangGiao from './Screen/statusOrder/dangGiao';
 import DaGiao from './Screen/statusOrder/daGiao';
 import DaHuy from './Screen/statusOrder/daHuy';
 import ChatScreen from './Screen/Chat';
-import {useIsFocused} from '@react-navigation/native';
 import CartScreen from './Screen/CartScreen';
 import DetailProducts from './Screen/detailProduct';
 import ChangPassword from './Screen/ChangPassword';
-import AdressScreen from './Screen/AddressScreen';
+import AdressScreen from './Screen/Address/AddressScreen';
 import EditProfile from './Screen/EditProfile';
 
 const TabTop = createMaterialTopTabNavigator();

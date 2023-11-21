@@ -109,7 +109,7 @@ const EditProfile = () => {
               name="arrow-back"
               size={28}
               color="#000000"
-              onPress={() => navigation.navigate()}
+              onPress={() => navigation.goBack()}
             />
             <View style={{flex: 1, marginLeft: 15}}>
               <Text style={{color: '#000000', fontWeight: '600', fontSize: 18}}>
