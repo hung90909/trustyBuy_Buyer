@@ -56,18 +56,33 @@ const AdressScreen = () => {
               }}
               source={require('../Resource/icon/gps.png')}></Image>
             <View>
-              <Text>{address.address}</Text>
+              <Text style={{fontWeight: 'bold'}}>{address.address}</Text>
               <Text>{address.addressDetail}</Text>
             </View>
           </View>
           <Image
             style={{
-              width: 25,
-              height: 25,
+              width: 22,
+              height: 22,
             }}
             source={require('../Resource/icon/edit.png')}></Image>
         </View>
       ))}
+      <TouchableOpacity
+        onPress={() => {}}
+        style={{
+          width: '100%',
+          backgroundColor: 'black',
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: 20,
+          elevation: 3,
+          paddingVertical: 15,
+          position: 'absolute',
+          bottom: 0,
+        }}>
+        <Text style={{color: 'white'}}>Thêm mới địa chỉ</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -78,6 +93,8 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: 15,
     marginTop: 25,
+    marginBottom: 10,
+    flex: 1,
   },
   header: {
     flexDirection: 'row',

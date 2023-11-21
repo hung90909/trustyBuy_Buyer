@@ -26,6 +26,7 @@ import CartScreen from './Screen/CartScreen';
 import DetailProducts from './Screen/detailProduct';
 import ChangPassword from './Screen/ChangPassword';
 import AdressScreen from './Screen/AddressScreen';
+import EditProfile from './Screen/EditProfile';
 
 const TabTop = createMaterialTopTabNavigator();
 const TabOrder = () => {
@@ -188,6 +189,11 @@ const App = () => {
         <Stack.Screen
           name="AdressScreen"
           component={AdressScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfile}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
