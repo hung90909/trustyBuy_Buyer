@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import Logout from './Component/Logout';
+import {useNavigation} from '@react-navigation/native';
 
 const ProfileScreen = () => {
   const [user, setUser] = useState({
@@ -8,6 +9,7 @@ const ProfileScreen = () => {
     phone: '+ 1 111 467 378 399',
     avatar: require('../../Resource/Image/img.png'),
   });
+  const nav = useNavigation();
   const [showLogout, setShowLogout] = useState(false);
   const features = [
     {
@@ -41,10 +43,10 @@ const ProfileScreen = () => {
         console.log('Edit profile clicked');
         break;
       case 'Address':
-        console.log('Address clicked');
+        nav.navigate('AdressScreen');
         break;
       case 'Change password':
-        console.log('Change password');
+        nav.navigate('ChangePassword');
         break;
       case 'Notification':
         console.log('Notification');

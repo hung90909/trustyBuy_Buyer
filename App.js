@@ -20,6 +20,8 @@ import ChatScreen from './Screen/Chat';
 import {useIsFocused} from '@react-navigation/native';
 import CartScreen from './Screen/CartScreen';
 import DetailProducts from './Screen/detailProduct';
+import ChangPassword from './Screen/ChangPassword';
+import AdressScreen from './Screen/AddressScreen';
 
 const TabTop = createMaterialTopTabNavigator();
 const TabOrder = () => {
@@ -177,6 +179,16 @@ const App = () => {
         <Stack.Screen
           name="DetailProducts"
           component={DetailProducts}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ChangePassword"
+          component={ChangPassword}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AdressScreen"
+          component={AdressScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
