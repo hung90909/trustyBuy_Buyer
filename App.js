@@ -6,6 +6,9 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import HomeScreen from './Screen/HomeScreen';
 import CartScreen from './Screen/CartScreen';
 import Welcome from './Screen/Welcome/welcome';
+import ProfileScreen from './Screen/Profile/ProfileScreen';
+import Ionicons from 'react-native-vector-icons/Ionicons'; // Import the icons you want to use
+import NotificationScreen from './Screen/NotificationScreen';
 import Welcome1 from './Screen/Welcome/welcome1';
 import Login from './Screen/Login/login';
 import RegisterInformation from './Screen/RegisterInformation';

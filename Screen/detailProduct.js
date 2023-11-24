@@ -287,7 +287,9 @@ const DetailProducts = () => {
                 <Ionicons name="paper-plane-outline" size={13} />
                 <Text style={{fontSize: 13, marginStart: 5}}>Hà nội</Text>
               </View>
-              <TouchableOpacity style={styles.btnShowShop}>
+              <TouchableOpacity
+                style={styles.btnShowShop}
+                onPress={() => nav.navigate('ShopInformation')}>
                 <Text style={{color: 'white', fontSize: 12}}>Xem cửa hàng</Text>
               </TouchableOpacity>
             </View>
