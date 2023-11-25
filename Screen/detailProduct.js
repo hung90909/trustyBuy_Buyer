@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ScrollView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -14,16 +15,18 @@ import {CheckBox} from '@rneui/themed';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import FiveStar from '../compoment/FiveStar';
-import {ScrollView} from 'react-native-virtualized-view';
 import ListStar from '../compoment/ListStar';
 import moment from 'moment';
 import Listproducts from './Listproducts';
+import axios from 'axios';
 // import 'moment/locale/vi'; // Nếu bạn muốn hiển thị thời gian bằng tiếng Việt
 // import 'moment-duration-format';
 const DetailProducts = () => {
   const route = useRoute();
+  const {productId} = route.params;
   const nav = useNavigation();
   const {item} = route.params;
+  const [dataDetail, setDataDetail] = useState([]);
   const [showDec, setShowDec] = useState(false);
   const [isLike, setIsLike] = useState(false);
   const [likedComment, setLikeComment] = useState([]);
@@ -78,7 +81,7 @@ const DetailProducts = () => {
         'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
       priceSP: 346476,
       soldSP: 123456,
-      star: 4,
+      star: 3,
     },
     {
       id: '19',
@@ -142,6 +145,30 @@ const DetailProducts = () => {
       soldSP: 464356,
     },
   ]);
+  useEffect(() => {
+    getDetailProduct();
+  }, []);
+  const getDetailProduct = async () => {
+    try {
+      // Tạo đối tượng headers để chứa các thông tin header
+      const headers = {
+        'x-xclient-id': '654c8a081f10540692bdc998', // Thay 'your-client-id' bằng giá trị thực tế
+        Authorization:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTRjOGEwODFmMTA1NDA2OTJiZGM5OTgiLCJlbWFpbCI6ImR1YzEyM0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRWR1l3dWY4Z0czSnVvR0FSM1hDSXd1UC9iR0lYSzdGbGJRU1RvNXVFZGdYS1ZWUTNpQlVJYSIsImlhdCI6MTcwMDc1NTE0NiwiZXhwIjoxNzAxNjE5MTQ2fQ.zdcI4Ce_Zqc0VgtJpi8V9SuIYG_MfZ5PQ0F77MGnye0', // Thay 'your-access-token' bằng giá trị thực tế
+      };
+      // Thực hiện GET request đến API endpoint với headers
+      const response = await axios.get(
+        `API_BASE_URL/v1/api/product/getAllProductByUser/${productId}`,
+        {
+          headers,
+        },
+      );
+      setData(response.data.message.allProduct);
+      console.log(response.data.message.allProduct);
+    } catch (error) {
+      console.error(error.response.data);
+    }
+  };
 
   const timeAgo = commentTime => {
     const currentTime = moment();
@@ -221,10 +248,10 @@ const DetailProducts = () => {
   const firstTwoComments = dataComments.slice(0, 2);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: 'white'}}>
       <ScrollView
         nestedScrollEnabled={true}
-        style={{width: '100%', backgroundColor: 'white'}}>
+        style={{width: '100%', backgroundColor: 'white', marginBottom: 60}}>
         <View style={{height: '100%'}}>
           <TouchableOpacity style={styles.btnBack} onPress={() => nav.goBack()}>
             <Ionicons name="arrow-back-outline" color={'black'} size={30} />
@@ -287,7 +314,9 @@ const DetailProducts = () => {
                 <Ionicons name="paper-plane-outline" size={13} />
                 <Text style={{fontSize: 13, marginStart: 5}}>Hà nội</Text>
               </View>
-              <TouchableOpacity style={styles.btnShowShop}>
+              <TouchableOpacity
+                style={styles.btnShowShop}
+                onPress={() => nav.navigate('ShopInformation')}>
                 <Text style={{color: 'white', fontSize: 12}}>Xem cửa hàng</Text>
               </TouchableOpacity>
             </View>
@@ -296,7 +325,7 @@ const DetailProducts = () => {
             <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
               Chi tiết sản phẩm
             </Text>
-            <Text numberOfLines={showDec ? undefined : 3}>
+            <Text numberOfLines={showDec ? undefined : 4}>
               Quần Jogger thun Dây Rút SUZY Form Rộng Nam Nữ Unisex 🖤 Quần dài
               ống rộng suông TÚI HỘP Y2K phong cách Ulzzang Một chiếc quần thun
               phối màu mới về cực trending cùng chất vải thun cotton có thể mix
@@ -328,7 +357,7 @@ const DetailProducts = () => {
                 alignItems: 'center',
               }}>
               <FiveStar numberStar={item.star} width={12} height={12} />
-              <Text style={{marginLeft: 5}}>{item.star}/5</Text>
+              <Text style={{marginLeft: 5}}>{item.star}5/5</Text>
               <Text style={{marginLeft: 10, fontSize: 11}}>
                 ({formatNumber(1000)} đánh giá)
               </Text>
@@ -467,7 +496,6 @@ const styles = StyleSheet.create({
   },
   relaiedProduct: {
     minHeight: 600,
-    backgroundColor: 'rgba(241, 241, 241, 0.9451)',
     alignItems: 'center',
   },
   btnShowAllComment: {
@@ -521,7 +549,7 @@ const styles = StyleSheet.create({
   priceSP: {
     color: '#FC6D26',
     fontSize: 18,
-    marginVertical: 20,
+    marginVertical: 10,
   },
   nameSP: {
     color: 'black',

@@ -24,6 +24,7 @@ import ChatScreen from './Screen/Chat';
 import {useIsFocused} from '@react-navigation/native';
 import CartScreen from './Screen/CartScreen';
 import DetailProducts from './Screen/detailProduct';
+import CheckoutScreen from './Screen/CheckoutScreen';
 
 const TabTop = createMaterialTopTabNavigator();
 const TabOrder = () => {
@@ -112,7 +113,7 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Main">
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen
           name="Main"
           component={BotBottomTabNavigator}
@@ -176,6 +177,11 @@ const App = () => {
         <Stack.Screen
           name="DetailProducts"
           component={DetailProducts}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Checkout"
+          component={CheckoutScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

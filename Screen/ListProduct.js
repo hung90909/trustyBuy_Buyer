@@ -130,7 +130,9 @@ const ListProduct = ({
         numColumns={2}
         data={danhsachSp}
         renderItem={({item}) => (
-          <TouchableOpacity style={styles.productContainer}>
+          <TouchableOpacity
+            style={styles.productContainer}
+            onPress={() => navigation.navigate('DetailProducts', {item})}>
             <Image
               style={styles.productImage}
               source={{uri: item.imageSP}}

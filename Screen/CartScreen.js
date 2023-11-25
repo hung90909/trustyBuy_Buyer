@@ -349,7 +349,7 @@ const CartScreen = () => {
           </Text>
         </View>
         <View style={{flexDirection: 'row', marginHorizontal: 10}}>
-          <Text style={{fontSize: 13, color: 'black'}}>Tông thanh toán</Text>
+          <Text style={{fontSize: 13, color: 'black'}}>Tổng thanh toán</Text>
           <Text
             style={{
               marginLeft: 5,
@@ -403,6 +403,6 @@ const styles = StyleSheet.create({
   },
   listProduct: {
     paddingHorizontal: 20,
-    height: '70%',
+    height: '73%',
   },
 });

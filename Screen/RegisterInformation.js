@@ -143,6 +143,7 @@ const RegisterInformation = () => {
           </Pressable>
         </View>
         <View style={{marginTop: 20}}>
+          <Text style={styles.label}>Họ và tên</Text>
           <TextInput
             style={styles.textinput}
             placeholder="Họ và tên"
@@ -198,6 +199,7 @@ const RegisterInformation = () => {
             style={styles.textinput}
             placeholder="Số điện thoại"
             value={phone}
+            keyboardType="numeric"
             onChangeText={text => {
               setPhone(text);
               setPhoneError('');
@@ -222,6 +224,7 @@ const RegisterInformation = () => {
               onChange={item => {
                 setValue(item.value);
                 setGenderError('');
+                console.log(item.value);
               }}
             />
           </View>
@@ -253,6 +256,7 @@ const styles = {
     borderRadius: 10,
     paddingHorizontal: 15,
     fontSize: 16,
+    borderWidth: 1,
   },
   dropdown: {
     margin: 16,
@@ -292,6 +296,13 @@ const styles = {
     color: 'red',
     marginHorizontal: 20,
     paddingHorizontal: 15,
+  },
+  label: {
+    marginHorizontal: 20,
+    marginVertical: 5,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
   },
 };
 

@@ -12,7 +12,6 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Slideshow from './Slideshow';
-import Listcategory from './Listcategory';
 import Listproducts from './Listproducts';
 import Listcategorys from './Listcategorys';
 
@@ -80,7 +79,6 @@ const HomeScreen = ({navigation}) => {
         </View>
         <Slideshow />
         <Listcategorys />
-        <Listcategory />
         <Listproducts />
       </ScrollView>
     </SafeAreaView>
