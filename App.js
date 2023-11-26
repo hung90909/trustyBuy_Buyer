@@ -4,17 +4,13 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import HomeScreen from './Screen/HomeScreen';
-import ProfileScreen from './Screen/ProfileScreen';
+import CartScreen from './Screen/CartScreen';
+import Welcome from './Screen/Welcome/welcome';
+import ProfileScreen from './Screen/Profile/ProfileScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons'; // Import the icons you want to use
 import NotificationScreen from './Screen/NotificationScreen';
 import Welcome1 from './Screen/Welcome/welcome1';
 import Login from './Screen/Login/login';
-import register from './Screen/Login/register';
-import login2 from './Screen/Login/login2';
-import SearchScreen from './Screen/SearchScreen';
-import ListProduct from './Screen/ListProduct';
-import ShopInformation from './Screen/ShopInformation';
-import Welcome from './Screen/Welcome/welcome';
 import RegisterInformation from './Screen/RegisterInformation';
 import XuLy from './Screen/statusOrder/xuLy';
 import DangGiao from './Screen/statusOrder/dangGiao';
@@ -22,8 +18,14 @@ import DaGiao from './Screen/statusOrder/daGiao';
 import DaHuy from './Screen/statusOrder/daHuy';
 import ChatScreen from './Screen/Chat';
 import {useIsFocused} from '@react-navigation/native';
-import CartScreen from './Screen/CartScreen';
 import DetailProducts from './Screen/detailProduct';
+import ChangPassword from './Screen/ChangPassword';
+import AdressScreen from './Screen/AddressScreen';
+import login2 from './Screen/Login/login2';
+import register from './Screen/Login/register';
+import SearchScreen from './Screen/SearchScreen';
+import ListProduct from './Screen/ListProduct';
+import ShopInformation from './Screen/ShopInformation';
 
 const TabTop = createMaterialTopTabNavigator();
 const TabOrder = () => {
@@ -112,7 +114,16 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
+
       <Stack.Navigator initialRouteName="Welcome">
+
+      <Stack.Navigator>
+        {/* <Stack.Screen
+          name='LoginNavigator'
+          options={{ headerShown: false }}
+          component={LoginNavigator}
+        /> */}
+
         <Stack.Screen
           name="Main"
           component={BotBottomTabNavigator}
@@ -176,6 +187,16 @@ const App = () => {
         <Stack.Screen
           name="DetailProducts"
           component={DetailProducts}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ChangePassword"
+          component={ChangPassword}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AdressScreen"
+          component={AdressScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
