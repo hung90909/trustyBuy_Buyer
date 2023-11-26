@@ -7,6 +7,7 @@ import {
   StatusBar,
   StyleSheet,
   TouchableOpacity,
+  FlatList
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -34,6 +35,18 @@ const HomeScreen = () => {
       currencyDisplay: 'symbol', // Để hiển thị ký hiệu đứng trước số
     });
     return `₫${priceSP.toLocaleString('vi-VN')}`;
+  };
+
+  const navigateToProfile = () => {
+    navigation.navigate('Profile');
+  };
+
+  const navigateToNotification = () => {
+    navigation.navigate('NotificationScreen');
+  };
+
+  const navigateToSearch = () => {
+    navigation.navigate('Search');
   };
 
   const [danhmuc, setDanhmuc] = useState([
