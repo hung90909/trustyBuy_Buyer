@@ -7,6 +7,7 @@ import {
   StatusBar,
   StyleSheet,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -314,7 +315,7 @@ const HomeScreen = () => {
               name="notifications-outline"
               size={26}
               color="#1B2028"
-              onPress={navigateToNotification}
+              // onPress={navigateToNotification}
             />
             <TouchableOpacity
               onPress={() => {
