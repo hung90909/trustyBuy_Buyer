@@ -18,17 +18,17 @@ const CartScreen = () => {
 
   const getCart = async () => {
     const token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTM2OGYzM2VmNWJkZjE3MGM2NzgxNzciLCJlbWFpbCI6Ikh1bmdAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmIkMTAkakxuaGRUdjFuTDU0VXBMUGVFVTV6dTkudXl1TzRWS0sxbHNCR3k1ay9yZXBaRk41ZnFTQmUiLCJpYXQiOjE2OTg1OTA0NTIsImV4cCI6MTY5OTQ1NDQ1Mn0.qM4BH_mULdGuC9fYEnJ8kj0oSwoKHbXCgTELA36dpUM'; // Thay thế bằng mã token thực tế của bạn
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTRjOGEwODFmMTA1NDA2OTJiZGM5OTgiLCJlbWFpbCI6ImR1YzEyM0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRWR1l3dWY4Z0czSnVvR0FSM1hDSXd1UC9iR0lYSzdGbGJRU1RvNXVFZGdYS1ZWUTNpQlVJYSIsImlhdCI6MTcwMDkwMDIzNCwiZXhwIjoxNzAxNzY0MjM0fQ.F1lzM2nO75bSYlVpUIqcNw1Yg1KqM8coj0lkPcOEMLk'; // Thay thế bằng mã token thực tế của bạn
 
     try {
       const response = await fetch(
-        'https://1f79-116-96-46-69.ngrok-free.app/v1/api/cart/getCart',
+        'https://7cc8-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/v1/api/cartv2',
         {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'x-xclient-id': '65368f33ef5bdf170c678177',
-            ahthorization: token, // Sửa lỗi chính tả, sử dụng "Authorization" thay vì "ahthorization"
+            'x-xclient-id': '654c8a081f10540692bdc998',
+            authorization: token, // Sửa lỗi chính tả, sử dụng "Authorization" thay vì "ahthorization"
           },
         },
       );
@@ -39,7 +39,8 @@ const CartScreen = () => {
 
       const data = await response.json();
       const productList = data.message;
-      setListCart(productList.cart.products);
+      console.log(productList.cart.cart_products)
+      setListCart(productList.cart.cart_products);
     } catch (error) {
       console.log(error);
     }
@@ -120,11 +121,11 @@ const CartScreen = () => {
   const handleCheckboxChange = item => {
     console.log('new cart: ' + item);
     setUpdatePrice(!isUpdatePrice);
-    const ids = selectedItems.map(item => item.product_id);
-    if (ids.includes(item.product_id)) {
+    const ids = selectedItems.map(item => item.productId);
+    if (ids.includes(item.productId)) {
       // Nếu sản phẩm đã được chọn, loại bỏ khỏi danh sách
       setSelectedItems(
-        selectedItems.filter(i => i.product_id !== item.product_id),
+        selectedItems.filter(i => i.productId !== item.productId),
       );
     } else {
       // Nếu sản phẩm chưa được chọn, thêm vào danh sách
@@ -219,7 +220,7 @@ const CartScreen = () => {
                         width: 30,
                         borderRadius: 25,
                       }}
-                      source={{uri: item.avatar_shop}}
+                      source={{uri:"https://7cc8-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/"+item.avatar_shop}}
                     />
                     <Text
                       style={{
@@ -243,7 +244,7 @@ const CartScreen = () => {
                         checked={
                           selectedItems.filter(
                             selectedItem =>
-                              selectedItem.product_id === item.product_id,
+                              selectedItem.productId === item.productId,
                           ).length > 0
                         }
                         onPress={() => handleCheckboxChange(item)}
@@ -256,7 +257,7 @@ const CartScreen = () => {
                         width: 100,
                         height: 90,
                       }}
-                      source={{uri: item.product_thumb}}
+                      source={{uri: "https://7cc8-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/uploads/"+item.product_thumb}}
                     />
                     <View style={{marginStart: 7, width: 140}}>
                       <Text numberOfLines={2}>{item.product_name}</Text>
@@ -265,7 +266,7 @@ const CartScreen = () => {
                         <Text>{item.size}</Text>
                       </View>
                       <Text style={{marginTop: 5, color: 'red'}}>
-                        {formatPrice(item.product_price)}
+                        {formatPrice(item.price)}
                       </Text>
                       <View
                         style={{
@@ -291,11 +292,11 @@ const CartScreen = () => {
                           />
                         </TouchableOpacity>
                         <Text style={{marginHorizontal: 8}}>
-                          {item.product_quantity}
+                          {item.quantity}
                         </Text>
                         <TouchableOpacity
                           onPress={() => {
-                            handleIncreaseQuantity(item.product_id);
+                            handleIncreaseQuantity(item.productId);
                           }}
                           style={{borderLeftWidth: 1, paddingHorizontal: 5}}>
                           <Ionicons

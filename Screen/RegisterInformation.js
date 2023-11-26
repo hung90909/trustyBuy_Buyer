@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -12,11 +12,12 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {Dropdown} from 'react-native-element-dropdown';
-import {useNavigation} from '@react-navigation/native';
+import { Dropdown } from 'react-native-element-dropdown';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const data = [
-  {label: 'Nam', value: '1'},
-  {label: 'Nữ', value: '2'},
+  { label: 'Nam', value: 'Nam' },
+  { label: 'Nữ', value: 'Nữ' },
 ];
 
 const RegisterInformation = () => {
@@ -33,6 +34,7 @@ const RegisterInformation = () => {
   const [phoneError, setPhoneError] = useState('');
   const [genderError, setGenderError] = useState('');
   const [tuoiError, setTuoiError] = useState('');
+  const [userID , setUserID] = useState('')
   const navigation = useNavigation();
 
   const onChange = (event, selectedDate) => {
@@ -40,6 +42,17 @@ const RegisterInformation = () => {
     setShowDatePicker(false);
     setDate(currentDate);
   };
+
+  async function getToken() {
+    const token = await AsyncStorage.getItem('access_token');
+    const tokenUser = token ? JSON.parse(token) : null;
+    console.log('Token save : ', tokenUser._id);
+    setUserID(tokenUser._id)
+  }
+
+  useEffect(() => {
+    getToken();
+  }, []);
 
   const handleSubmit = () => {
     // Kiểm tra xem có lỗi nào không
@@ -81,34 +94,48 @@ const RegisterInformation = () => {
       setGenderError('Vui lòng chọn giới tính');
     }
 
-    const birthDate = new Date(date);
-    const currentDate = new Date();
-    let age = currentDate.getFullYear() - birthDate.getFullYear();
-    if (
-      currentDate.getMonth() < birthDate.getMonth() ||
-      (currentDate.getMonth() === birthDate.getMonth() &&
-        currentDate.getDate() < birthDate.getDate())
-    ) {
-      age--; // Chưa đến ngày sinh nhật trong năm nay
-    }
+    // const birthDate = new Date(date);
+    // const currentDate = new Date();
+    // let age = currentDate.getFullYear() - birthDate.getFullYear();
+    // if (
+    //   currentDate.getMonth() < birthDate.getMonth() ||
+    //   (currentDate.getMonth() === birthDate.getMonth() &&
+    //     currentDate.getDate() < birthDate.getDate())
+    // ) {
+    //   age--; // Chưa đến ngày sinh nhật trong năm nay
+    // }
 
-    if (age < 18) {
-      setTuoiError('Bạn phải đủ 18 tuổi');
-    }
+    // if (age < 18) {
+    //   setTuoiError('Bạn phải đủ 18 tuổi');
+    // }
 
     // Chuyển hướng đến màn hình "Main" chỉ khi không có lỗi
     else if (!hasErrors) {
-      navigation.navigate('Main');
+     onRegisterInformations()
     }
   };
+
+  const onRegisterInformations = () => {
+    const data = {
+      fullName: name, phoneNumber: phone, gender: value
+    }
+    fetch("https://7cc8-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/v1/api/user/setUpAcc/" + userID, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    }).then(() => navigation.navigate("Login2"))
+      .catch(err => console.log(err))
+  }
 
   return (
     <ScrollView>
       <KeyboardAvoidingView
-        style={{flex: 1}}
+        style={{ flex: 1 }}
         behavior="padding" // Choose the behavior you need (padding, position, height)
       >
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <View
             style={{
               flexDirection: 'row',
@@ -122,8 +149,8 @@ const RegisterInformation = () => {
               color="#000000"
               onPress={() => navigation.navigate('Register')}
             />
-            <View style={{flex: 1, alignItems: 'center', marginRight: 20}}>
-              <Text style={{color: '#000000', fontWeight: '600', fontSize: 18}}>
+            <View style={{ flex: 1, alignItems: 'center', marginRight: 20 }}>
+              <Text style={{ color: '#000000', fontWeight: '600', fontSize: 18 }}>
                 Thông tin cá nhân
               </Text>
             </View>
@@ -142,7 +169,7 @@ const RegisterInformation = () => {
             />
           </Pressable>
         </View>
-        <View style={{marginTop: 20}}>
+        <View style={{ marginTop: 20 }}>
           <TextInput
             style={styles.textinput}
             placeholder="Họ và tên"
@@ -206,7 +233,7 @@ const RegisterInformation = () => {
           {phoneError ? (
             <Text style={styles.errorText}>{phoneError}</Text>
           ) : null}
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <Dropdown
               style={styles.dropdown}
               placeholderStyle={styles.placeholderStyle}
