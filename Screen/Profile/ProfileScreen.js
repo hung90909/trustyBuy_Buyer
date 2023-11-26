@@ -40,7 +40,7 @@ const ProfileScreen = () => {
   const handleFeatureClick = featureName => {
     switch (featureName) {
       case 'Edit profile':
-        console.log('Edit profile clicked');
+        nav.navigate('EditProfile');
         break;
       case 'Address':
         nav.navigate('AdressScreen');
