@@ -20,6 +20,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {Alert} from 'react-native';
+import {TouchableOpacity} from 'react-native';
+import {TextInput} from 'react-native';
 const DetailProducts = ({navigation}) => {
   const route = useRoute();
   const {productId} = useRoute().params;
@@ -29,6 +31,49 @@ const DetailProducts = ({navigation}) => {
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedQuantity, setSelectedQuantity] = useState();
+  const [quantity, setQuantity] = useState(1);
+
+  const handleIncreaseQuantity = () => {
+    if (selectedColor && selectedSize) {
+      const totalQuantity = getTotalQuantityForColorAndSize(
+        selectedColor,
+        selectedSize,
+      );
+      if (quantity < 100 && quantity < totalQuantity) {
+        setQuantity(quantity + 1);
+      } else {
+        Alert.alert('Thông báo', 'Số lượng sản phẩm đặt đã đạt giới hạn');
+      }
+    } else {
+      Alert.alert(
+        'Thông báo',
+        'Vui lòng chọn màu sắc và kích thước trước khi thay đổi số lượng',
+      );
+    }
+  };
+
+  const handleDecreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+
+  const getTotalQuantityForColorAndSize = (color, size) => {
+    // Calculate and return the total quantity based on the selected color and size
+    const colorOption = productDetail.product_attributes.find(
+      item => item.color === color,
+    );
+    if (colorOption) {
+      const sizeOption = colorOption.options.find(
+        sizeItem => sizeItem.size === size,
+      );
+      if (sizeOption) {
+        return sizeOption.options_quantity;
+      }
+    }
+    return 0; // Return 0 if color or size not found
+  };
+
   const handleAddToCart = async () => {
     try {
       if (selectedColor && selectedSize && selectedQuantity !== null) {
@@ -212,7 +257,7 @@ const DetailProducts = ({navigation}) => {
                 </View>
                 <View style={styles.shopProduct}>
                   <Image
-                    style={{height: 100, width: 100, borderRadius: 50}}
+                    style={styles.imgShop}
                     source={{
                       uri: `${API_BASE_URL}${productDetail?.shop_avatar}`,
                     }}
@@ -234,11 +279,6 @@ const DetailProducts = ({navigation}) => {
                     {productDetail?.product_description}
                   </Text>
                 </View>
-                {/* <FlatList
-              data={productDetail?.reviews}
-              scrollEnabled={false}
-              renderItem={renderReview}
-            /> */}
               </View>
               <View style={styles.suggestionsProduct}>
                 <Text style={styles.titelSuggestions}>Gợi ý các sản phẩm</Text>
@@ -405,6 +445,73 @@ const DetailProducts = ({navigation}) => {
                 <Text>No image available</Text>
               )}
             </View>
+            <View
+              style={{
+                height: 60,
+                backgroundColor: 'white',
+                justifyContent: 'space-between',
+                paddingHorizontal: 20,
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Text style={{color: isAddToCartDisabled ? '#CCCCCC' : 'black'}}>
+                Số lượng
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <TouchableOpacity
+                  onPress={isAddToCartDisabled ? null : handleDecreaseQuantity}>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      color: isAddToCartDisabled ? '#CCCCCC' : 'black',
+                    }}>
+                    -
+                  </Text>
+                </TouchableOpacity>
+                <TextInput
+                  style={{
+                    fontSize: 14,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginHorizontal: 16,
+                    marginVertical: 10,
+                    textAlign: 'center',
+                    color: isAddToCartDisabled ? '#CCCCCC' : '#FC6D26',
+                  }}
+                  keyboardType="numeric"
+                  value={quantity.toString()}
+                  onChangeText={text => {
+                    const numericValue = parseInt(text, 10);
+                    if (
+                      !isNaN(numericValue) &&
+                      numericValue >= 1 &&
+                      numericValue <= 100 &&
+                      numericValue <=
+                        getTotalQuantityForColorAndSize(
+                          selectedColor,
+                          selectedSize,
+                        )
+                    ) {
+                      setQuantity(numericValue);
+                    }
+                  }}
+                />
+                <TouchableOpacity
+                  onPress={isAddToCartDisabled ? null : handleIncreaseQuantity}>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      color: isAddToCartDisabled ? '#CCCCCC' : 'black',
+                    }}>
+                    +
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
             <Pressable
               style={[
                 styles.btnAddCart,
@@ -548,6 +655,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  imgShop: {
+    height: 100,
+    width: 100,
+    borderRadius: 50,
   },
 });
 
