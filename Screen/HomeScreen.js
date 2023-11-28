@@ -79,7 +79,7 @@ const HomeScreen = ({navigation}) => {
         </View>
         <Slideshow />
         <Listcategorys />
-        <Listproducts />
+        <Listproducts navigation={navigation} />
       </ScrollView>
     </SafeAreaView>
   );

@@ -10,11 +10,12 @@ import {
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {useNavigation} from '@react-navigation/native';
-import {formatPrice} from './Format';
-const Listproducts = () => {
+import {formatPrice, formatSoldSP} from './Format';
+import {API_BASE_URL, PRODUCT_API} from '../API/getAPI';
+const Listproducts = props => {
   const [selectedItem, setSelectedItem] = useState(null);
-  const navigation = useNavigation();
-  const [data, setData] = useState([]);
+  const [product, setProduct] = useState([]);
+  const {navigation} = props;
 
   useEffect(() => {
     getAllProduct();
@@ -25,16 +26,13 @@ const Listproducts = () => {
       const headers = {
         'x-xclient-id': '654c8a081f10540692bdc998', // Thay 'your-client-id' bằng giá trị thực tế
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTRjOGEwODFmMTA1NDA2OTJiZGM5OTgiLCJlbWFpbCI6ImR1YzEyM0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRWR1l3dWY4Z0czSnVvR0FSM1hDSXd1UC9iR0lYSzdGbGJRU1RvNXVFZGdYS1ZWUTNpQlVJYSIsImlhdCI6MTcwMDc1NTE0NiwiZXhwIjoxNzAxNjE5MTQ2fQ.zdcI4Ce_Zqc0VgtJpi8V9SuIYG_MfZ5PQ0F77MGnye0', // Thay 'your-access-token' bằng giá trị thực tế
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTRjOGEwODFmMTA1NDA2OTJiZGM5OTgiLCJlbWFpbCI6ImR1YzEyM0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRWR1l3dWY4Z0czSnVvR0FSM1hDSXd1UC9iR0lYSzdGbGJRU1RvNXVFZGdYS1ZWUTNpQlVJYSIsImlhdCI6MTcwMDkwMDIzNCwiZXhwIjoxNzAxNzY0MjM0fQ.F1lzM2nO75bSYlVpUIqcNw1Yg1KqM8coj0lkPcOEMLk', // Thay 'your-access-token' bằng giá trị thực tế
       };
       // Thực hiện GET request đến API endpoint với headers
-      const response = await axios.get(
-        'https://5c34-116-96-44-199.ngrok-free.app/v1/api/product/getAllProductByUser',
-        {
-          headers,
-        },
-      );
-      setData(response.data.message.allProduct);
+      const response = await axios.get(`${PRODUCT_API}/getAllProductByUser`, {
+        headers,
+      });
+      setProduct(response.data.message.allProduct);
       console.log(response.data.message.allProduct);
     } catch (error) {
       console.error(error.response.data);
@@ -55,7 +53,7 @@ const Listproducts = () => {
         <Image
           style={styles.imageSP}
           source={{
-            uri: `https://ef22-116-96-44-199.ngrok-free.app/uploads/${item?.product_thumb[0]}`,
+            uri: `${API_BASE_URL}uploads/${item?.product_thumb[0]}`,
           }}
           resizeMode="contain"
         />
@@ -66,8 +64,7 @@ const Listproducts = () => {
         <View style={styles.containerGia}>
           <Text style={styles.giaSp}>{formatPrice(item.product_price)}</Text>
           <Text style={styles.daBan}>
-            Đã bán
-            {/* {formatSoldSP(item.soldSP)} */}
+            Đã bán {formatSoldSP(item.product_sold)}
           </Text>
         </View>
       </Pressable>
@@ -76,7 +73,7 @@ const Listproducts = () => {
   return (
     <View>
       <FlatList
-        data={data}
+        data={product}
         scrollEnabled={false}
         keyExtractor={item => item?._id}
         renderItem={renderSanpham}
