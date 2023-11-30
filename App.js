@@ -4,7 +4,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import HomeScreen from './Screen/HomeScreen';
-import CartScreen from './Screen/CartScreen';
 import Welcome from './Screen/Welcome/welcome';
 import ProfileScreen from './Screen/Profile/ProfileScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons'; // Import the icons you want to use
@@ -26,6 +25,12 @@ import SearchScreen from './Screen/SearchScreen';
 import ListProduct from './Screen/ListProduct';
 import ShopInformation from './Screen/ShopInformation';
 import AdressScreen from './Screen/Address/AddressScreen';
+import AdressScreen from './Screen/AddressScreen';
+import register from './Screen/Login/register';
+import login2 from './Screen/Login/login2';
+import SearchScreen from './Screen/SearchScreen';
+import ListProduct from './Screen/ListProduct';
+import ShopInformation from './Screen/ShopInformation';
 import EditProfile from './Screen/EditProfile';
 
 const TabTop = createMaterialTopTabNavigator();
@@ -186,6 +191,11 @@ const App = () => {
         <Stack.Screen
           name="ChangePassword"
           component={ChangPassword}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfile}
           options={{headerShown: false}}
         />
         <Stack.Screen

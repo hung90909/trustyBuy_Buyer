@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -7,11 +7,18 @@ import {
   Pressable,
   KeyboardAvoidingView,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Dropdown} from 'react-native-element-dropdown';
 import {useNavigation} from '@react-navigation/native';
+import {API_BASE} from '../API/getAPI';
+import axios from 'axios';
+import {PermissionsAndroid} from 'react-native';
+import {Alert} from 'react-native';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+
 const data = [
   {label: 'Nam', value: '1'},
   {label: 'Nữ', value: '2'},
@@ -22,17 +29,16 @@ const EditProfile = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [avatar, setAvatar] = useState('');
   const [value, setValue] = useState(null);
   const [nameError, setNameError] = useState('');
   const [usernameError, setUsernameError] = useState('');
-  const [emailError, setEmailError] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [genderError, setGenderError] = useState('');
-  const [tuoiError, setTuoiError] = useState('');
   const navigation = useNavigation();
-  //Gọi fetch user infor rồi gắn value vào là đưọc
+  const [selectedImages, setSelectedImages] = useState(null);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -40,36 +46,71 @@ const EditProfile = () => {
     setDate(currentDate);
   };
 
-  const handleSubmit = () => {
-    const hasErrors =
-      !!nameError ||
-      !!usernameError ||
-      !!emailError ||
-      !!phoneError ||
-      !!genderError ||
-      !!tuoiError;
-    setNameError('');
-    setUsernameError('');
-    setEmailError('');
-    setPhoneError('');
-    setGenderError('');
-    setTuoiError('');
-    if (!name) {
-      setNameError('Vui lòng nhập họ và tên');
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log('ahahaha');
+      const api = `${API_BASE}/v1/api/user/getProfile`;
+      const userId = '655992c8b8ffe55cb44e9673';
+      const accessToken =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTU5OTJjOGI4ZmZlNTVjYjQ0ZTk2NzMiLCJlbWFpbCI6Im5na2hhY2RhaUBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRiN2lJci9SenpGbXZ1QWxUMzc5SmNPOU9FOUJpT1hITUY3M0o5cGtmZENJQ1BJNVV1alRyNiIsImlhdCI6MTcwMDk4Mzk0MSwiZXhwIjoxNzAxODQ3OTQxfQ.M-TK8_IU6x-TyT3ufeE8pX90zqzKWdDk6wTWkdYean8';
+      await axios
+        .get(api, {
+          headers: {
+            'x-xclient-id': userId,
+            authorization: accessToken,
+          },
+        })
+        .then(res => {
+          setUsername(res.data.message.checkUser.information.fullName);
+          setName(res.data.message.checkUser.user_name);
+          setPhone(
+            res.data.message.checkUser.information.phoneNumber.toString(),
+          );
+          setAvatar(res.data.message.checkUser.information.avatar);
+          setAddress(res.data.message.checkUser.information.address);
+          setValue(res.data.message.checkUser.information.gender);
+          console.log(res.data.message.checkUser.information.gender);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    };
+    fetchData();
+  }, []);
+
+  const openCamera = async isFrontCamera => {
+    try {
+      await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
+
+      const result = isFrontCamera
+        ? await launchCamera({mediaType: 'photo'})
+        : await launchImageLibrary({mediaType: 'photo'});
+
+      setSelectedImages(result.assets[0]?.uri);
+      console.log(selectedImages);
+    } catch (error) {
+      console.log(error);
     }
+  };
+  const selectImageOption = () => {
+    Alert.alert(
+      'Thông báo',
+      'Bạn muốn lấy ảnh từ?',
+      [
+        {text: 'Chụp ảnh ', onPress: () => openCamera(true)},
+        {text: 'Thư viện ', onPress: () => openCamera(false)},
+      ],
+      {cancelable: true},
+    );
+  };
+
+  const handleSubmit = async () => {
+    console.log();
     if (!username) {
       setUsernameError('Vui lòng nhập tên tài khoản');
     }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email) {
-      setEmailError('Vui lòng nhập email');
-    } else if (!emailRegex.test(email)) {
-      setEmailError('Email không hợp lệ');
-    }
     if (!phone) {
       setPhoneError('Vui lòng nhập số điện thoại');
-    } else if (!/^\d{10}$/.test(phone)) {
-      setPhoneError('Số điện thoại không hợp lệ');
     }
     if (!value) {
       setGenderError('Vui lòng chọn giới tính');
@@ -85,12 +126,31 @@ const EditProfile = () => {
     ) {
       age--;
     }
+    const userId = '655992c8b8ffe55cb44e9673';
+    const accessToken =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTU5OTJjOGI4ZmZlNTVjYjQ0ZTk2NzMiLCJlbWFpbCI6Im5na2hhY2RhaUBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRiN2lJci9SenpGbXZ1QWxUMzc5SmNPOU9FOUJpT1hITUY3M0o5cGtmZENJQ1BJNVV1alRyNiIsImlhdCI6MTcwMDk4Mzk0MSwiZXhwIjoxNzAxODQ3OTQxfQ.M-TK8_IU6x-TyT3ufeE8pX90zqzKWdDk6wTWkdYean8';
 
-    if (age < 18) {
-      setTuoiError('Bạn phải đủ 18 tuổi');
-    } else if (!hasErrors) {
-      navigation.goBack();
-    }
+    const formData = new FormData();
+    formData.append('phoneNumber', phone);
+    formData.append('address', address);
+    formData.append('avatar', {
+      uri: selectedImages,
+      type: 'image/jpeg',
+      name: 'image.jpg',
+    });
+    formData.append('fullName', username);
+    formData.append('gender', value);
+    await axios
+      .put(`${API_BASE}/v1/api/user/updateUser`, formData, {
+        headers: {
+          'x-xclient-id': userId,
+          authorization: accessToken,
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then(e => {
+        console.log(e);
+      });
   };
 
   return (
@@ -118,19 +178,36 @@ const EditProfile = () => {
             </View>
           </View>
         </View>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: 20,
-          }}>
-          <Pressable>
+        <View style={styles.infor_profile}>
+          <View style={styles.avatar_container}>
             <Image
-              style={styles.profileImage}
-              source={require('../Resource/Image/imgpro.png')}
+              style={styles.avatar}
+              source={{
+                uri: selectedImages ?? `${API_BASE}/${avatar}`,
+              }}
+              resizeMode="contain"
             />
-          </Pressable>
+            <TouchableOpacity
+              style={styles.edit_icon_container}
+              onPress={() => {
+                selectImageOption();
+              }}>
+              <Image
+                source={require('../Resource/icon/edit-text.png')}
+                style={styles.edit_icon}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
+        <Text
+          style={{
+            textAlign: 'center',
+            fontSize: 17,
+            color: '#000',
+            textDecorationLine: 'underline',
+          }}>
+          Thông tin cá nhân
+        </Text>
         <View style={{marginTop: 20}}>
           <TextInput
             style={styles.textinput}
@@ -142,26 +219,16 @@ const EditProfile = () => {
             }}
           />
           {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
-
           <TextInput
             style={styles.textinput}
-            placeholder="Tên tài khoản"
+            placeholder="Họ và tên"
             value={username}
             onChangeText={text => {
               setUsername(text);
-              setUsernameError('');
+              setNameError('');
             }}
           />
-          {usernameError ? (
-            <Text style={styles.errorText}>{usernameError}</Text>
-          ) : null}
-          <TextInput
-            style={styles.textinput}
-            placeholder="Ngày sinh"
-            value={date.toLocaleDateString()}
-            onFocus={() => setShowDatePicker(true)}
-          />
-          {tuoiError ? <Text style={styles.errorText}>{tuoiError}</Text> : null}
+          {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
           {showDatePicker && (
             <DateTimePicker
               value={date}
@@ -170,22 +237,11 @@ const EditProfile = () => {
               onChange={onChange}
             />
           )}
-          <TextInput
-            style={styles.textinput}
-            placeholder="Email"
-            value={email}
-            onChangeText={text => {
-              setEmail(text);
-              setEmailError('');
-            }}
-          />
 
-          {emailError ? (
-            <Text style={styles.errorText}>{emailError}</Text>
-          ) : null}
           <TextInput
             style={styles.textinput}
             placeholder="Số điện thoại"
+            keyboardType="numeric"
             value={phone}
             onChangeText={text => {
               setPhone(text);
@@ -206,7 +262,7 @@ const EditProfile = () => {
               maxHeight={150}
               labelField="label"
               valueField="value"
-              placeholder="Giới tính"
+              placeholder={value}
               value={value}
               onChange={item => {
                 setValue(item.value);
@@ -217,6 +273,15 @@ const EditProfile = () => {
           {genderError ? (
             <Text style={styles.errorText}>{genderError}</Text>
           ) : null}
+          <TextInput
+            style={styles.textinput}
+            placeholder="Địa chỉ"
+            value={address}
+            onChangeText={text => {
+              setAddress(text);
+              setUsernameError('');
+            }}
+          />
         </View>
 
         <Pressable style={styles.button} onPress={handleSubmit}>
@@ -281,6 +346,35 @@ const styles = {
     color: 'red',
     marginHorizontal: 20,
     paddingHorizontal: 15,
+  },
+  avatar_container: {
+    position: 'relative',
+  },
+  avatar: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+  },
+  edit_icon_container: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: 'black',
+    padding: 8,
+    borderRadius: 20,
+  },
+  edit_icon: {
+    width: 17,
+    height: 17,
+  },
+  infor_profile: {
+    marginTop: 40,
+    alignItems: 'center',
+    width: '100%',
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#d0d0d0',
+    paddingBottom: 20,
+    marginBottom: 20,
   },
 };
 

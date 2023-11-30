@@ -1,7 +1,32 @@
+import {useNavigation} from '@react-navigation/native';
+import axios from 'axios';
 import React from 'react';
 import {Modal, View, TouchableOpacity, StyleSheet, Text} from 'react-native';
+import {API_BASE} from '../../../API/getAPI';
 
 const Logout = ({visible, onClose}) => {
+  const navigation = useNavigation();
+
+  const handlerLogout = async () => {
+    const api = `${API_BASE}/v1/api/access/signOut`;
+    const userId = '655992c8b8ffe55cb44e9673';
+    const accessToken =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTU5OTJjOGI4ZmZlNTVjYjQ0ZTk2NzMiLCJlbWFpbCI6Im5na2hhY2RhaUBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRrT0ozSlVMRElmVnpNRWVMTXVlcVplLkdhMURCZXBFYVRZLy4ydmtTa0xHaEZ5amxTL28wNiIsImlhdCI6MTcwMDk3OTU0NCwiZXhwIjoxNzAxODQzNTQ0fQ.2TBuhva-lV63eEFW0Y3gh5dzVITkVFSX4yyFBfIOP-Y';
+    axios
+      .delete(api, {
+        headers: {
+          'x-xclient-id': userId,
+          authorization: accessToken,
+        },
+      })
+      .then(res => {
+        console.log(res);
+        navigation.navigate('Login2');
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
   return (
     <Modal
       visible={visible}
@@ -36,6 +61,7 @@ const Logout = ({visible, onClose}) => {
               <Text style={{color: 'black'}}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={() => handlerLogout()}
               style={[
                 styles.button_container,
                 {backgroundColor: 'black', marginLeft: 10},

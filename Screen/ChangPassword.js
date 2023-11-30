@@ -9,6 +9,8 @@ import {
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {checkEmail, checkPassword} from '../compoment/checkValidate';
+import axios from 'axios';
+import {API_BASE} from '../API/getAPI';
 
 export default ChangePassword = () => {
   const [errorPassword, setErrorPassword] = useState('');
@@ -17,7 +19,7 @@ export default ChangePassword = () => {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const nav = useNavigation();
 
-  const checkValidateLogin = () => {
+  const handlerChangePassword = async () => {
     if (
       passwordOld.length == 0 ||
       password.length == 0 ||
@@ -26,6 +28,29 @@ export default ChangePassword = () => {
       setErrorPassword('Vui lòng nhập đầy đủ thông tin');
       return;
     }
+    const api = `${API_BASE}/v1/api/user/changePassword`; // tạo config riêng nhé
+    //Lấy token và userId trong storage nhé
+    const userId = '655992c8b8ffe55cb44e9673';
+    const accessToken =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTU5OTJjOGI4ZmZlNTVjYjQ0ZTk2NzMiLCJlbWFpbCI6Im5na2hhY2RhaUBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRrT0ozSlVMRElmVnpNRWVMTXVlcVplLkdhMURCZXBFYVRZLy4ydmtTa0xHaEZ5amxTL28wNiIsImlhdCI6MTcwMDk4MzA4OSwiZXhwIjoxNzAxODQ3MDg5fQ.iybYQqXa_T20hTTOnm6hGVVBTxYDTWKhEitk3MtiEQU';
+    const formData = {
+      oldPassword: passwordOld,
+      newPassword: password,
+    };
+    await axios
+      .put(api, formData, {
+        headers: {
+          'x-xclient-id': userId,
+          authorization: accessToken,
+        },
+      })
+      .then(res => {
+        console.log(res);
+        //Them cai thong bao nhe
+      })
+      .catch(e => {
+        console.log(e);
+      });
   };
   return (
     <View style={styles.container}>
@@ -139,7 +164,7 @@ export default ChangePassword = () => {
         )}
         <TouchableOpacity
           onPress={() => {
-            checkValidateLogin();
+            handlerChangePassword();
           }}
           style={{
             width: '100%',
