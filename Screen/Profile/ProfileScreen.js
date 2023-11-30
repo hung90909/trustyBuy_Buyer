@@ -1,50 +1,52 @@
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
-import Logout from './Logout';
+import Logout from './Component/Logout';
+import {useNavigation} from '@react-navigation/native';
 
 const ProfileScreen = () => {
   const [user, setUser] = useState({
     name: 'Andrew Ainsley',
     phone: '+ 1 111 467 378 399',
-    avatar: require('../Resource/Image/img.png'),
+    avatar: require('../../Resource/Image/img.png'),
   });
+  const nav = useNavigation();
   const [showLogout, setShowLogout] = useState(false);
   const features = [
     {
       name: 'Edit profile',
-      image: require('../Resource/icon/user.png'),
+      image: require('../../Resource/icon/user.png'),
     },
     {
       name: 'Address',
-      image: require('../Resource/icon/pin.png'),
+      image: require('../../Resource/icon/pin.png'),
     },
     {
       name: 'Notification',
-      image: require('../Resource/icon/notification.png'),
+      image: require('../../Resource/icon/notification.png'),
     },
     {
       name: 'Message',
-      image: require('../Resource/icon/speech-bubble.png'),
+      image: require('../../Resource/icon/speech-bubble.png'),
     },
     {
       name: 'Change password',
-      image: require('../Resource/icon/padlock.png'),
+      image: require('../../Resource/icon/padlock.png'),
     },
     {
       name: 'Setting',
-      image: require('../Resource/icon/settings.png'),
+      image: require('../../Resource/icon/settings.png'),
     },
   ];
   const handleFeatureClick = featureName => {
     switch (featureName) {
       case 'Edit profile':
-        console.log('Edit profile clicked');
+        nav.navigate('EditProfile');
         break;
       case 'Address':
-        console.log('Address clicked');
+        nav.navigate('AdressScreen');
         break;
       case 'Change password':
-        console.log('Change password');
+        nav.navigate('ChangePassword');
         break;
       case 'Notification':
         console.log('Notification');
@@ -66,7 +68,7 @@ const ProfileScreen = () => {
       <View style={styles.header_profile}>
         <View style={{flexDirection: 'row'}}>
           <Image
-            source={require('../Resource/Image/shopping-bag.png')}
+            source={require('../../Resource/Image/shopping-bag.png')}
             style={[styles.icon_profile, {marginRight: 10}]}
           />
           <Text style={{color: 'black', fontWeight: '500', fontSize: 18}}>
@@ -74,7 +76,7 @@ const ProfileScreen = () => {
           </Text>
         </View>
         <Image
-          source={require('../Resource/icon/menu.png')}
+          source={require('../../Resource/icon/menu.png')}
           style={styles.icon_profile}
         />
       </View>
@@ -89,7 +91,7 @@ const ProfileScreen = () => {
             style={styles.edit_icon_container}
             onPress={() => {}}>
             <Image
-              source={require('../Resource/icon/edit-text.png')}
+              source={require('../../Resource/icon/edit-text.png')}
               style={styles.edit_icon}
             />
           </TouchableOpacity>
@@ -120,7 +122,7 @@ const ProfileScreen = () => {
               </Text>
             </View>
             <Image
-              source={require('../Resource/icon/next.png')}
+              source={require('../../Resource/icon/next.png')}
               style={{width: 15, height: 15}}
             />
           </View>
@@ -130,7 +132,7 @@ const ProfileScreen = () => {
         <View style={styles.feature_item}>
           <View style={{flexDirection: 'row'}}>
             <Image
-              source={require('../Resource/icon/logout.png')}
+              source={require('../../Resource/icon/logout.png')}
               style={[styles.icon_profile, {marginRight: 15}]}
             />
             <Text style={{color: 'red', fontWeight: '500', fontSize: 16}}>

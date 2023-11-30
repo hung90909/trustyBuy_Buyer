@@ -1,12 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   Image,
   TextInput,
   Pressable,
-  StatusBar,
-  SafeAreaView,
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
@@ -14,13 +12,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Dropdown} from 'react-native-element-dropdown';
 import {useNavigation} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 const data = [
-  {label: 'Nam', value: 'Nam'},
-  {label: 'Nữ', value: 'Nữ'},
+  {label: 'Nam', value: '1'},
+  {label: 'Nữ', value: '2'},
 ];
 
-const RegisterInformation = () => {
+const EditProfile = () => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [name, setName] = useState('');
@@ -34,8 +31,8 @@ const RegisterInformation = () => {
   const [phoneError, setPhoneError] = useState('');
   const [genderError, setGenderError] = useState('');
   const [tuoiError, setTuoiError] = useState('');
-  const [userID, setUserID] = useState('');
   const navigation = useNavigation();
+  //Gọi fetch user infor rồi gắn value vào là đưọc
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -43,19 +40,7 @@ const RegisterInformation = () => {
     setDate(currentDate);
   };
 
-  async function getToken() {
-    const token = await AsyncStorage.getItem('access_token');
-    const tokenUser = token ? JSON.parse(token) : null;
-    console.log('Token save : ', tokenUser._id);
-    setUserID(tokenUser._id);
-  }
-
-  useEffect(() => {
-    getToken();
-  }, []);
-
   const handleSubmit = () => {
-    // Kiểm tra xem có lỗi nào không
     const hasErrors =
       !!nameError ||
       !!usernameError ||
@@ -63,16 +48,12 @@ const RegisterInformation = () => {
       !!phoneError ||
       !!genderError ||
       !!tuoiError;
-
-    // Làm sạch các thông báo lỗi trước khi kiểm tra điều kiện
     setNameError('');
     setUsernameError('');
     setEmailError('');
     setPhoneError('');
     setGenderError('');
     setTuoiError('');
-
-    // Kiểm tra các điều kiện và đặt các thông báo lỗi khi cần thiết
     if (!name) {
       setNameError('Vui lòng nhập họ và tên');
     }
@@ -94,71 +75,45 @@ const RegisterInformation = () => {
       setGenderError('Vui lòng chọn giới tính');
     }
 
-    // const birthDate = new Date(date);
-    // const currentDate = new Date();
-    // let age = currentDate.getFullYear() - birthDate.getFullYear();
-    // if (
-    //   currentDate.getMonth() < birthDate.getMonth() ||
-    //   (currentDate.getMonth() === birthDate.getMonth() &&
-    //     currentDate.getDate() < birthDate.getDate())
-    // ) {
-    //   age--; // Chưa đến ngày sinh nhật trong năm nay
-    // }
-
-    // if (age < 18) {
-    //   setTuoiError('Bạn phải đủ 18 tuổi');
-    // }
-
-    // Chuyển hướng đến màn hình "Main" chỉ khi không có lỗi
-    else if (!hasErrors) {
-      onRegisterInformations();
+    const birthDate = new Date(date);
+    const currentDate = new Date();
+    let age = currentDate.getFullYear() - birthDate.getFullYear();
+    if (
+      currentDate.getMonth() < birthDate.getMonth() ||
+      (currentDate.getMonth() === birthDate.getMonth() &&
+        currentDate.getDate() < birthDate.getDate())
+    ) {
+      age--;
     }
-  };
 
-  const onRegisterInformations = () => {
-    const data = {
-      fullName: name,
-      phoneNumber: phone,
-      gender: value,
-    };
-    fetch(
-      'https://7cc8-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/v1/api/user/setUpAcc/' +
-        userID,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      },
-    )
-      .then(() => navigation.navigate('Login2'))
-      .catch(err => console.log(err));
+    if (age < 18) {
+      setTuoiError('Bạn phải đủ 18 tuổi');
+    } else if (!hasErrors) {
+      navigation.goBack();
+    }
   };
 
   return (
     <ScrollView>
-      <KeyboardAvoidingView
-        style={{flex: 1}}
-        behavior="padding" // Choose the behavior you need (padding, position, height)
-      >
+      <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
         <View style={{flex: 1}}>
           <View
             style={{
               flexDirection: 'row',
               marginTop: 20,
-              marginLeft: 20,
+              marginLeft: 10,
               alignItems: 'center',
+              marginBottom: 10,
             }}>
             <Ionicons
               name="arrow-back"
               size={28}
               color="#000000"
-              onPress={() => navigation.navigate('Register')}
+              onPress={() => navigation.goBack()}
             />
-            <View style={{flex: 1, alignItems: 'center', marginRight: 20}}>
+            <View style={{flex: 1, marginLeft: 15}}>
               <Text style={{color: '#000000', fontWeight: '600', fontSize: 18}}>
-                Thông tin cá nhân
+                Thay đổi thông tin cá nhân
               </Text>
             </View>
           </View>
@@ -232,7 +187,6 @@ const RegisterInformation = () => {
             style={styles.textinput}
             placeholder="Số điện thoại"
             value={phone}
-            keyboardType="numeric"
             onChangeText={text => {
               setPhone(text);
               setPhoneError('');
@@ -257,7 +211,6 @@ const RegisterInformation = () => {
               onChange={item => {
                 setValue(item.value);
                 setGenderError('');
-                console.log(item.value);
               }}
             />
           </View>
@@ -289,7 +242,6 @@ const styles = {
     borderRadius: 10,
     paddingHorizontal: 15,
     fontSize: 16,
-    borderWidth: 1,
   },
   dropdown: {
     margin: 16,
@@ -330,13 +282,6 @@ const styles = {
     marginHorizontal: 20,
     paddingHorizontal: 15,
   },
-  label: {
-    marginHorizontal: 20,
-    marginVertical: 5,
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'black',
-  },
 };
 
-export default RegisterInformation;
+export default EditProfile;

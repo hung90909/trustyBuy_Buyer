@@ -4,17 +4,13 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import HomeScreen from './Screen/HomeScreen';
-import ProfileScreen from './Screen/ProfileScreen';
+import CartScreen from './Screen/CartScreen';
+import Welcome from './Screen/Welcome/welcome';
+import ProfileScreen from './Screen/Profile/ProfileScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons'; // Import the icons you want to use
 import NotificationScreen from './Screen/NotificationScreen';
 import Welcome1 from './Screen/Welcome/welcome1';
 import Login from './Screen/Login/login';
-import register from './Screen/Login/register';
-import login2 from './Screen/Login/login2';
-import SearchScreen from './Screen/SearchScreen';
-import ListProduct from './Screen/ListProduct';
-import ShopInformation from './Screen/ShopInformation';
-import Welcome from './Screen/Welcome/welcome';
 import RegisterInformation from './Screen/RegisterInformation';
 import XuLy from './Screen/statusOrder/xuLy';
 import DangGiao from './Screen/statusOrder/dangGiao';
@@ -22,9 +18,7 @@ import DaGiao from './Screen/statusOrder/daGiao';
 import DaHuy from './Screen/statusOrder/daHuy';
 import ChatScreen from './Screen/Chat';
 import {useIsFocused} from '@react-navigation/native';
-import CartScreen from './Screen/CartScreen';
 import DetailProducts from './Screen/detailProduct';
-import CheckoutScreen from './Screen/CheckoutScreen';
 
 const TabTop = createMaterialTopTabNavigator();
 const TabOrder = () => {
@@ -177,11 +171,6 @@ const App = () => {
         <Stack.Screen
           name="DetailProducts"
           component={DetailProducts}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Checkout"
-          component={CheckoutScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

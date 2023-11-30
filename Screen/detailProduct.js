@@ -375,6 +375,9 @@ const DetailProducts = ({route, navigation}) => {
                 <Text style={styles.titelSuggestions}>Gợi ý các sản phẩm</Text>
                 <Listproducts />
               </View>
+              <TouchableOpacity style={styles.btnShowShop}>
+                <Text style={{color: 'white', fontSize: 12}}>Xem cửa hàng</Text>
+              </TouchableOpacity>
             </View>
           </ScrollView>
           <View style={styles.butonCartBuy}>
