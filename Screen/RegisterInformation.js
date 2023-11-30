@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -12,12 +12,12 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Dropdown } from 'react-native-element-dropdown';
-import { useNavigation } from '@react-navigation/native';
+import {Dropdown} from 'react-native-element-dropdown';
+import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const data = [
-  { label: 'Nam', value: 'Nam' },
-  { label: 'Nữ', value: 'Nữ' },
+  {label: 'Nam', value: 'Nam'},
+  {label: 'Nữ', value: 'Nữ'},
 ];
 
 const RegisterInformation = () => {
@@ -34,7 +34,7 @@ const RegisterInformation = () => {
   const [phoneError, setPhoneError] = useState('');
   const [genderError, setGenderError] = useState('');
   const [tuoiError, setTuoiError] = useState('');
-  const [userID , setUserID] = useState('')
+  const [userID, setUserID] = useState('');
   const navigation = useNavigation();
 
   const onChange = (event, selectedDate) => {
@@ -47,7 +47,7 @@ const RegisterInformation = () => {
     const token = await AsyncStorage.getItem('access_token');
     const tokenUser = token ? JSON.parse(token) : null;
     console.log('Token save : ', tokenUser._id);
-    setUserID(tokenUser._id)
+    setUserID(tokenUser._id);
   }
 
   useEffect(() => {
@@ -111,31 +111,38 @@ const RegisterInformation = () => {
 
     // Chuyển hướng đến màn hình "Main" chỉ khi không có lỗi
     else if (!hasErrors) {
-     onRegisterInformations()
+      onRegisterInformations();
     }
   };
 
   const onRegisterInformations = () => {
     const data = {
-      fullName: name, phoneNumber: phone, gender: value
-    }
-    fetch("https://7cc8-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/v1/api/user/setUpAcc/" + userID, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
+      fullName: name,
+      phoneNumber: phone,
+      gender: value,
+    };
+    fetch(
+      'https://7cc8-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/v1/api/user/setUpAcc/' +
+        userID,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
       },
-      body: JSON.stringify(data)
-    }).then(() => navigation.navigate("Login2"))
-      .catch(err => console.log(err))
-  }
+    )
+      .then(() => navigation.navigate('Login2'))
+      .catch(err => console.log(err));
+  };
 
   return (
     <ScrollView>
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
+        style={{flex: 1}}
         behavior="padding" // Choose the behavior you need (padding, position, height)
       >
-        <View style={{ flex: 1 }}>
+        <View style={{flex: 1}}>
           <View
             style={{
               flexDirection: 'row',
@@ -149,8 +156,8 @@ const RegisterInformation = () => {
               color="#000000"
               onPress={() => navigation.navigate('Register')}
             />
-            <View style={{ flex: 1, alignItems: 'center', marginRight: 20 }}>
-              <Text style={{ color: '#000000', fontWeight: '600', fontSize: 18 }}>
+            <View style={{flex: 1, alignItems: 'center', marginRight: 20}}>
+              <Text style={{color: '#000000', fontWeight: '600', fontSize: 18}}>
                 Thông tin cá nhân
               </Text>
             </View>
@@ -169,7 +176,7 @@ const RegisterInformation = () => {
             />
           </Pressable>
         </View>
-        <View style={{ marginTop: 20 }}>
+        <View style={{marginTop: 20}}>
           <TextInput
             style={styles.textinput}
             placeholder="Họ và tên"
@@ -225,6 +232,7 @@ const RegisterInformation = () => {
             style={styles.textinput}
             placeholder="Số điện thoại"
             value={phone}
+            keyboardType="numeric"
             onChangeText={text => {
               setPhone(text);
               setPhoneError('');
@@ -233,7 +241,7 @@ const RegisterInformation = () => {
           {phoneError ? (
             <Text style={styles.errorText}>{phoneError}</Text>
           ) : null}
-          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <Dropdown
               style={styles.dropdown}
               placeholderStyle={styles.placeholderStyle}
@@ -249,6 +257,7 @@ const RegisterInformation = () => {
               onChange={item => {
                 setValue(item.value);
                 setGenderError('');
+                console.log(item.value);
               }}
             />
           </View>
@@ -280,6 +289,7 @@ const styles = {
     borderRadius: 10,
     paddingHorizontal: 15,
     fontSize: 16,
+    borderWidth: 1,
   },
   dropdown: {
     margin: 16,
@@ -319,6 +329,13 @@ const styles = {
     color: 'red',
     marginHorizontal: 20,
     paddingHorizontal: 15,
+  },
+  label: {
+    marginHorizontal: 20,
+    marginVertical: 5,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
   },
 };
 

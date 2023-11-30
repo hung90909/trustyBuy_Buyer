@@ -5,7 +5,7 @@ const Slideshow = () => {
   return (
     <View
       style={{
-        height: 150,
+        height: 160,
         width: '90%',
         alignSelf: 'center',
         borderRadius: 20,

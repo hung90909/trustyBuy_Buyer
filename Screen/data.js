@@ -208,6 +208,9 @@ export const sanpham = [
       'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
     priceSP: 346476,
     soldSP: 123456,
+    soLuong: 1,
+    color: 'Đen',
+    size: 'XL',
   },
   {
     id: '19',
@@ -217,6 +220,9 @@ export const sanpham = [
       'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
     priceSP: 345332,
     soldSP: 876824345,
+    soLuong: 1,
+    color: 'Đen',
+    size: 'XL',
   },
   {
     id: '20',
@@ -226,6 +232,9 @@ export const sanpham = [
       'https://down-vn.img.susercontent.com/file/sg-11134201-22120-kzglycl3unlvf4',
     priceSP: 124323,
     soldSP: 456645,
+    soLuong: 1,
+    color: 'Đen',
+    size: 'XL',
   },
   {
     id: '21',
@@ -234,6 +243,9 @@ export const sanpham = [
       'https://down-vn.img.susercontent.com/file/1c6db1d5260f99d6a0a8f55002ba7412',
     priceSP: 234574,
     soldSP: 464356,
+    soLuong: 1,
+    color: 'Đen',
+    size: 'XL',
   },
   {
     id: '22',
@@ -243,6 +255,9 @@ export const sanpham = [
       'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
     priceSP: 346476,
     soldSP: 123456,
+    soLuong: 1,
+    color: 'Đen',
+    size: 'XL',
   },
   {
     id: '23',
@@ -252,6 +267,9 @@ export const sanpham = [
       'https://down-vn.img.susercontent.com/file/e37ae5c2e54e2c0749e1c1ee6f8ccea6',
     priceSP: 345332,
     soldSP: 876824345,
+    soLuong: 1,
+    color: 'Đen',
+    size: 'XL',
   },
   {
     id: '24',
@@ -261,6 +279,9 @@ export const sanpham = [
       'https://down-vn.img.susercontent.com/file/sg-11134201-22120-kzglycl3unlvf4',
     priceSP: 124323,
     soldSP: 456645,
+    soLuong: 1,
+    color: 'Đen',
+    size: 'XL',
   },
   {
     id: '25',
@@ -269,6 +290,9 @@ export const sanpham = [
       'https://down-vn.img.susercontent.com/file/1c6db1d5260f99d6a0a8f55002ba7412',
     priceSP: 234574,
     soldSP: 464356,
+    soLuong: 1,
+    color: 'Đen',
+    size: 'XL',
   },
 ];
 export const danhmucphobien = [
