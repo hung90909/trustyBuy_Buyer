@@ -32,6 +32,8 @@ const DetailProducts = ({navigation}) => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedQuantity, setSelectedQuantity] = useState();
   const [quantity, setQuantity] = useState(1);
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+  const [bottomSheetAction, setBottomSheetAction] = useState('addToCart');
 
   const handleIncreaseQuantity = () => {
     if (selectedColor && selectedSize) {
@@ -85,6 +87,61 @@ const DetailProducts = ({navigation}) => {
     return 0; // Return 0 if color or size not found
   };
 
+  const handleBuyNow = async () => {
+    try {
+      handleIncreaseQuantity();
+      if (selectedColor && selectedSize && selectedQuantity !== null) {
+        const headers = {
+          'x-xclient-id': '654c8a081f10540692bdc998',
+          Authorization:
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTRjOGEwODFmMTA1NDA2OTJiZGM5OTgiLCJlbWFpbCI6ImR1YzEyM0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRWR1l3dWY4Z0czSnVvR0FSM1hDSXd1UC9iR0lYSzdGbGJRU1RvNXVFZGdYS1ZWUTNpQlVJYSIsImlhdCI6MTcwMDkwMDIzNCwiZXhwIjoxNzAxNzY0MjM0fQ.F1lzM2nO75bSYlVpUIqcNw1Yg1KqM8coj0lkPcOEMLk',
+        };
+
+        const cartItem = {
+          product: {
+            productId: productId,
+            shopId: productDetail.shop_id,
+            quantity: selectedQuantity,
+            name: productDetail.product_name,
+            price: productDetail.product_price,
+            color: selectedColor,
+            size: selectedSize,
+          },
+        };
+
+        // const response = await axios.post(
+        //   'https://serverapiecommercefashion.onrender.com/v1/api/cartv2',
+        //   cartItem,
+        //   {
+        //     headers: {
+        //       'Content-Type': 'application/json',
+        //       ...headers,
+        //     },
+        //   },
+        // );
+
+        // console.log('Added to cart:', response.data.message);
+
+        // Reset selected options after adding to the cart
+
+        setSelectedColor(null);
+        setSelectedSize(null);
+        setSelectedQuantity(null);
+
+        Alert.alert('Thêm vào giỏ hàng thành công');
+      } else {
+        if (!selectedColor) {
+          Alert.alert('Vui lòng chọn màu sắc của sản phẩm');
+        } else if (!selectedSize) {
+          Alert.alert('Vui lòng chọn kích thước của sản phẩm');
+        } else {
+          Alert.alert('Sản phẩm này hiện không có sẵn');
+        }
+      }
+    } catch (error) {
+      console.error('Error adding to cart:', error.response.data);
+    }
+  };
   const handleAddToCart = async () => {
     try {
       handleIncreaseQuantity();
@@ -145,12 +202,14 @@ const DetailProducts = ({navigation}) => {
     resetQuantity(); // Reset quantity when size is selected
   };
   const snapPoints = ['70%'];
-  function handlePresentModal() {
+  const handlePresentModal = action => {
+    setBottomSheetAction(action);
     bottomSheetModalRef.current?.present();
     setTimeout(() => {
-      setIsOpen(true);
+      setIsBottomSheetVisible(true);
     }, 100);
-  }
+  };
+
   useEffect(() => {
     const getDetailProduct = async () => {
       try {
@@ -310,7 +369,9 @@ const DetailProducts = ({navigation}) => {
               <Ionicons name="chatbubbles-outline" size={30} color={'black'} />
             </Pressable>
             <View style={styles.line}></View>
-            <Pressable style={styles.btnCart} onPress={handlePresentModal}>
+            <Pressable
+              style={styles.btnCart}
+              onPress={() => handlePresentModal('addToCart')}>
               <MaterialCommunityIcons
                 name="cart-plus"
                 size={28}
@@ -318,7 +379,9 @@ const DetailProducts = ({navigation}) => {
               />
             </Pressable>
 
-            <Pressable style={styles.btnBuy}>
+            <Pressable
+              style={styles.btnBuy}
+              onPress={() => handlePresentModal('buyNow')}>
               <Text style={styles.titleBuy}>Mua ngay</Text>
             </Pressable>
           </View>
@@ -327,7 +390,7 @@ const DetailProducts = ({navigation}) => {
             index={0}
             snapPoints={snapPoints}
             backgroundStyle={{borderRadius: 10}}
-            onDismiss={() => setIsOpen(false)}>
+            onDismiss={() => setIsBottomSheetVisible(false)}>
             <View style={{flex: 1, paddingHorizontal: 20}}>
               {productDetail?.product_thumb &&
               productDetail.product_thumb.length > 0 ? (
@@ -552,20 +615,38 @@ const DetailProducts = ({navigation}) => {
                 </Pressable>
               </View>
             </View>
-            <Pressable
-              style={[
-                styles.btnAddCart,
-                {backgroundColor: isAddToCartDisabled ? '#EEEEEE' : 'black'},
-              ]}
-              onPress={isAddToCartDisabled ? null : handleAddToCart}>
-              <Text
+
+            {bottomSheetAction === 'addToCart' ? (
+              <Pressable
                 style={[
-                  styles.titleBtnAddCart,
-                  {color: isAddToCartDisabled ? '#CCCCCC' : 'white'},
-                ]}>
-                Thêm vào giỏ hàng
-              </Text>
-            </Pressable>
+                  styles.btnAddCart,
+                  {backgroundColor: isAddToCartDisabled ? '#EEEEEE' : 'black'},
+                ]}
+                onPress={isAddToCartDisabled ? null : handleAddToCart}>
+                <Text
+                  style={[
+                    styles.titleBtnAddCart,
+                    {color: isAddToCartDisabled ? '#CCCCCC' : 'white'},
+                  ]}>
+                  Thêm vào giỏ hàng
+                </Text>
+              </Pressable>
+            ) : (
+              <Pressable
+                style={[
+                  styles.btnAddCart,
+                  {backgroundColor: isAddToCartDisabled ? '#EEEEEE' : 'black'},
+                ]}
+                onPress={isAddToCartDisabled ? null : handleBuyNow}>
+                <Text
+                  style={[
+                    styles.titleBtnAddCart,
+                    {color: isAddToCartDisabled ? '#CCCCCC' : 'white'},
+                  ]}>
+                  Mua ngay
+                </Text>
+              </Pressable>
+            )}
           </BottomSheetModal>
         </SafeAreaView>
       </BottomSheetModalProvider>
