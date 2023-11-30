@@ -1,14 +1,37 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import Logout from './Component/Logout';
 import {useNavigation} from '@react-navigation/native';
+import axios from 'axios';
+import {API_BASE} from '../../API/getAPI';
 
 const ProfileScreen = () => {
-  const [user, setUser] = useState({
-    name: 'Andrew Ainsley',
-    phone: '+ 1 111 467 378 399',
-    avatar: require('../../Resource/Image/img.png'),
-  });
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log('ahahaha');
+      const api = `${API_BASE}/v1/api/user/getProfile`;
+      const userId = '655992c8b8ffe55cb44e9673';
+      const accessToken =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTU5OTJjOGI4ZmZlNTVjYjQ0ZTk2NzMiLCJlbWFpbCI6Im5na2hhY2RhaUBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRiN2lJci9SenpGbXZ1QWxUMzc5SmNPOU9FOUJpT1hITUY3M0o5cGtmZENJQ1BJNVV1alRyNiIsImlhdCI6MTcwMDk4Mzk0MSwiZXhwIjoxNzAxODQ3OTQxfQ.M-TK8_IU6x-TyT3ufeE8pX90zqzKWdDk6wTWkdYean8';
+      await axios
+        .get(api, {
+          headers: {
+            'x-xclient-id': userId,
+            authorization: accessToken,
+          },
+        })
+        .then(res => {
+          setUser(res.data.message.checkUser.information);
+          console.log(res.data.message.checkUser);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    };
+    fetchData();
+  }, []);
   const nav = useNavigation();
   const [showLogout, setShowLogout] = useState(false);
   const features = [
@@ -84,7 +107,9 @@ const ProfileScreen = () => {
         <View style={styles.avatar_container}>
           <Image
             style={styles.avatar}
-            source={user.avatar}
+            source={{
+              uri: `${API_BASE}/${user.avatar}`,
+            }}
             resizeMode="contain"
           />
           <TouchableOpacity
@@ -105,9 +130,9 @@ const ProfileScreen = () => {
             marginTop: 10,
             marginBottom: 5,
           }}>
-          {user.name}
+          {user.fullName}
         </Text>
-        <Text style={{fontSize: 13, color: 'black'}}>{user.phone}</Text>
+        <Text style={{fontSize: 13, color: 'black'}}>0{user.phoneNumber}</Text>
       </View>
       {features.map((item, index) => (
         <TouchableOpacity onPress={() => handleFeatureClick(item.name)}>

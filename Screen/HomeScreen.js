@@ -61,7 +61,7 @@ const HomeScreen = ({navigation}) => {
               name="notifications-outline"
               size={26}
               color="#1B2028"
-              onPress={navigateToNotification}
+              // onPress={navigateToNotification}
             />
             <TouchableOpacity
               onPress={() => {

@@ -4,7 +4,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import HomeScreen from './Screen/HomeScreen';
-import CartScreen from './Screen/CartScreen';
 import Welcome from './Screen/Welcome/welcome';
 import ProfileScreen from './Screen/Profile/ProfileScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons'; // Import the icons you want to use
@@ -181,6 +180,11 @@ const App = () => {
         <Stack.Screen
           name="DetailProducts"
           component={DetailProducts}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfile}
           options={{headerShown: false}}
         />
         <Stack.Screen

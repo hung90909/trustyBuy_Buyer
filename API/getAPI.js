@@ -1,7 +1,7 @@
 export const API_Login =
-  'https://serverapiecommercefashion.onrender.com/v1/api/access/login';
+  'https://7cc8-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/v1/api/access/login';
 export const API_Signup =
-  'https://serverapiecommercefashion.onrender.com/v1/api/access/signup';
+  'https://7cc8-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/v1/api/access/signup';
 export const API_BASE_URL =
   // 'https://1eaf-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/';
   'https://serverapiecommercefashion.onrender.com/';
@@ -17,3 +17,5 @@ export const ORDER_API = getApiUrl('v1/api/checkout');
 export const SHOP_API = getApiUrl('v1/api/shop');
 export const DISCOUNT_API = getApiUrl('v1/api/discount');
 export const ADD_CART_API = getApiUrl('v1/api/cartv2');
+
+export const API_BASE = 'https://10a8-116-96-44-199.ngrok-free.app';
