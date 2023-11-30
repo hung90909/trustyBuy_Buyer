@@ -25,13 +25,8 @@ import SearchScreen from './Screen/SearchScreen';
 import ListProduct from './Screen/ListProduct';
 import ShopInformation from './Screen/ShopInformation';
 import AdressScreen from './Screen/Address/AddressScreen';
-import AdressScreen from './Screen/AddressScreen';
-import register from './Screen/Login/register';
-import login2 from './Screen/Login/login2';
-import SearchScreen from './Screen/SearchScreen';
-import ListProduct from './Screen/ListProduct';
-import ShopInformation from './Screen/ShopInformation';
 import EditProfile from './Screen/EditProfile';
+import CartScreen from './Screen/CartScreen';
 
 const TabTop = createMaterialTopTabNavigator();
 const TabOrder = () => {
@@ -120,9 +115,7 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-
       <Stack.Navigator initialRouteName="Main">
-
         <Stack.Screen
           name="Main"
           component={BotBottomTabNavigator}
@@ -201,11 +194,6 @@ const App = () => {
         <Stack.Screen
           name="AdressScreen"
           component={AdressScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="EditProfile"
-          component={EditProfile}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
