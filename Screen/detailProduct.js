@@ -25,7 +25,7 @@ import {TextInput} from 'react-native';
 const DetailProducts = ({navigation}) => {
   const route = useRoute();
   const {productId} = useRoute().params;
-  const [productDetail, setProductDetail] = useState([]);
+  const [productDetail, setProductDetail] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const bottomSheetModalRef = useRef(null);
   const [selectedColor, setSelectedColor] = useState(null);
@@ -49,6 +49,17 @@ const DetailProducts = ({navigation}) => {
         'Thông báo',
         'Vui lòng chọn màu sắc và kích thước trước khi thay đổi số lượng',
       );
+    }
+  };
+  const resetQuantity = () => {
+    if (selectedColor && selectedSize) {
+      const totalQuantity = getTotalQuantityForColorAndSize(
+        selectedColor,
+        selectedSize,
+      );
+      setQuantity(Math.min(totalQuantity, 1));
+    } else {
+      setQuantity(1);
     }
   };
 
@@ -76,6 +87,7 @@ const DetailProducts = ({navigation}) => {
 
   const handleAddToCart = async () => {
     try {
+      handleIncreaseQuantity();
       if (selectedColor && selectedSize && selectedQuantity !== null) {
         const headers = {
           'x-xclient-id': '654c8a081f10540692bdc998',
@@ -109,6 +121,7 @@ const DetailProducts = ({navigation}) => {
         console.log('Added to cart:', response.data.message);
 
         // Reset selected options after adding to the cart
+
         setSelectedColor(null);
         setSelectedSize(null);
         setSelectedQuantity(null);
@@ -127,7 +140,10 @@ const DetailProducts = ({navigation}) => {
       console.error('Error adding to cart:', error.response.data);
     }
   };
-
+  const handleSizePress = size => {
+    setSelectedSize(size);
+    resetQuantity(); // Reset quantity when size is selected
+  };
   const snapPoints = ['70%'];
   function handlePresentModal() {
     bottomSheetModalRef.current?.present();
@@ -155,10 +171,12 @@ const DetailProducts = ({navigation}) => {
         console.log(response.data);
       } catch (error) {
         console.error(error.response.data);
+      } finally {
+        resetQuantity(); // Reset quantity when product details are loaded
       }
     };
     getDetailProduct();
-  }, []);
+  }, [selectedColor, selectedSize]);
 
   const renderImage = useCallback(({item}) => {
     return (
@@ -177,6 +195,7 @@ const DetailProducts = ({navigation}) => {
     setSelectedQuantity(
       options.reduce((total, item) => total + item.options_quantity, 0),
     );
+    resetQuantity();
   };
 
   const getTotalQuantity = () => {
@@ -282,7 +301,7 @@ const DetailProducts = ({navigation}) => {
               </View>
               <View style={styles.suggestionsProduct}>
                 <Text style={styles.titelSuggestions}>Gợi ý các sản phẩm</Text>
-                <Listproducts navigation={navigation} />
+                <Listproducts />
               </View>
             </View>
           </ScrollView>
@@ -462,25 +481,37 @@ const DetailProducts = ({navigation}) => {
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
-                <TouchableOpacity
-                  onPress={isAddToCartDisabled ? null : handleDecreaseQuantity}>
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      color: isAddToCartDisabled ? '#CCCCCC' : 'black',
-                    }}>
-                    -
-                  </Text>
-                </TouchableOpacity>
+                <Pressable
+                  onPress={isAddToCartDisabled ? null : handleDecreaseQuantity}
+                  style={{
+                    borderWidth: 1,
+                    padding: 2,
+                    height: 30,
+                    width: 30,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderColor: isAddToCartDisabled ? '#CCCCCC' : 'gray',
+                    borderTopLeftRadius: 2,
+                    borderBottomLeftRadius: 2,
+                  }}>
+                  <AntDesign
+                    name="minus"
+                    size={20}
+                    color={isAddToCartDisabled ? '#CCCCCC' : 'black'}
+                  />
+                </Pressable>
                 <TextInput
                   style={{
                     fontSize: 14,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    marginHorizontal: 16,
-                    marginVertical: 10,
                     textAlign: 'center',
+                    padding: 5,
                     color: isAddToCartDisabled ? '#CCCCCC' : '#FC6D26',
+                    height: 30,
+                    borderColor: isAddToCartDisabled ? '#CCCCCC' : 'gray',
+                    borderTopWidth: 1,
+                    borderBottomWidth: 1,
                   }}
                   keyboardType="numeric"
                   value={quantity.toString()}
@@ -500,16 +531,25 @@ const DetailProducts = ({navigation}) => {
                     }
                   }}
                 />
-                <TouchableOpacity
-                  onPress={isAddToCartDisabled ? null : handleIncreaseQuantity}>
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      color: isAddToCartDisabled ? '#CCCCCC' : 'black',
-                    }}>
-                    +
-                  </Text>
-                </TouchableOpacity>
+                <Pressable
+                  onPress={isAddToCartDisabled ? null : handleIncreaseQuantity}
+                  style={{
+                    borderWidth: 1,
+                    padding: 2,
+                    height: 30,
+                    width: 30,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderColor: isAddToCartDisabled ? '#CCCCCC' : 'gray',
+                    borderTopRightRadius: 2,
+                    borderBottomRightRadius: 2,
+                  }}>
+                  <AntDesign
+                    name="plus"
+                    size={18}
+                    color={isAddToCartDisabled ? '#CCCCCC' : 'black'}
+                  />
+                </Pressable>
               </View>
             </View>
             <Pressable

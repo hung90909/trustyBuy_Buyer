@@ -12,10 +12,10 @@ import axios from 'axios';
 import {useNavigation} from '@react-navigation/native';
 import {formatPrice, formatSoldSP} from './Format';
 import {API_BASE_URL, PRODUCT_API} from '../API/getAPI';
-const Listproducts = props => {
+const Listproducts = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [product, setProduct] = useState([]);
-  const {navigation} = props;
+  const navigation = useNavigation();
 
   useEffect(() => {
     getAllProduct();
@@ -78,7 +78,6 @@ const Listproducts = props => {
         keyExtractor={item => item?._id}
         renderItem={renderSanpham}
         numColumns={2}
-        style={{marginBottom: 10}}
       />
     </View>
   );
