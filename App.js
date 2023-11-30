@@ -19,6 +19,14 @@ import DaHuy from './Screen/statusOrder/daHuy';
 import ChatScreen from './Screen/Chat';
 import {useIsFocused} from '@react-navigation/native';
 import DetailProducts from './Screen/detailProduct';
+import login2 from './Screen/Login/login2';
+import register from './Screen/Login/register';
+import SearchScreen from './Screen/SearchScreen';
+import ListProduct from './Screen/ListProduct';
+import ShopInformation from './Screen/ShopInformation';
+import EditProfile from './Screen/EditProfile';
+import AdressScreen from './Screen/Address/AddressScreen';
+import ChangPassword from './Screen/ChangPassword';
 
 const TabTop = createMaterialTopTabNavigator();
 const TabOrder = () => {
@@ -171,6 +179,21 @@ const App = () => {
         <Stack.Screen
           name="DetailProducts"
           component={DetailProducts}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfile}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AdressScreen"
+          component={AdressScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ChangePassword"
+          component={ChangPassword}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
