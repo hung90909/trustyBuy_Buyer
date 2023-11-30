@@ -16,15 +16,15 @@ import Listproducts from './Listproducts';
 import Listcategorys from './Listcategorys';
 
 const HomeScreen = ({navigation}) => {
-  // async function getToken() {
-  //   const token = await AsyncStorage.getItem('access_token');
-  //   const tokenUser = token ? JSON.parse(token) : null;
-  //   console.log('Token save : ', tokenUser);
-  // }
+  async function getToken() {
+    const token = await AsyncStorage.getItem('access_token');
+    const tokenUser = token ? JSON.parse(token) : null;
+    console.log('Token save : ', tokenUser);
+  }
 
-  // useEffect(() => {
-  //   getToken();
-  // }, []);
+  useEffect(() => {
+    getToken();
+  }, []);
   const navigateToProfile = () => {
     navigation.navigate('Profile');
   };

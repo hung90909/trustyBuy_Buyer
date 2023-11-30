@@ -10,11 +10,10 @@ const ProfileScreen = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log('ahahaha');
       const api = `${API_BASE}/v1/api/user/getProfile`;
       const userId = '655992c8b8ffe55cb44e9673';
       const accessToken =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTU5OTJjOGI4ZmZlNTVjYjQ0ZTk2NzMiLCJlbWFpbCI6Im5na2hhY2RhaUBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRiN2lJci9SenpGbXZ1QWxUMzc5SmNPOU9FOUJpT1hITUY3M0o5cGtmZENJQ1BJNVV1alRyNiIsImlhdCI6MTcwMDk4Mzk0MSwiZXhwIjoxNzAxODQ3OTQxfQ.M-TK8_IU6x-TyT3ufeE8pX90zqzKWdDk6wTWkdYean8';
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTU5OTJjOGI4ZmZlNTVjYjQ0ZTk2NzMiLCJlbWFpbCI6Im5na2hhY2RhaUBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRiN2lJci9SenpGbXZ1QWxUMzc5SmNPOU9FOUJpT1hITUY3M0o5cGtmZENJQ1BJNVV1alRyNiIsImlhdCI6MTcwMTM1ODE2OCwiZXhwIjoxNzAyMjIyMTY4fQ.ElSx8RCY3l8wLLr4FGaxfpes5aOEzNQ9YmFueMAxNrI';
       await axios
         .get(api, {
           headers: {

@@ -36,51 +36,6 @@ export default function XuLy() {
     }, []),
   );
 
-  const dataOrderXuLy = [
-    {
-      id: 1,
-      avatarShop:
-        'https://th.bing.com/th/id/OIP.4DxmdHCqdqCgoe9rESRuyAHaHa?w=178&h=180&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      nameShop: 'Tia To',
-      image:
-        'https://th.bing.com/th/id/OIP.KUOCcLMoEvgXlpy8_Q_LZQHaHa?w=187&h=187&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      name: 'Đồng Hồ Đeo Tay Thông Minh FD68S Đo Nhịp Tim Huyết Áp Cho Android Ios 2022',
-      color: 'trăng',
-      size: 'XL',
-      price: 20000000,
-      quantity: 3,
-      status: 0,
-    },
-    {
-      id: 2,
-      avatarShop:
-        'https://th.bing.com/th/id/OIP.4DxmdHCqdqCgoe9rESRuyAHaHa?w=178&h=180&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      nameShop: 'Tia To',
-      image:
-        'https://th.bing.com/th/id/OIP.KUOCcLMoEvgXlpy8_Q_LZQHaHa?w=187&h=187&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      name: 'Đồng Hồ Đeo Tay Thông Minh FD68S Đo Nhịp Tim Huyết Áp Cho Android Ios 2022',
-      color: 'trăng',
-      size: 'XL',
-      price: 20000000,
-      quantity: 3,
-      status: 0,
-    },
-    {
-      id: 3,
-      avatarShop:
-        'https://th.bing.com/th/id/OIP.4DxmdHCqdqCgoe9rESRuyAHaHa?w=178&h=180&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      nameShop: 'Tia To',
-      image:
-        'https://th.bing.com/th/id/OIP.KUOCcLMoEvgXlpy8_Q_LZQHaHa?w=187&h=187&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      name: 'Đồng Hồ Đeo Tay Thông Minh FD68S Đo Nhịp Tim Huyết Áp Cho Android Ios 2022',
-      color: 'trăng',
-      size: 'XL',
-      price: 20000000,
-      quantity: 3,
-      status: 0,
-    },
-  ];
-
   const onClickCancel = id => {
     fetch(
       'https://7324-116-96-44-199.ngrok-free.app/v1/api/checkout/cancelByUser/' +

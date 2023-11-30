@@ -160,6 +160,7 @@ const DetailProducts = ({route, navigation}) => {
         };
 
         const cartItem = {
+          userId: '654c8a081f10540692bdc998',
           product: {
             productId: productId,
             shopId: productDetail.shop_id,
