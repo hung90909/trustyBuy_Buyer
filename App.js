@@ -186,11 +186,6 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="EditProfile"
-          component={EditProfile}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
           name="AdressScreen"
           component={AdressScreen}
           options={{headerShown: false}}
