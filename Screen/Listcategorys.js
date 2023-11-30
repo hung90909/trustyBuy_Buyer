@@ -1,6 +1,5 @@
 import {StyleSheet, Text, View, Pressable, Image, FlatList} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {danhmucsp} from './data';
 import {useNavigation} from '@react-navigation/native';
 const Listcategorys = () => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -17,7 +16,7 @@ const Listcategorys = () => {
 
         // Thực hiện GET request đến API endpoint với headers
         const response = await axios.get(
-          'https://ef22-116-96-44-199.ngrok-free.app/v1/api/category/getAllCategory',
+          'https://10a8-116-96-44-199.ngrok-free.app/v1/api/category/getAllCategory',
           {
             headers,
           },
@@ -51,7 +50,7 @@ const Listcategorys = () => {
         }}>
         <Image
           source={{
-            uri: `https://ef22-116-96-44-199.ngrok-free.app/${item?.category_thumb}`,
+            uri: `https://10a8-116-96-44-199.ngrok-free.app/${item?.category_thumb}`,
           }}
         />
         {/* <Image source={item.image} /> */}
@@ -66,8 +65,8 @@ const Listcategorys = () => {
       <FlatList
         data={data}
         scrollEnabled={false}
-        keyExtractor={item => item._id}
-        numColumns={4} // Set the number of columns to 2
+        keyExtractor={item => item?._id}
+        numColumns={4}
         renderItem={renderItem}
         style={{marginHorizontal: 25, marginVertical: 20}}
       />

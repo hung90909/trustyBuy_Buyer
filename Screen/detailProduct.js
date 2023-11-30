@@ -113,8 +113,6 @@ const DetailProducts = ({route, navigation}) => {
           },
         };
         console.log(quantity);
-
-        // Navigate to the CheckoutScreen and pass the order details as params
         navigation.navigate('Checkout', {orderDetails: orderItem});
 
         // You can customize this part based on your business logic
