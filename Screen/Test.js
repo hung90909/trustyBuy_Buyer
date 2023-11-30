@@ -8,7 +8,7 @@ import {useNavigation} from '@react-navigation/native';
 import {ScrollView} from 'react-native';
 import {Pressable} from 'react-native';
 
-const CheckoutScreen = ({route}) => {
+const Test = ({route}) => {
   const {orderDetails} = route.params;
   const product = orderDetails.product;
   const navigation = useNavigation();
@@ -197,7 +197,6 @@ const CheckoutScreen = ({route}) => {
   );
 };
 
-export default CheckoutScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -297,3 +296,5 @@ const styles = StyleSheet.create({
     color: '#FC6D26',
   },
 });
+
+export default Test;

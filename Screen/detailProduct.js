@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   FlatList,
   Image,
+  TouchableOpacity,
 } from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
@@ -103,7 +104,7 @@ const DetailProducts = ({route, navigation}) => {
           product: {
             productId: productId,
             shopId: productDetail.shop_id,
-            quantity: selectedQuantity,
+            quantity: quantity,
             name: productDetail.product_name,
             price: productDetail.product_price,
             color: selectedColor,
@@ -111,6 +112,7 @@ const DetailProducts = ({route, navigation}) => {
             thumb: productDetail.product_thumb,
           },
         };
+        console.log(quantity);
 
         // Navigate to the CheckoutScreen and pass the order details as params
         navigation.navigate('Checkout', {orderDetails: orderItem});
@@ -128,6 +130,7 @@ const DetailProducts = ({route, navigation}) => {
         // );
 
         // Reset selected options after buying
+        navigation.navigate('Test', {orderDetails: orderItem});
         setSelectedColor(null);
         setSelectedSize(null);
         setSelectedQuantity(null);

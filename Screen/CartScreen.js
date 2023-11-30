@@ -22,7 +22,7 @@ const CartScreen = () => {
 
     try {
       const response = await fetch(
-        'https://7cc8-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/v1/api/cartv2',
+        'https://serverapiecommercefashion.onrender.com/v1/api/cartv2',
         {
           method: 'GET',
           headers: {
@@ -39,7 +39,7 @@ const CartScreen = () => {
 
       const data = await response.json();
       const productList = data.message;
-      console.log(productList.cart.cart_products)
+      console.log(productList.cart.cart_products);
       setListCart(productList.cart.cart_products);
     } catch (error) {
       console.log(error);
@@ -57,61 +57,6 @@ const CartScreen = () => {
       return 'Giá không hợp lệ';
     }
   };
-
-  const dataCart = [
-    {
-      id: 1,
-      avatarShop:
-        'https://th.bing.com/th/id/OIP.4DxmdHCqdqCgoe9rESRuyAHaHa?w=178&h=180&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      nameShop: 'GShock Việt Nam Official',
-      image:
-        'https://th.bing.com/th/id/OIP.KUOCcLMoEvgXlpy8_Q_LZQHaHa?w=187&h=187&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      name: 'Đồng Hồ Đeo Tay Thông Minh FD68S Đo Nhịp Tim Huyết Áp Cho Android Ios 2022',
-      color: 'trăng',
-      size: 'XL',
-      price: 20000000,
-      quantity: 3,
-    },
-    {
-      id: 2,
-      avatarShop:
-        'https://th.bing.com/th/id/OIP.4DxmdHCqdqCgoe9rESRuyAHaHa?w=178&h=180&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      nameShop: 'GShock Việt Nam Official',
-      image:
-        'https://th.bing.com/th/id/OIP.KUOCcLMoEvgXlpy8_Q_LZQHaHa?w=187&h=187&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      name: 'Đồng Hồ Đeo Tay Thông Minh FD68S Đo Nhịp Tim Huyết Áp Cho Android Ios 2022',
-      color: 'trăng',
-      size: 'XL',
-      price: 20000000,
-      quantity: 3,
-    },
-    {
-      id: 3,
-      avatarShop:
-        'https://th.bing.com/th/id/OIP.4DxmdHCqdqCgoe9rESRuyAHaHa?w=178&h=180&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      nameShop: 'GShock Việt Nam Official',
-      image:
-        'https://th.bing.com/th/id/OIP.KUOCcLMoEvgXlpy8_Q_LZQHaHa?w=187&h=187&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      name: 'Đồng Hồ Đeo Tay Thông Minh FD68S Đo Nhịp Tim Huyết Áp Cho Android Ios 2022',
-      color: 'trăng',
-      size: 'XL',
-      price: 20000000,
-      quantity: 3,
-    },
-    {
-      id: 4,
-      avatarShop:
-        'https://th.bing.com/th/id/OIP.4DxmdHCqdqCgoe9rESRuyAHaHa?w=178&h=180&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      nameShop: 'GShock Việt Nam Official',
-      image:
-        'https://th.bing.com/th/id/OIP.KUOCcLMoEvgXlpy8_Q_LZQHaHa?w=187&h=187&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      name: 'Đồng Hồ Đeo Tay Thông Minh FD68S Đo Nhịp Tim Huyết Áp Cho Android Ios 2022',
-      color: 'trăng',
-      size: 'XL',
-      price: 20000000,
-      quantity: 3,
-    },
-  ];
   const [isSelected, setSelection] = useState(false);
   const [quantity, setQuantity] = useState(0);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -220,7 +165,11 @@ const CartScreen = () => {
                         width: 30,
                         borderRadius: 25,
                       }}
-                      source={{uri:"https://7cc8-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/"+item.avatar_shop}}
+                      source={{
+                        uri:
+                          'https://7cc8-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/' +
+                          item.avatar_shop,
+                      }}
                     />
                     <Text
                       style={{
@@ -257,7 +206,11 @@ const CartScreen = () => {
                         width: 100,
                         height: 90,
                       }}
-                      source={{uri: "https://7cc8-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/uploads/"+item.product_thumb}}
+                      source={{
+                        uri:
+                          'https://7cc8-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/uploads/' +
+                          item.product_thumb,
+                      }}
                     />
                     <View style={{marginStart: 7, width: 140}}>
                       <Text numberOfLines={2}>{item.product_name}</Text>
