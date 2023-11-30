@@ -1,7 +1,7 @@
 export const API_Login =
-  'https://01d9-116-96-46-69.ngrok-free.app/v1/api/access/login';
+  'https://serverapiecommercefashion.onrender.com/v1/api/access/login';
 export const API_Signup =
-  'https://01d9-116-96-46-69.ngrok-free.app/v1/api/access/signup';
+  'https://serverapiecommercefashion.onrender.com/v1/api/access/signup';
 export const API_BASE_URL =
   // 'https://1eaf-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/';
   'https://serverapiecommercefashion.onrender.com/';

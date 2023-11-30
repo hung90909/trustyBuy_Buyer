@@ -30,6 +30,16 @@ const CheckoutScreen = ({route}) => {
           <ScrollView>
             <View style={styles.content}>
               <View style={styles.productContainer}>
+                <View style={{borderWidth: 1}}>
+                  <Image
+                    source={{
+                      uri: `${API_BASE_URL}${product.imageShop}`,
+                    }}
+                    style={{height: 50, width: 50}}
+                  />
+                  <Text style={{}}>{product.nameShop}</Text>
+                </View>
+
                 <Image
                   source={{
                     uri: `${API_BASE_URL}uploads/${product.thumb[0]}`,

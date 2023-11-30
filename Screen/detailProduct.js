@@ -130,7 +130,7 @@ const DetailProducts = ({route, navigation}) => {
         // );
 
         // Reset selected options after buying
-        navigation.navigate('Test', {orderDetails: orderItem});
+        navigation.navigate('Checkout', {orderDetails: orderItem});
         setSelectedColor(null);
         setSelectedSize(null);
         setSelectedQuantity(null);
@@ -170,6 +170,8 @@ const DetailProducts = ({route, navigation}) => {
             price: productDetail.product_price,
             color: selectedColor,
             size: selectedSize,
+            imageShop: productDetail.shop_avatar,
+            nameShop: productDetail.shop_name,
           },
         };
 

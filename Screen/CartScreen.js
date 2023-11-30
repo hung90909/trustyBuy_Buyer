@@ -22,7 +22,7 @@ const CartScreen = () => {
 
     try {
       const response = await fetch(
-        'https://serverapiecommercefashion.onrender.com/v1/api/cartv2',
+        'https://10a8-116-96-44-199.ngrok-free.app/v1/api/cartv2',
         {
           method: 'GET',
           headers: {
@@ -167,7 +167,7 @@ const CartScreen = () => {
                       }}
                       source={{
                         uri:
-                          'https://7cc8-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/' +
+                          'https://10a8-116-96-44-199.ngrok-free.app/' +
                           item.avatar_shop,
                       }}
                     />
@@ -208,7 +208,7 @@ const CartScreen = () => {
                       }}
                       source={{
                         uri:
-                          'https://7cc8-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/uploads/' +
+                          'https://10a8-116-96-44-199.ngrok-free.app/uploads/' +
                           item.product_thumb,
                       }}
                     />
