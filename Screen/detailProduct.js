@@ -1,36 +1,33 @@
+import React, {useCallback, useEffect, useState, useRef} from 'react';
 import {
-  FlatList,
-  Image,
-  SafeAreaView,
-  StyleSheet,
   Text,
   View,
   ScrollView,
   Pressable,
+  TextInput,
+  StyleSheet,
+  SafeAreaView,
+  FlatList,
+  Image,
 } from 'react-native';
-import React, {useCallback, useEffect, useState, useRef} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import Listproducts from './Listproducts';
+import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import axios from 'axios';
-import {ADD_CART_API, API_BASE_URL, PRODUCT_API} from '../API/getAPI';
-import {formatPrice, formatSoldSP} from './Format';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {Alert} from 'react-native';
-import {TouchableOpacity} from 'react-native';
-import {TextInput} from 'react-native';
-const DetailProducts = ({navigation}) => {
-  const route = useRoute();
-  const {productId} = useRoute().params;
-  const [productDetail, setProductDetail] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
+import {formatPrice, formatSoldSP} from './Format';
+import Listproducts from './Listproducts';
+import {ADD_CART_API, API_BASE_URL, PRODUCT_API} from '../API/getAPI';
+const DetailProducts = ({route, navigation}) => {
+  const {productId} = route.params;
   const bottomSheetModalRef = useRef(null);
+  const [productDetail, setProductDetail] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
-  const [selectedQuantity, setSelectedQuantity] = useState();
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [quantity, setQuantity] = useState(1);
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [bottomSheetAction, setBottomSheetAction] = useState('addToCart');
@@ -91,13 +88,18 @@ const DetailProducts = ({navigation}) => {
     try {
       handleIncreaseQuantity();
       if (selectedColor && selectedSize && selectedQuantity !== null) {
+        const totalQuantity = getTotalQuantityForColorAndSize(
+          selectedColor,
+          selectedSize,
+        );
+
         const headers = {
           'x-xclient-id': '654c8a081f10540692bdc998',
           Authorization:
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTRjOGEwODFmMTA1NDA2OTJiZGM5OTgiLCJlbWFpbCI6ImR1YzEyM0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRWR1l3dWY4Z0czSnVvR0FSM1hDSXd1UC9iR0lYSzdGbGJRU1RvNXVFZGdYS1ZWUTNpQlVJYSIsImlhdCI6MTcwMDkwMDIzNCwiZXhwIjoxNzAxNzY0MjM0fQ.F1lzM2nO75bSYlVpUIqcNw1Yg1KqM8coj0lkPcOEMLk',
         };
 
-        const cartItem = {
+        const orderItem = {
           product: {
             productId: productId,
             shopId: productDetail.shop_id,
@@ -106,29 +108,29 @@ const DetailProducts = ({navigation}) => {
             price: productDetail.product_price,
             color: selectedColor,
             size: selectedSize,
+            thumb: productDetail.product_thumb,
           },
         };
 
-        // const response = await axios.post(
-        //   'https://serverapiecommercefashion.onrender.com/v1/api/cartv2',
-        //   cartItem,
-        //   {
-        //     headers: {
-        //       'Content-Type': 'application/json',
-        //       ...headers,
-        //     },
-        //   },
+        // Navigate to the CheckoutScreen and pass the order details as params
+        navigation.navigate('Checkout', {orderDetails: orderItem});
+
+        // You can customize this part based on your business logic
+        // Here, it just shows an alert with the total quantity
+        const updatedTotalQuantity = getTotalQuantityForColorAndSize(
+          selectedColor,
+          selectedSize,
+        );
+
+        // Alert.alert(
+        //   'Mua ngay thành công',
+        //   `Tổng số lượng sản phẩm: ${updatedTotalQuantity}`,
         // );
 
-        // console.log('Added to cart:', response.data.message);
-
-        // Reset selected options after adding to the cart
-
+        // Reset selected options after buying
         setSelectedColor(null);
         setSelectedSize(null);
         setSelectedQuantity(null);
-
-        Alert.alert('Thêm vào giỏ hàng thành công');
       } else {
         if (!selectedColor) {
           Alert.alert('Vui lòng chọn màu sắc của sản phẩm');
@@ -139,13 +141,17 @@ const DetailProducts = ({navigation}) => {
         }
       }
     } catch (error) {
-      console.error('Error adding to cart:', error.response.data);
+      console.error('Error buying:', error.response.data);
     }
   };
-  const handleAddToCart = async () => {
+  const handleAddToCart = async quantity => {
     try {
-      handleIncreaseQuantity();
-      if (selectedColor && selectedSize && selectedQuantity !== null) {
+      if (selectedColor && selectedSize && quantity !== null) {
+        const totalQuantity = getTotalQuantityForColorAndSize(
+          selectedColor,
+          selectedSize,
+        );
+
         const headers = {
           'x-xclient-id': '654c8a081f10540692bdc998',
           Authorization:
@@ -156,7 +162,7 @@ const DetailProducts = ({navigation}) => {
           product: {
             productId: productId,
             shopId: productDetail.shop_id,
-            quantity: selectedQuantity,
+            quantity: quantity,
             name: productDetail.product_name,
             price: productDetail.product_price,
             color: selectedColor,
@@ -165,7 +171,7 @@ const DetailProducts = ({navigation}) => {
         };
 
         const response = await axios.post(
-          'https://serverapiecommercefashion.onrender.com/v1/api/cartv2',
+          `${API_BASE_URL}v1/api/cartv2`,
           cartItem,
           {
             headers: {
@@ -178,12 +184,19 @@ const DetailProducts = ({navigation}) => {
         console.log('Added to cart:', response.data.message);
 
         // Reset selected options after adding to the cart
-
         setSelectedColor(null);
         setSelectedSize(null);
         setSelectedQuantity(null);
 
-        Alert.alert('Thêm vào giỏ hàng thành công');
+        const updatedTotalQuantity = getTotalQuantityForColorAndSize(
+          selectedColor,
+          selectedSize,
+        );
+
+        // Alert.alert(
+        //   'Thêm vào giỏ hàng thành công',
+        //   `Tổng số lượng sản phẩm: ${updatedTotalQuantity}`,
+        // );
       } else {
         if (!selectedColor) {
           Alert.alert('Vui lòng chọn màu sắc của sản phẩm');
@@ -197,6 +210,7 @@ const DetailProducts = ({navigation}) => {
       console.error('Error adding to cart:', error.response.data);
     }
   };
+
   const handleSizePress = size => {
     setSelectedSize(size);
     resetQuantity(); // Reset quantity when size is selected
@@ -227,7 +241,6 @@ const DetailProducts = ({navigation}) => {
           },
         );
         setProductDetail(response.data.message);
-        console.log(response.data);
       } catch (error) {
         console.error(error.response.data);
       } finally {
@@ -594,6 +607,7 @@ const DetailProducts = ({navigation}) => {
                     }
                   }}
                 />
+
                 <Pressable
                   onPress={isAddToCartDisabled ? null : handleIncreaseQuantity}
                   style={{
@@ -622,7 +636,9 @@ const DetailProducts = ({navigation}) => {
                   styles.btnAddCart,
                   {backgroundColor: isAddToCartDisabled ? '#EEEEEE' : 'black'},
                 ]}
-                onPress={isAddToCartDisabled ? null : handleAddToCart}>
+                onPress={
+                  isAddToCartDisabled ? null : () => handleAddToCart(quantity)
+                }>
                 <Text
                   style={[
                     styles.titleBtnAddCart,

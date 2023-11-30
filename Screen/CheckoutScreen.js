@@ -13,7 +13,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {sanpham} from './data';
 import {formatPrice} from './Format';
-const CheckoutScreen = () => {
+const CheckoutScreen = ({route}) => {
+  const {orderDetails} = route.params;
   const renderDonhang = ({item}) => {
     return (
       <View
