@@ -28,7 +28,7 @@ const DetailProducts = ({route, navigation}) => {
   const [productDetail, setProductDetail] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
-  const [selectedQuantity, setSelectedQuantity] = useState(1);
+  const [selectedQuantity, setSelectedQuantity] = useState();
   const [quantity, setQuantity] = useState(1);
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [bottomSheetAction, setBottomSheetAction] = useState('addToCart');

@@ -26,6 +26,7 @@ import ShopInformation from './Screen/ShopInformation';
 import AdressScreen from './Screen/Address/AddressScreen';
 import EditProfile from './Screen/EditProfile';
 import CartScreen from './Screen/CartScreen';
+import CheckoutScreen from './Screen/CheckoutScreen';
 
 const TabTop = createMaterialTopTabNavigator();
 const TabOrder = () => {
@@ -188,6 +189,11 @@ const App = () => {
         <Stack.Screen
           name="AdressScreen"
           component={AdressScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Checkout"
+          component={CheckoutScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
