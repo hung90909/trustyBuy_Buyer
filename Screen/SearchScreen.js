@@ -10,7 +10,7 @@ import {
   ScrollView,
   Pressable,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 // Khai báo icon
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -18,12 +18,14 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {sanpham} from './data';
 import Bottomsheet from './Bottomsheet';
+import ListProduct from './ListProduct';
+import {formatPrice, formatSoldSP} from './Format';
 // Khai báo bottom sheet
 
 const SearchScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredSanpham, setFilteredSanpham] = useState([]);
-
+  const [data, setData] = useState(null);
   const [isPressed, setIsPressed] = useState(false);
 
   const handlePress = () => {
@@ -46,22 +48,37 @@ const SearchScreen = () => {
 
     return formattedValue;
   };
+  useEffect(() => {
+    const getAllProduct = async () => {
+      try {
+        // Tạo đối tượng headers để chứa các thông tin header
+        const headers = {
+          'x-xclient-id': '654c8a081f10540692bdc998', // Thay 'your-client-id' bằng giá trị thực tế
+          Authorization:
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTRjOGEwODFmMTA1NDA2OTJiZGM5OTgiLCJlbWFpbCI6ImR1YzEyM0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRWR1l3dWY4Z0czSnVvR0FSM1hDSXd1UC9iR0lYSzdGbGJRU1RvNXVFZGdYS1ZWUTNpQlVJYSIsImlhdCI6MTcwMDc1NTE0NiwiZXhwIjoxNzAxNjE5MTQ2fQ.zdcI4Ce_Zqc0VgtJpi8V9SuIYG_MfZ5PQ0F77MGnye0', // Thay 'your-access-token' bằng giá trị thực tế
+        };
+        // Thực hiện GET request đến API endpoint với headers
+        const response = await axios.get(
+          'https://5c34-116-96-44-199.ngrok-free.app/v1/api/product/getAllProductByUser',
+          {
+            headers,
+          },
+        );
+        setData(response.data.message.allProduct);
+        console.log(response.data.message.allProduct);
+      } catch (error) {
+        console.error(error.response.data);
+      }
+    };
 
+    getAllProduct();
+  }, []);
   const handleInputChange = text => {
     setInputValue(formatCurrency(text));
   };
   const handleRetrySearch = () => {
     setSearchQuery(''); // Clear the search query
     // You can also reset any other state variables related to search if needed.
-  };
-
-  const formatPrice = priceSP => {
-    const formatter = new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-      currencyDisplay: 'symbol', // Để hiển thị ký hiệu đứng trước số
-    });
-    return `₫${priceSP.toLocaleString('vi-VN')}`;
   };
 
   const handleSearch = query => {
@@ -71,7 +88,7 @@ const SearchScreen = () => {
       setFilteredSanpham([]);
     } else {
       // Nếu có tìm kiếm, lọc danh sách sản phẩm
-      const filteredProducts = sanpham.filter(product =>
+      const filteredProducts = data.filter(product =>
         product.nameSP.toLowerCase().includes(query.toLowerCase()),
       );
       setFilteredSanpham(filteredProducts);
@@ -79,16 +96,6 @@ const SearchScreen = () => {
   };
 
   const renderSanpham = ({item}) => {
-    const formatSoldSP = value => {
-      if (value >= 1000000) {
-        return `${(value / 1000000).toFixed(1)}M`; // Đơn vị "M" cho giá trị lớn hơn hoặc bằng 1,000,000
-      } else if (value >= 1000) {
-        return `${(value / 1000).toFixed(1)}k`; // Đơn vị "k" cho giá trị lớn hơn hoặc bằng 1,000
-      } else {
-        return value.toString(); // Giữ nguyên giá trị nếu nhỏ hơn 1,000
-      }
-    };
-
     return (
       <TouchableOpacity
         style={{
@@ -210,13 +217,7 @@ const SearchScreen = () => {
                 style={{fontWeight: 'bold', color: 'black', marginLeft: 10}}>
                 Có thể bạn cũng thích
               </Text>
-              <FlatList
-                data={sanpham}
-                keyExtractor={item => item.id}
-                renderItem={renderSanpham}
-                numColumns={2}
-                scrollEnabled={false}
-              />
+              <ListProduct />
             </ScrollView>
           )}
           {/* FlatList item */}

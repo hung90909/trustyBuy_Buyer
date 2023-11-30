@@ -18,7 +18,6 @@ import DaHuy from './Screen/statusOrder/daHuy';
 import ChatScreen from './Screen/Chat';
 import {useIsFocused} from '@react-navigation/native';
 import DetailProducts from './Screen/detailProduct';
-import ChangPassword from './Screen/ChangPassword';
 import login2 from './Screen/Login/login2';
 import register from './Screen/Login/register';
 import SearchScreen from './Screen/SearchScreen';
@@ -115,7 +114,7 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Main">
+      <Stack.Navigator initialRouteName="Welcome">
         <Stack.Screen
           name="Main"
           component={BotBottomTabNavigator}
@@ -182,8 +181,8 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="ChangePassword"
-          component={ChangPassword}
+          name="EditProfile"
+          component={EditProfile}
           options={{headerShown: false}}
         />
         <Stack.Screen
