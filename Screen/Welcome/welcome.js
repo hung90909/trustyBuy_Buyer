@@ -16,9 +16,11 @@ const Welcome = () => {
       <ImageBackground
         resizeMode="stretch"
         style={styles.backGround}
-        source={require('../../Resource/Image/welcome.png')}>
-        <Text style={styles.text}>{`Welcome to`}</Text>
-        <Text style={styles.text1}>{`TrustyBuy`}</Text>
+        source={{
+          uri: 'https://image.hsv-tech.io/reebok/common/65af6c7b-ea50-49f9-8db6-09943edd6047.webp',
+        }}>
+        <Text style={styles.text}>Welcome to</Text>
+        <Text style={styles.text1}>TrustyBuy</Text>
       </ImageBackground>
     </View>
   );
@@ -32,21 +34,22 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: 'contain',
     paddingHorizontal: 20,
+    resizeMode: 'contain',
   },
   text: {
-    color: 'white',
-    fontSize: 25,
+    color: 'black',
+    fontSize: 30,
+    fontWeight: 'bold',
     position: 'absolute',
-    bottom: 80,
-    left: 20,
-    fontWeight: '400',
+    bottom: 130,
+    left: 10,
   },
   text1: {
-    color: 'white',
-    fontSize: 25,
+    color: 'black',
+    fontSize: 44,
     position: 'absolute',
-    bottom: 50,
-    left: 20,
+    bottom: 80,
+    left: 5,
     fontFamily: 'sans-serif-condensed',
     fontWeight: 'bold',
   },

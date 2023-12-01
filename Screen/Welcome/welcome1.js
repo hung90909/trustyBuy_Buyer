@@ -7,17 +7,17 @@ const Welcome1 = () => {
   const data = [
     {
       image:
-        'https://th.bing.com/th/id/OIP.mIJ22yp-GYpTdZSONq_bLgHaLH?pid=ImgDet&w=204&h=306&c=7&dpr=1.7',
+        'https://cafefcdn.com/203337114487263232/2022/1/25/1-1643080654946580357162.jpg',
       text: 'Chúng tôi cung cấp các sản phẩm chất lượng cho bạn',
     },
     {
       image:
-        'https://th.bing.com/th/id/OIP.i2enHpvw3tkVL9sCrg2gCwHaJA?pid=ImgDet&w=183&h=222&c=7&dpr=1.7',
+        'https://media.vneconomy.vn/w900/images/upload/2022/02/11/z3171115711773-550e04205cbdd6b8fd675e9f250a6c68.jpg',
       text: 'Chúng tôi cung cấp các sản phẩm chất lượng cho bạn',
     },
     {
       image:
-        'https://th.bing.com/th/id/OIP.mJw6N4vR4tmf0iTZNIzdtwAAAA?pid=ImgDet&w=183&h=240&c=7&dpr=1.7',
+        'https://mcdn.coolmate.me/image/August2021/thuong-hieu-thoi-trang-nam-tam-trung_99.jpg',
       text: 'Chúng tôi cung cấp các sản phẩm chất lượng cho bạn',
     },
   ];
@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
   image: {
     height: '80%',
     width: '100%',
+    resizeMode: 'contain',
   },
   text: {
     color: 'black',

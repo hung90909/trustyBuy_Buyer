@@ -13,7 +13,7 @@ const Listcategorys = () => {
         const headers = {
           'x-xclient-id': '654c8a081f10540692bdc998',
           authorization:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTRjOGEwODFmMTA1NDA2OTJiZGM5OTgiLCJlbWFpbCI6ImR1YzEyM0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRWR1l3dWY4Z0czSnVvR0FSM1hDSXd1UC9iR0lYSzdGbGJRU1RvNXVFZGdYS1ZWUTNpQlVJYSIsImlhdCI6MTcwMDc0NzcyMywiZXhwIjoxNzAxNjExNzIzfQ.e6b2XU7X14vXAilxpFXjwms7kqRcbOI_dQ1UKRS6IRg', // Thay 'your-access-token' bằng giá trị thực tế
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTRjOGEwODFmMTA1NDA2OTJiZGM5OTgiLCJlbWFpbCI6ImR1YzEyM0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRWR1l3dWY4Z0czSnVvR0FSM1hDSXd1UC9iR0lYSzdGbGJRU1RvNXVFZGdYS1ZWUTNpQlVJYSIsImlhdCI6MTcwMDkwMDIzNCwiZXhwIjoxNzAxNzY0MjM0fQ.F1lzM2nO75bSYlVpUIqcNw1Yg1KqM8coj0lkPcOEMLk', // Thay 'your-access-token' bằng giá trị thực tế
         };
 
         const response = await axios.get(`${CATEGORY_API}/getAllCategory`, {
@@ -40,7 +40,6 @@ const Listcategorys = () => {
           navigation.navigate('ListProduct', {danhmucspId: item.id});
         }}>
         <Image
-          style={styles.categoryImage}
           source={{
             uri: `${API_BASE_URL}/${item?.category_thumb}`,
           }}

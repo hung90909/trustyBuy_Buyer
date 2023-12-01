@@ -3,29 +3,29 @@ import {
   Image,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {ORDER_API} from '../../API/getAPI';
+
 export default function XuLy() {
   const nav = useNavigation();
 
   const token =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTRjOGEwODFmMTA1NDA2OTJiZGM5OTgiLCJlbWFpbCI6ImR1YzEyM0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRWR1l3dWY4Z0czSnVvR0FSM1hDSXd1UC9iR0lYSzdGbGJRU1RvNXVFZGdYS1ZWUTNpQlVJYSIsImlhdCI6MTcwMDgzODc4NywiZXhwIjoxNzAxNzAyNzg3fQ.RuxO3lv8xnqAG2lwRJwXcq2_z9GThZV3VOfkA7om458';
   const getAllOrderForUser = () => {
-    fetch(
-      'https://7324-116-96-44-199.ngrok-free.app/v1/api/checkout/getAllOrderForUser/pending',
-      {
-        headers: {
-          'x-xclient-id': '654c8a081f10540692bdc998',
-          authorization: token,
-        },
+    fetch(`${ORDER_API}/getAllOrderForUser/pending`, {
+      headers: {
+        'x-xclient-id': '654c8a081f10540692bdc998',
+        authorization: token,
       },
-    )
+    })
       .then(item => item.json())
-      .then(item => setListProduct(item.message.orderRes.user))
+      .then(item => {
+        setListProduct(item.message.orderRes.user);
+      })
       .catch(err => console.log(err));
   };
   const [listProduct, setListProduct] = useState([]);
@@ -36,63 +36,14 @@ export default function XuLy() {
     }, []),
   );
 
-  const dataOrderXuLy = [
-    {
-      id: 1,
-      avatarShop:
-        'https://th.bing.com/th/id/OIP.4DxmdHCqdqCgoe9rESRuyAHaHa?w=178&h=180&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      nameShop: 'Tia To',
-      image:
-        'https://th.bing.com/th/id/OIP.KUOCcLMoEvgXlpy8_Q_LZQHaHa?w=187&h=187&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      name: 'Đồng Hồ Đeo Tay Thông Minh FD68S Đo Nhịp Tim Huyết Áp Cho Android Ios 2022',
-      color: 'trăng',
-      size: 'XL',
-      price: 20000000,
-      quantity: 3,
-      status: 0,
-    },
-    {
-      id: 2,
-      avatarShop:
-        'https://th.bing.com/th/id/OIP.4DxmdHCqdqCgoe9rESRuyAHaHa?w=178&h=180&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      nameShop: 'Tia To',
-      image:
-        'https://th.bing.com/th/id/OIP.KUOCcLMoEvgXlpy8_Q_LZQHaHa?w=187&h=187&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      name: 'Đồng Hồ Đeo Tay Thông Minh FD68S Đo Nhịp Tim Huyết Áp Cho Android Ios 2022',
-      color: 'trăng',
-      size: 'XL',
-      price: 20000000,
-      quantity: 3,
-      status: 0,
-    },
-    {
-      id: 3,
-      avatarShop:
-        'https://th.bing.com/th/id/OIP.4DxmdHCqdqCgoe9rESRuyAHaHa?w=178&h=180&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      nameShop: 'Tia To',
-      image:
-        'https://th.bing.com/th/id/OIP.KUOCcLMoEvgXlpy8_Q_LZQHaHa?w=187&h=187&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      name: 'Đồng Hồ Đeo Tay Thông Minh FD68S Đo Nhịp Tim Huyết Áp Cho Android Ios 2022',
-      color: 'trăng',
-      size: 'XL',
-      price: 20000000,
-      quantity: 3,
-      status: 0,
-    },
-  ];
-
   const onClickCancel = id => {
-    fetch(
-      'https://7324-116-96-44-199.ngrok-free.app/v1/api/checkout/cancelByUser/' +
-        id,
-      {
-        method: 'PATCH',
-        headers: {
-          'x-xclient-id': '654c8a081f10540692bdc998',
-          authorization: token,
-        },
+    fetch(`${ORDER_API}/cancelByUser/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'x-xclient-id': '654c8a081f10540692bdc998',
+        authorization: token,
       },
-    )
+    })
       .then(() => nav.navigate('DaHuy'))
       .catch(err => console.log(err));
   };

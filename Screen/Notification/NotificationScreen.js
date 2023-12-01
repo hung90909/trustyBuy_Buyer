@@ -8,19 +8,23 @@ import {
   Image,
   FlatList,
 } from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
+import {useNavigation} from '@react-navigation/native';
 import {thongbao} from '../data';
 
 const NotificationScreen = () => {
   const navigation = useNavigation();
+
   const renderItem = ({item}) => {
+    const {day, month, year, hour, minute, image, title, content} = item;
+
     const notificationDate = moment(
-      `${item.day}/${item.month}/${item.year} ${item.hour}:${item.minute}`,
+      `${day}/${month}/${year} ${hour}:${minute}`,
       'DD/MM/YYYY HH:mm',
     );
+
     const now = moment();
 
     const isToday = notificationDate.isSame(now, 'day');
@@ -57,12 +61,12 @@ const NotificationScreen = () => {
       <TouchableOpacity style={styles.notificationItem}>
         <Image
           resizeMode="cover"
-          source={{uri: item.image}}
+          source={{uri: image}}
           style={styles.notificationImage}
         />
         <View style={styles.notificationTextContainer}>
-          <Text style={styles.notificationTitle}>{item.title}</Text>
-          <Text style={styles.notificationContent}>{item.content}</Text>
+          <Text style={styles.notificationTitle}>{title}</Text>
+          <Text style={styles.notificationContent}>{content}</Text>
           <Text style={styles.notificationTime}>{timeAgo}</Text>
         </View>
       </TouchableOpacity>
