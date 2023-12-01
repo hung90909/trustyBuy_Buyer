@@ -1,17 +1,9 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-  Image,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, Text, View, Pressable, Image, FlatList} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {useNavigation} from '@react-navigation/native';
-import {formatPrice, formatSoldSP} from './Format';
-import {API_BASE_URL, PRODUCT_API} from '../API/getAPI';
+import {formatPrice, formatSoldSP} from '../Format';
+import {API_BASE_URL, PRODUCT_API} from '../../API/getAPI';
 const Listproducts = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [product, setProduct] = useState([]);
@@ -22,18 +14,15 @@ const Listproducts = () => {
   }, []);
   const getAllProduct = async () => {
     try {
-      // Tạo đối tượng headers để chứa các thông tin header
       const headers = {
-        'x-xclient-id': '654c8a081f10540692bdc998', // Thay 'your-client-id' bằng giá trị thực tế
+        'x-xclient-id': '654c8a081f10540692bdc998',
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTRjOGEwODFmMTA1NDA2OTJiZGM5OTgiLCJlbWFpbCI6ImR1YzEyM0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRWR1l3dWY4Z0czSnVvR0FSM1hDSXd1UC9iR0lYSzdGbGJRU1RvNXVFZGdYS1ZWUTNpQlVJYSIsImlhdCI6MTcwMDkwMDIzNCwiZXhwIjoxNzAxNzY0MjM0fQ.F1lzM2nO75bSYlVpUIqcNw1Yg1KqM8coj0lkPcOEMLk', // Thay 'your-access-token' bằng giá trị thực tế
       };
-      // Thực hiện GET request đến API endpoint với headers
       const response = await axios.get(`${PRODUCT_API}/getAllProductByUser`, {
         headers,
       });
       setProduct(response.data.message.allProduct);
-      console.log(response.data.message.allProduct);
     } catch (error) {
       console.error(error.response.data);
     }

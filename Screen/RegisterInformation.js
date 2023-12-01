@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -12,12 +12,12 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {Dropdown} from 'react-native-element-dropdown';
-import {useNavigation} from '@react-navigation/native';
+import { Dropdown } from 'react-native-element-dropdown';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const data = [
-  {label: 'Nam', value: 'Nam'},
-  {label: 'Nữ', value: 'Nữ'},
+  { label: 'Nam', value: 'Nam' },
+  { label: 'Nữ', value: 'Nữ' },
 ];
 
 const RegisterInformation = () => {
@@ -122,8 +122,8 @@ const RegisterInformation = () => {
       gender: value,
     };
     fetch(
-      'https://7cc8-2a09-bac5-d45a-16dc-00-247-17.ngrok-free.app/v1/api/user/setUpAcc/' +
-        userID,
+      'https://fbf9-123-24-162-159.ngrok-free.app/v1/api/user/setUpAcc/' +
+      userID,
       {
         method: 'POST',
         headers: {
@@ -139,10 +139,10 @@ const RegisterInformation = () => {
   return (
     <ScrollView>
       <KeyboardAvoidingView
-        style={{flex: 1}}
+        style={{ flex: 1 }}
         behavior="padding" // Choose the behavior you need (padding, position, height)
       >
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <View
             style={{
               flexDirection: 'row',
@@ -156,8 +156,8 @@ const RegisterInformation = () => {
               color="#000000"
               onPress={() => navigation.navigate('Register')}
             />
-            <View style={{flex: 1, alignItems: 'center', marginRight: 20}}>
-              <Text style={{color: '#000000', fontWeight: '600', fontSize: 18}}>
+            <View style={{ flex: 1, alignItems: 'center', marginRight: 20 }}>
+              <Text style={{ color: '#000000', fontWeight: '600', fontSize: 18 }}>
                 Thông tin cá nhân
               </Text>
             </View>
@@ -176,7 +176,7 @@ const RegisterInformation = () => {
             />
           </Pressable>
         </View>
-        <View style={{marginTop: 20}}>
+        <View style={{ marginTop: 20 }}>
           <TextInput
             style={styles.textinput}
             placeholder="Họ và tên"
@@ -216,9 +216,7 @@ const RegisterInformation = () => {
             />
           )}
 
-          {emailError ? (
-            <Text style={styles.errorText}>{emailError}</Text>
-          ) : null}
+
           <TextInput
             style={styles.textinput}
             placeholder="Số điện thoại"
@@ -232,7 +230,7 @@ const RegisterInformation = () => {
           {phoneError ? (
             <Text style={styles.errorText}>{phoneError}</Text>
           ) : null}
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <Dropdown
               style={styles.dropdown}
               placeholderStyle={styles.placeholderStyle}

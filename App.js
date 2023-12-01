@@ -3,28 +3,29 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import HomeScreen from './Screen/HomeScreen';
+import HomeScreen from './Screen/home/HomeScreen';
 import Welcome from './Screen/Welcome/welcome';
 import ProfileScreen from './Screen/Profile/ProfileScreen';
-import { Ionicons } from 'react-native-vector-icons';
-import NotificationScreen from './Screen/NotificationScreen';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import NotificationScreen from './Screen/Notification/NotificationScreen';
 import Welcome1 from './Screen/Welcome/welcome1';
 import Login from './Screen/Login/login';
 import RegisterInformation from './Screen/RegisterInformation';
-import XuLy from './Screen/statusOrder/xuLy';
-import DangGiao from './Screen/statusOrder/dangGiao';
-import DaGiao from './Screen/statusOrder/daGiao';
-import DaHuy from './Screen/statusOrder/daHuy';
-import ChatScreen from './Screen/Chat';
+import XuLy from './Screen/Order/xuLy';
+import DangGiao from './Screen/Order/dangGiao';
+import DaGiao from './Screen/Order/daGiao';
+import DaHuy from './Screen/Order/daHuy';
+import ChatScreen from './Screen/Chat/Chat';
 import DetailProducts from './Screen/detailProduct';
 import login2 from './Screen/Login/login2';
 import register from './Screen/Login/register';
 import SearchScreen from './Screen/SearchScreen';
 import ListProduct from './Screen/ListProduct';
-import ShopInformation from './Screen/ShopInformation';
+import ShopInformation from './Screen/InfoShop/ShopInformation';
 import AdressScreen from './Screen/Address/AddressScreen';
-import EditProfile from './Screen/EditProfile';
-import CartScreen from './Screen/CartScreen';
+import EditProfile from './Screen/Profile/EditProfile';
+import CartScreen from './Screen/Cart/CartScreen';
+import CheckoutScreen from './Screen/CheckoutScreen';
 
 const TabTop = createMaterialTopTabNavigator();
 
@@ -104,12 +105,12 @@ const App = () => (
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Register" component={register} />
       <Stack.Screen name="Login2" component={login2} />
-      <Stack.Screen name="Main" component={BotBottomTabNavigator} />
-      <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
       <Stack.Screen
         name="RegisterInformation"
         component={RegisterInformation}
       />
+      <Stack.Screen name="Main" component={BotBottomTabNavigator} />
+      <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
       <Stack.Screen name="Search" component={SearchScreen} />
       <Stack.Screen name="ListProduct" component={ListProduct} />
       <Stack.Screen name="ShopInformation" component={ShopInformation} />

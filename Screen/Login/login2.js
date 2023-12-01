@@ -13,7 +13,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { checkEmail, checkPassword } from '../../compoment/checkValidate';
-import { API_Login } from '../../API/getAPI';
+import { API_Login, Login_API } from '../../API/getAPI';
 
 const Login2 = () => {
   const [errorEmail, setErrorEmail] = useState('');
@@ -40,7 +40,7 @@ const Login2 = () => {
     }
 
     // Nếu không có lỗi, thực hiện đăng nhập
-    fetch(API_Login, {
+    fetch(Login_API, {
       method: 'POST',
       body: JSON.stringify({ email, password }),
       headers: {
@@ -137,6 +137,40 @@ const Login2 = () => {
         <Text style={styles.buttonText}>Đăng nhập</Text>
       </TouchableOpacity>
       <View style={styles.footer}>
+        <View style={styles.line}>
+          <View style={{ height: 1, width: '40%', backgroundColor: '#D9D9D9' }} />
+          <Text style={{ marginHorizontal: 10, color: 'black' }}>Hoặc</Text>
+          <View style={{ height: 1, width: '40%', backgroundColor: '#D9D9D9' }} />
+        </View>
+        <View
+          style={{
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 20,
+            flexDirection: 'row',
+          }}>
+          <TouchableOpacity style={styles.btn}>
+            <Image
+              style={{
+                width: 30,
+                height: 30,
+              }}
+              source={require('../../Resource/icon/facebook.png')}
+            />
+          </TouchableOpacity>
+          <View style={{ width: 20 }} />
+          <TouchableOpacity style={styles.btn}>
+            <Image
+              style={{
+                width: 30,
+                height: 30,
+              }}
+              source={require('../../Resource/icon/google.png')}
+            />
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.notAcount}>
           <Text>Chưa có tài khoản? </Text>
           <TouchableOpacity
@@ -173,8 +207,6 @@ const styles = StyleSheet.create({
     height: 400,
     justifyContent: 'center',
     paddingHorizontal: 20,
-
-
   },
   textInput: {
     width: '100%',
@@ -204,6 +236,10 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
   },
+  line: {
+    flexDirection: "row",
+    alignItems: 'center'
+  },
   footer: {
     flex: 1,
     justifyContent: 'center',
@@ -222,6 +258,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 20,
 
+  }, btn: {
+    width: 80,
+    height: 50,
+    borderWidth: 1,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: 'gray',
   },
 });
 

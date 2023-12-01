@@ -2,8 +2,23 @@ import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 
+const Header = () => (
+  <View style={styles.headerContainer}>
+    <Text style={styles.headerText}>TrustyBuy</Text>
+  </View>
+);
+
+const ContinueButton = ({ source, text }) => (
+  <TouchableOpacity style={styles.continue}>
+    <View style={{ width: 70 }} />
+    <Image style={styles.icon} source={source} />
+    <Text style={styles.buttonText}>{text}</Text>
+  </TouchableOpacity>
+);
+
 const Login = () => {
   const nav = useNavigation();
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -53,9 +68,7 @@ const Login = () => {
           <View style={{ height: 0.3, width: '40%', backgroundColor: 'black' }} />
         </View>
         <TouchableOpacity
-          onPress={() => {
-            nav.navigate('Login2');
-          }}
+          onPress={() => nav.navigate('Login2')}
           style={styles.btnLogin}>
           <Text style={{ color: 'white', fontWeight: '600' }}>Đăng nhập</Text>
         </TouchableOpacity>
@@ -79,15 +92,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     backgroundColor: 'white',
   },
-  header: {
+  headerContainer: {
     width: '100%',
     height: '30%',
-
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20
   },
-  body: {
+  bodyContainer: {
     width: '100%',
     height: '30%',
     marginVertical: 20,
@@ -100,7 +112,6 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: 'gray',
     borderRadius: 10,
-
     alignItems: 'center',
     flexDirection: 'row',
     marginVertical: 30
@@ -114,7 +125,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-
   },
   btnLogin: {
     width: '100%',
@@ -135,5 +145,20 @@ const styles = StyleSheet.create({
     height: 200,
     resizeMode: 'contain', // Tùy chỉnh theo yêu cầu của bạn
   },
+  headerText: {
+    fontSize: 40,
+    fontFamily: 'sans-serif-condensed',
+    fontWeight: 'bold',
+    color: 'black',
+    fontStyle: 'normal',
+  },
+  buttonText: {
+    color: 'black',
+  },
+  boldText: {
+    fontWeight: 'bold',
+    color: 'black',
+  },
 });
+
 export default Login;

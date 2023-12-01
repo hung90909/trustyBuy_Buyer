@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {checkEmail, checkPassword} from '../compoment/checkValidate';
+import {checkEmail, checkPassword} from '../../compoment/checkValidate';
 import axios from 'axios';
-import {API_BASE} from '../API/getAPI';
+import {API_BASE} from '../../API/getAPI';
 
 export default ChangePassword = () => {
   const [errorPassword, setErrorPassword] = useState('');

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -16,15 +16,6 @@ import Listproducts from './Listproducts';
 import Listcategorys from './Listcategorys';
 
 const HomeScreen = ({navigation}) => {
-  // async function getToken() {
-  //   const token = await AsyncStorage.getItem('access_token');
-  //   const tokenUser = token ? JSON.parse(token) : null;
-  //   console.log('Token save : ', tokenUser);
-  // }
-
-  // useEffect(() => {
-  //   getToken();
-  // }, []);
   const navigateToProfile = () => {
     navigation.navigate('Profile');
   };
@@ -46,7 +37,7 @@ const HomeScreen = ({navigation}) => {
             <Pressable style={styles.profileButton} onPress={navigateToProfile}>
               <Image
                 style={styles.profileImage}
-                source={require('../Resource/Image/img.png')}
+                source={require('../../Resource/Image/img.png')}
                 resizeMode="contain"
               />
             </Pressable>
@@ -129,7 +120,11 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     marginHorizontal: 25,
-    marginTop: 20,
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 10,
+    padding: 2,
   },
   searchButton: {
     flexDirection: 'row',
