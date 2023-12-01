@@ -10,7 +10,6 @@ const Login = () => {
         <Text
           style={{
             fontSize: 40,
-            fontFamily: 'sans-serif-condensed',
             fontWeight: 'bold',
             color: 'black',
             fontStyle: 'normal',
@@ -75,6 +74,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
+    backgroundColor: 'white',
   },
   header: {
     width: '100%',
