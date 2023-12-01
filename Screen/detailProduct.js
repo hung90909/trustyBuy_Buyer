@@ -20,7 +20,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Alert} from 'react-native';
 import {formatPrice, formatSoldSP} from './Format';
-import Listproducts from './Listproducts';
+import Listproducts from './home/Listproducts';
 import {ADD_CART_API, API_BASE_URL, PRODUCT_API} from '../API/getAPI';
 const DetailProducts = ({route, navigation}) => {
   const {productId} = route.params;

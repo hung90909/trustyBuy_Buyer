@@ -7,18 +7,13 @@ import {
   TextInput,
 } from 'react-native';
 import React, {useState} from 'react';
-<<<<<<< HEAD
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {useNavigation} from '@react-navigation/native';
 import CheckBox from '@react-native-community/checkbox';
-=======
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import Fontisto from 'react-native-vector-icons/Fontisto';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
->>>>>>> ed223e8d1275c73230897764a6d5e622f4050a6e
 import {checkEmail, checkPassword} from '../../compoment/checkValidate';
-import {API_Login} from '../../API/getAPI';
+import {API_Login, SIGNIN_API} from '../../API/getAPI';
 
 export default Login2 = () => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
@@ -45,7 +40,7 @@ export default Login2 = () => {
     if (errorEmail.length !== 0 || errorPassword.length !== 0) {
       return;
     }
-    fetch(API_Login, {
+    fetch(SIGNIN_API, {
       method: 'POST',
       body: JSON.stringify({email, password}),
       headers: {
@@ -139,7 +134,6 @@ export default Login2 = () => {
             {errorPassword}
           </Text>
         )}
-<<<<<<< HEAD
 
         <View
           style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
@@ -150,8 +144,6 @@ export default Login2 = () => {
           />
           <Text style={{fontSize: 16}}>Ghi nhớ</Text>
         </View>
-=======
->>>>>>> ed223e8d1275c73230897764a6d5e622f4050a6e
         <TouchableOpacity
           onPress={() => {
             checkValidateLogin();
@@ -165,7 +157,6 @@ export default Login2 = () => {
             marginTop: errorPassword ? 20 : 40,
             borderRadius: 5,
           }}>
-<<<<<<< HEAD
           <Text style={{color: 'white'}}>Đăng nhập</Text>
         </TouchableOpacity>
       </View>
@@ -204,12 +195,6 @@ export default Login2 = () => {
           </TouchableOpacity>
         </View>
 
-=======
-          <Text style={{color: 'white', fontSize: 18}}>Đăng nhập</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.footer}>
->>>>>>> ed223e8d1275c73230897764a6d5e622f4050a6e
         <View style={styles.notAcount}>
           <Text>Chưa có tài khoản? </Text>
           <TouchableOpacity

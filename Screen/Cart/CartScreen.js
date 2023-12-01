@@ -8,30 +8,27 @@ import {
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {CheckBox} from '@rneui/themed';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
+import {ADD_CART_API} from '../../API/getAPI';
 const CartScreen = () => {
   const [listCart, setListCart] = useState([]);
   const nav = useNavigation();
 
   const getCart = async () => {
     const token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTRjOGEwODFmMTA1NDA2OTJiZGM5OTgiLCJlbWFpbCI6ImR1YzEyM0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRWR1l3dWY4Z0czSnVvR0FSM1hDSXd1UC9iR0lYSzdGbGJRU1RvNXVFZGdYS1ZWUTNpQlVJYSIsImlhdCI6MTcwMDkwMDIzNCwiZXhwIjoxNzAxNzY0MjM0fQ.F1lzM2nO75bSYlVpUIqcNw1Yg1KqM8coj0lkPcOEMLk'; // Thay thế bằng mã token thực tế của bạn
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTRjOGEwODFmMTA1NDA2OTJiZGM5OTgiLCJlbWFpbCI6ImR1YzEyM0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRWR1l3dWY4Z0czSnVvR0FSM1hDSXd1UC9iR0lYSzdGbGJRU1RvNXVFZGdYS1ZWUTNpQlVJYSIsImlhdCI6MTcwMDkwMDIzNCwiZXhwIjoxNzAxNzY0MjM0fQ.F1lzM2nO75bSYlVpUIqcNw1Yg1KqM8coj0lkPcOEMLk';
 
     try {
-      const response = await fetch(
-        'https://10a8-116-96-44-199.ngrok-free.app/v1/api/cartv2',
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-xclient-id': '654c8a081f10540692bdc998',
-            authorization: token, // Sửa lỗi chính tả, sử dụng "Authorization" thay vì "ahthorization"
-          },
+      const response = await fetch(ADD_CART_API, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-xclient-id': '654c8a081f10540692bdc998',
+          authorization: token,
         },
-      );
+      });
 
       if (!response.ok) {
         throw new Error('Lỗi khi gọi API');

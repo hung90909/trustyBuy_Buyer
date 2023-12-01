@@ -11,7 +11,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
-import Listproducts from './Listproducts';
+import Listproducts from '../home/Listproducts';
 
 const ShopInformation = () => {
   const navigation = useNavigation();
@@ -71,7 +71,7 @@ const ShopInformation = () => {
             <View style={styles.shopRating}>
               <Image
                 style={styles.starIcon}
-                source={require('../Resource/Image/star.png')}
+                source={require('../../Resource/Image/star.png')}
               />
               <Text style={styles.ratingText}>4.9/5.0</Text>
               <View style={styles.ratingSeparator} />

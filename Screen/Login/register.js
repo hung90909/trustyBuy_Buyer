@@ -7,22 +7,15 @@ import {
   TextInput,
 } from 'react-native';
 import React, {useState} from 'react';
-<<<<<<< HEAD
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import {useNavigation} from '@react-navigation/native';
-import CheckBox from '@react-native-community/checkbox';
-=======
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
->>>>>>> ed223e8d1275c73230897764a6d5e622f4050a6e
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import {useNavigation} from '@react-navigation/native';
 import {checkEmail, checkPassword} from '../../compoment/checkValidate';
-import {API_Signup} from '../../API/getAPI';
+import {SIGNUP_API} from '../../API/getAPI';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default Register = () => {
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [errorEmail, setErrorEmail] = useState('');
   const [errorPassword, setErrorPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -52,7 +45,7 @@ export default Register = () => {
       password,
       role: 'User',
     };
-    fetch(API_Signup, {
+    fetch(SIGNUP_API, {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
@@ -176,7 +169,6 @@ export default Register = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.footer}>
-<<<<<<< HEAD
         <View style={styles.line}>
           <View style={{height: 1, width: '40%', backgroundColor: '#D9D9D9'}} />
           <Text style={{marginHorizontal: 10, color: 'black'}}>Hoặc</Text>
@@ -211,8 +203,6 @@ export default Register = () => {
           </TouchableOpacity>
         </View>
 
-=======
->>>>>>> ed223e8d1275c73230897764a6d5e622f4050a6e
         <View style={styles.notAcount}>
           <Text>Đã có tài khoản? </Text>
           <TouchableOpacity

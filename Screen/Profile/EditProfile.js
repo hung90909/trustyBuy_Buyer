@@ -13,7 +13,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Dropdown} from 'react-native-element-dropdown';
 import {useNavigation} from '@react-navigation/native';
-import {API_BASE} from '../API/getAPI';
+import {API_BASE} from '../../API/getAPI';
 import axios from 'axios';
 import {PermissionsAndroid} from 'react-native';
 import {Alert} from 'react-native';
@@ -193,7 +193,7 @@ const EditProfile = () => {
                 selectImageOption();
               }}>
               <Image
-                source={require('../Resource/icon/edit-text.png')}
+                source={require('../../Resource/icon/edit-text.png')}
                 style={styles.edit_icon}
               />
             </TouchableOpacity>

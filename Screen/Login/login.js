@@ -21,7 +21,6 @@ const Login = () => {
 
   return (
     <View style={styles.container}>
-<<<<<<< HEAD
       <Header />
       <View style={styles.bodyContainer}>
         <ContinueButton
@@ -32,18 +31,6 @@ const Login = () => {
           source={require('../../Resource/icon/google.png')}
           text="Tiếp tục với Google"
         />
-=======
-      <View style={styles.header}>
-        <Text
-          style={{
-            fontSize: 40,
-            fontWeight: 'bold',
-            color: 'black',
-            fontStyle: 'normal',
-          }}>
-          TrustyBuy
-        </Text>
->>>>>>> ed223e8d1275c73230897764a6d5e622f4050a6e
       </View>
       <View style={styles.footerContainer}>
         <View style={styles.line}>

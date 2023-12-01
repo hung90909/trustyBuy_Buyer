@@ -12,7 +12,7 @@ import React, {useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
-import {thongbao} from './data';
+import {thongbao} from '../data';
 
 const NotificationScreen = () => {
   const navigation = useNavigation();
