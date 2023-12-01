@@ -3,29 +3,30 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import HomeScreen from './Screen/home/HomeScreen';
-import Welcome from './Screen/Welcome/welcome';
-import ProfileScreen from './Screen/Profile/ProfileScreen';
+import HomeScreen from './src/Screen/home/HomeScreen';
+import Welcome from './src/Screen/Welcome/welcome';
+import ProfileScreen from './src/Screen/Profile/ProfileScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import NotificationScreen from './Screen/Notification/NotificationScreen';
-import Welcome1 from './Screen/Welcome/welcome1';
-import Login from './Screen/Login/login';
-import RegisterInformation from './Screen/RegisterInformation';
-import XuLy from './Screen/Order/xuLy';
-import DangGiao from './Screen/Order/dangGiao';
-import DaGiao from './Screen/Order/daGiao';
-import DaHuy from './Screen/Order/daHuy';
-import ChatScreen from './Screen/Chat/Chat';
-import DetailProducts from './Screen/detailProduct';
-import login2 from './Screen/Login/login2';
-import register from './Screen/Login/register';
-import SearchScreen from './Screen/SearchScreen';
-import ListProduct from './Screen/ListProduct';
-import ShopInformation from './Screen/InfoShop/ShopInformation';
-import AdressScreen from './Screen/Address/AddressScreen';
-import EditProfile from './Screen/Profile/EditProfile';
-import CartScreen from './Screen/Cart/CartScreen';
-import CheckoutScreen from './Screen/CheckoutScreen';
+import NotificationScreen from './src/Screen/Notification/NotificationScreen';
+import Welcome1 from './src/Screen/Welcome/welcome1';
+import Login from './src/Screen/Login/login';
+import RegisterInformation from './src/Screen/RegisterInformation';
+import XuLy from './src/Screen/Order/xuLy';
+import DangGiao from './src/Screen/Order/dangGiao';
+import DaGiao from './src/Screen/Order/daGiao';
+import DaHuy from './src/Screen/Order/daHuy';
+import ChatScreen from './src/Screen/Chat/Chat';
+import DetailProducts from './src/Screen/home/detailProduct';
+import login2 from './src/Screen/Login/login2';
+import register from './src/Screen/Login/register';
+import SearchScreen from './src/Screen/SearchScreen';
+import ListProduct from './src/Screen/ListProduct';
+import ShopInformation from './src/Screen/InfoShop/ShopInformation';
+import AdressScreen from './src/Screen/Address/AddressScreen';
+import EditProfile from './src/Screen/Profile/EditProfile';
+import CartScreen from './src/Screen/Cart/CartScreen';
+import ChangePassword from './src/Screen/ChangePassword';
+import CheckoutScreen from './src/Screen/CheckoutScreen';
 
 const TabTop = createMaterialTopTabNavigator();
 
@@ -98,7 +99,7 @@ const Stack = createNativeStackNavigator();
 const App = () => (
   <NavigationContainer>
     <Stack.Navigator
-      initialRouteName="Main"
+      initialRouteName="Welcome"
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="Welcome" component={Welcome} />
       <Stack.Screen name="Welcome1" component={Welcome1} />
@@ -117,6 +118,7 @@ const App = () => (
       <Stack.Screen name="Cart" component={CartScreen} />
       <Stack.Screen name="DetailProducts" component={DetailProducts} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
+      <Stack.Screen name="ChangePassword" component={ChangePassword} />
       <Stack.Screen name="AdressScreen" component={AdressScreen} />
     </Stack.Navigator>
   </NavigationContainer>
