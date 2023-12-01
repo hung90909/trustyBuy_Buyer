@@ -7,9 +7,16 @@ import {
   TextInput,
 } from 'react-native';
 import React, {useState} from 'react';
+<<<<<<< HEAD
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import CheckBox from '@react-native-community/checkbox';
+=======
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
+>>>>>>> ed223e8d1275c73230897764a6d5e622f4050a6e
 import {checkEmail, checkPassword} from '../../compoment/checkValidate';
 import {API_Login} from '../../API/getAPI';
 
@@ -63,19 +70,6 @@ export default Login2 = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => {
-            nav.navigate('Login');
-          }}>
-          <Image
-            style={{
-              width: 25,
-              height: 25,
-            }}
-            source={require('../../Resource/icon/back.png')}
-          />
-        </TouchableOpacity>
-
         <Text style={styles.Text}>TrustyBuy</Text>
         <Text
           style={{
@@ -90,14 +84,7 @@ export default Login2 = () => {
       </View>
       <View style={styles.body}>
         <View style={styles.textInput}>
-          <Image
-            style={{
-              width: 25,
-              height: 25,
-              marginStart: 20,
-            }}
-            source={require('../../Resource/icon/user.png')}
-          />
+          <Fontisto name="email" size={25} color={'black'} />
           <TextInput
             onChangeText={text => {
               if (checkEmail(text)) {
@@ -111,7 +98,7 @@ export default Login2 = () => {
             style={{
               marginStart: 10,
             }}
-            placeholder="Email / Số điện thoại"
+            placeholder="Email"
           />
         </View>
         {errorEmail && (
@@ -125,14 +112,7 @@ export default Login2 = () => {
           </Text>
         )}
         <View style={styles.textInput}>
-          <Image
-            style={{
-              width: 25,
-              height: 25,
-              marginStart: 20,
-            }}
-            source={require('../../Resource/icon/clock.png')}
-          />
+          <SimpleLineIcons name="lock" size={25} />
           <TextInput
             onChangeText={text => {
               if (checkPassword(text)) {
@@ -146,6 +126,7 @@ export default Login2 = () => {
               marginStart: 10,
             }}
             placeholder="Mật khẩu"
+            secureTextEntry
           />
         </View>
         {errorPassword && (
@@ -158,6 +139,7 @@ export default Login2 = () => {
             {errorPassword}
           </Text>
         )}
+<<<<<<< HEAD
 
         <View
           style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
@@ -168,6 +150,8 @@ export default Login2 = () => {
           />
           <Text style={{fontSize: 16}}>Ghi nhớ</Text>
         </View>
+=======
+>>>>>>> ed223e8d1275c73230897764a6d5e622f4050a6e
         <TouchableOpacity
           onPress={() => {
             checkValidateLogin();
@@ -179,9 +163,9 @@ export default Login2 = () => {
             justifyContent: 'center',
             alignItems: 'center',
             marginTop: errorPassword ? 20 : 40,
-            borderRadius: 20,
-            elevation: 3,
+            borderRadius: 5,
           }}>
+<<<<<<< HEAD
           <Text style={{color: 'white'}}>Đăng nhập</Text>
         </TouchableOpacity>
       </View>
@@ -220,6 +204,12 @@ export default Login2 = () => {
           </TouchableOpacity>
         </View>
 
+=======
+          <Text style={{color: 'white', fontSize: 18}}>Đăng nhập</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.footer}>
+>>>>>>> ed223e8d1275c73230897764a6d5e622f4050a6e
         <View style={styles.notAcount}>
           <Text>Chưa có tài khoản? </Text>
           <TouchableOpacity
@@ -238,7 +228,6 @@ const styles = StyleSheet.create({
   btn: {
     width: 80,
     height: 50,
-    borderWidth: 1,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -246,39 +235,43 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 20,
   },
   header: {
     height: '25%',
+    alignContent: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
   },
   Text: {
     alignSelf: 'center',
     fontSize: 35,
-    fontFamily: 'sans-serif-condensed',
     fontWeight: 'bold',
     color: 'black',
     marginTop: 15,
   },
   body: {
     height: checkPassword ? '50%' : '40%',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
     // backgroundColor:"red"
   },
   textInput: {
     width: '100%',
     height: 50,
     backgroundColor: 'rgba(232, 232, 232, 1)',
-    borderRadius: 15,
+    borderRadius: 5,
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: checkEmail ? 20 : 10,
+    paddingHorizontal: 15,
   },
   footer: {
     flex: 1,
-    marginTop: 10,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
     //    backgroundColor:"red"
   },
   line: {
-    marginTop: 10,
     height: 20,
     width: '100%',
     flexDirection: 'row',

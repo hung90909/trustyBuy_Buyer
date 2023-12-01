@@ -25,6 +25,7 @@ import ShopInformation from './Screen/ShopInformation';
 import AdressScreen from './Screen/Address/AddressScreen';
 import EditProfile from './Screen/EditProfile';
 import CartScreen from './Screen/CartScreen';
+import CheckoutScreen from './Screen/CheckoutScreen';
 
 const TabTop = createMaterialTopTabNavigator();
 
@@ -94,6 +95,7 @@ const BotBottomTabNavigator = () => (
 
 const Stack = createNativeStackNavigator();
 
+<<<<<<< HEAD
 const App = () => (
   <NavigationContainer>
     <Stack.Navigator
@@ -120,5 +122,95 @@ const App = () => (
     </Stack.Navigator>
   </NavigationContainer>
 );
+=======
+const App = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="RegisterInformation">
+        <Stack.Screen
+          name="Main"
+          component={BotBottomTabNavigator}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="NotificationScreen"
+          component={NotificationScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="RegisterInformation"
+          component={RegisterInformation}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Welcome"
+          component={Welcome}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Welcome1"
+          component={Welcome1}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Register"
+          component={register}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Login2"
+          component={login2}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Search"
+          component={SearchScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ListProduct"
+          component={ListProduct}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ShopInformation"
+          component={ShopInformation}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Cart"
+          component={CartScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="DetailProducts"
+          component={DetailProducts}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfile}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AdressScreen"
+          component={AdressScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Checkout"
+          component={CheckoutScreen}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+>>>>>>> ed223e8d1275c73230897764a6d5e622f4050a6e
 
 export default App;

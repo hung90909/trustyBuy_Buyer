@@ -39,7 +39,12 @@ const Welcome1 = () => {
 
   const onIndexChanged = index => {
     if (index === data.length) {
+<<<<<<< HEAD
       nav.navigate('Login');
+=======
+      // Nếu đang ở slide cuối cùng, chuyển sang màn hình mới
+      nav.navigate('Login2'); // Thay 'NewScreen' bằng tên màn hình mới của bạn
+>>>>>>> ed223e8d1275c73230897764a6d5e622f4050a6e
     }
   };
 

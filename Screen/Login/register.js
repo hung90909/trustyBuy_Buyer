@@ -7,9 +7,16 @@ import {
   TextInput,
 } from 'react-native';
 import React, {useState} from 'react';
+<<<<<<< HEAD
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation} from '@react-navigation/native';
 import CheckBox from '@react-native-community/checkbox';
+=======
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useNavigation} from '@react-navigation/native';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+>>>>>>> ed223e8d1275c73230897764a6d5e622f4050a6e
 import {checkEmail, checkPassword} from '../../compoment/checkValidate';
 import {API_Signup} from '../../API/getAPI';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -77,15 +84,9 @@ export default Register = () => {
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => {
-            nav.navigate('Login');
+            nav.goBack();
           }}>
-          <Image
-            style={{
-              width: 25,
-              height: 25,
-            }}
-            source={require('../../Resource/icon/back.png')}
-          />
+          <Ionicons name="arrow-back" size={25} color={'black'} />
         </TouchableOpacity>
 
         <Text style={styles.Text}>TrustyBuy</Text>
@@ -102,14 +103,7 @@ export default Register = () => {
       </View>
       <View style={styles.body}>
         <View style={styles.textInput}>
-          <Image
-            style={{
-              width: 25,
-              height: 25,
-              marginStart: 20,
-            }}
-            source={require('../../Resource/icon/user.png')}
-          />
+          <Fontisto name="email" size={25} color={'black'} />
           <TextInput
             onChangeText={text => {
               if (checkEmail(text)) {
@@ -123,7 +117,7 @@ export default Register = () => {
             style={{
               marginStart: 10,
             }}
-            placeholder="Email / Số điện thoại"
+            placeholder="Email"
           />
         </View>
         {errorEmail && (
@@ -137,14 +131,7 @@ export default Register = () => {
           </Text>
         )}
         <View style={styles.textInput}>
-          <Image
-            style={{
-              width: 25,
-              height: 25,
-              marginStart: 20,
-            }}
-            source={require('../../Resource/icon/clock.png')}
-          />
+          <SimpleLineIcons name="lock" size={25} />
           <TextInput
             onChangeText={text => {
               if (checkPassword(text)) {
@@ -182,13 +169,14 @@ export default Register = () => {
             justifyContent: 'center',
             alignItems: 'center',
             marginTop: errorPassword ? 20 : 40,
-            borderRadius: 20,
+            borderRadius: 5,
             elevation: 3,
           }}>
           <Text style={{color: 'white'}}>Đăng ký</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.footer}>
+<<<<<<< HEAD
         <View style={styles.line}>
           <View style={{height: 1, width: '40%', backgroundColor: '#D9D9D9'}} />
           <Text style={{marginHorizontal: 10, color: 'black'}}>Hoặc</Text>
@@ -223,6 +211,8 @@ export default Register = () => {
           </TouchableOpacity>
         </View>
 
+=======
+>>>>>>> ed223e8d1275c73230897764a6d5e622f4050a6e
         <View style={styles.notAcount}>
           <Text>Đã có tài khoản? </Text>
           <TouchableOpacity
@@ -249,15 +239,15 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 20,
   },
   header: {
     height: '25%',
+    padding: 20,
+    justifyContent: 'center',
   },
   Text: {
     alignSelf: 'center',
     fontSize: 35,
-    fontFamily: 'sans-serif-condensed',
     fontWeight: 'bold',
     color: 'black',
     marginTop: 15,
@@ -265,20 +255,24 @@ const styles = StyleSheet.create({
   body: {
     height: '40%',
     marginTop: 20,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
     // backgroundColor:"red"
   },
   textInput: {
     width: '100%',
     height: 50,
     backgroundColor: 'rgba(232, 232, 232, 1)',
-    borderRadius: 15,
+    borderRadius: 5,
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 15,
+    paddingHorizontal: 15,
   },
   footer: {
     flex: 1,
     marginTop: checkPassword ? 30 : 10,
+    justifyContent: 'center',
     //    backgroundColor:"red"
   },
   line: {

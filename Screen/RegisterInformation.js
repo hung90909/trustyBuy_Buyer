@@ -215,15 +215,6 @@ const RegisterInformation = () => {
               onChange={onChange}
             />
           )}
-          <TextInput
-            style={styles.textinput}
-            placeholder="Email"
-            value={email}
-            onChangeText={text => {
-              setEmail(text);
-              setEmailError('');
-            }}
-          />
 
           {emailError ? (
             <Text style={styles.errorText}>{emailError}</Text>

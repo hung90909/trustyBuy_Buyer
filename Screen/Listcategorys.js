@@ -2,6 +2,7 @@ import {StyleSheet, Text, View, Pressable, Image, FlatList} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {danhmucsp} from './data';
 import {useNavigation} from '@react-navigation/native';
+import axios from 'axios';
 const Listcategorys = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [data, setData] = useState(null);
