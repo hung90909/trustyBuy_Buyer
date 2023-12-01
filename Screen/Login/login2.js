@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { checkEmail, checkPassword } from '../../compoment/checkValidate';
 import { API_Login, Login_API } from '../../API/getAPI';
+import { getItem } from '../../utils/utils';
 
 const Login2 = () => {
   const [errorEmail, setErrorEmail] = useState('');
@@ -49,15 +50,10 @@ const Login2 = () => {
     })
       .then(response => response.json())
       .then(data => {
-        const accessToken = data.message.accessToken;
+        const accessToken = data.message;
         nav.navigate('Main');
-        AsyncStorage.setItem('access_token', JSON.stringify(accessToken))
-          .then(() => {
-            console.log('Token đã được lưu vào AsyncStorage.');
-          })
-          .catch(err =>
-            console.log('Lỗi khi lưu token vào AsyncStorage:', err),
-          );
+        getItem('token', accessToken);
+        console.log(accessToken);
       })
       .catch(err => console.log(err));
   };
