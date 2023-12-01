@@ -6,13 +6,12 @@ import {
   Image,
   TextInput,
 } from 'react-native';
-import React, { useState } from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import React, {useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import CheckBox from '@react-native-community/checkbox';
-import { checkEmail, checkPassword } from '../../compoment/checkValidate';
-import { API_Login } from '../../API/getAPI';
+import {checkEmail, checkPassword} from '../../compoment/checkValidate';
+import {API_Login} from '../../API/getAPI';
 
 export default Login2 = () => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
@@ -41,7 +40,7 @@ export default Login2 = () => {
     }
     fetch(API_Login, {
       method: 'POST',
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({email, password}),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -161,13 +160,13 @@ export default Login2 = () => {
         )}
 
         <View
-          style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+          style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
           <CheckBox
             disabled={false}
             value={toggleCheckBox}
             onValueChange={newValue => setToggleCheckBox(newValue)}
           />
-          <Text style={{ fontSize: 16 }}>Ghi nhớ</Text>
+          <Text style={{fontSize: 16}}>Ghi nhớ</Text>
         </View>
         <TouchableOpacity
           onPress={() => {
@@ -183,14 +182,14 @@ export default Login2 = () => {
             borderRadius: 20,
             elevation: 3,
           }}>
-          <Text style={{ color: 'white' }}>Đăng nhập</Text>
+          <Text style={{color: 'white'}}>Đăng nhập</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.footer}>
         <View style={styles.line}>
-          <View style={{ height: 1, width: '40%', backgroundColor: '#D9D9D9' }} />
-          <Text style={{ marginHorizontal: 10, color: 'black' }}>Hoặc</Text>
-          <View style={{ height: 1, width: '40%', backgroundColor: '#D9D9D9' }} />
+          <View style={{height: 1, width: '40%', backgroundColor: '#D9D9D9'}} />
+          <Text style={{marginHorizontal: 10, color: 'black'}}>Hoặc</Text>
+          <View style={{height: 1, width: '40%', backgroundColor: '#D9D9D9'}} />
         </View>
         <View
           style={{
@@ -209,7 +208,7 @@ export default Login2 = () => {
               source={require('../../Resource/icon/facebook.png')}
             />
           </TouchableOpacity>
-          <View style={{ width: 20 }} />
+          <View style={{width: 20}} />
           <TouchableOpacity style={styles.btn}>
             <Image
               style={{
@@ -227,7 +226,7 @@ export default Login2 = () => {
             onPress={() => {
               nav.navigate('Register');
             }}>
-            <Text style={{ fontWeight: 'bold', color: 'black' }}>Đăng ký</Text>
+            <Text style={{fontWeight: 'bold', color: 'black'}}>Đăng ký</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -287,5 +286,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // backgroundColor:"red"
   },
-  notAcount: { flexDirection: 'row', justifyContent: 'center', marginTop: 20 },
+  notAcount: {flexDirection: 'row', justifyContent: 'center', marginTop: 20},
 });

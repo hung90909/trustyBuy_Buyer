@@ -6,12 +6,12 @@ import {
   Image,
   TextInput,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import CheckBox from '@react-native-community/checkbox';
-import { checkEmail, checkPassword } from '../../compoment/checkValidate';
-import { API_Signup } from '../../API/getAPI';
+import {checkEmail, checkPassword} from '../../compoment/checkValidate';
+import {API_Signup} from '../../API/getAPI';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default Register = () => {
@@ -23,7 +23,6 @@ export default Register = () => {
   const nav = useNavigation();
 
   const checkValidateLogin = () => {
-
     if (email.length === 0 && password.length === 0) {
       setErrorEmail('Vui lòng nhập đầy đủ thông tin');
       setErrorPassword('Vui lòng nhập đầy đủ thông tin');
@@ -58,18 +57,17 @@ export default Register = () => {
         console.log(reponse);
         if (reponse.status === 200) {
           AsyncStorage.setItem('access_token', JSON.stringify(reponse.newUser))
-          .then(() => {
-            console.log('Token đã được lưu vào AsyncStorage.');
-          })
-          .catch(err =>
-            console.log('Lỗi khi lưu token vào AsyncStorage:', err),
-          )
-    
-          nav.navigate('RegisterInformation');
-        }else{
-          console.log(reponse.message)
-        }
+            .then(() => {
+              console.log('Token đã được lưu vào AsyncStorage.');
+            })
+            .catch(err =>
+              console.log('Lỗi khi lưu token vào AsyncStorage:', err),
+            );
 
+          nav.navigate('RegisterInformation');
+        } else {
+          console.log(reponse.message);
+        }
       })
       .catch(err => console.log(err));
     // nav.navigate('RegisterInformation')
@@ -175,7 +173,7 @@ export default Register = () => {
 
         <TouchableOpacity
           onPress={() => {
-            checkValidateLogin()
+            checkValidateLogin();
           }}
           style={{
             width: '100%',
@@ -187,14 +185,14 @@ export default Register = () => {
             borderRadius: 20,
             elevation: 3,
           }}>
-          <Text style={{ color: 'white' }}>Đăng ký</Text>
+          <Text style={{color: 'white'}}>Đăng ký</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.footer}>
         <View style={styles.line}>
-          <View style={{ height: 1, width: '40%', backgroundColor: '#D9D9D9' }} />
-          <Text style={{ marginHorizontal: 10, color: 'black' }}>Hoặc</Text>
-          <View style={{ height: 1, width: '40%', backgroundColor: '#D9D9D9' }} />
+          <View style={{height: 1, width: '40%', backgroundColor: '#D9D9D9'}} />
+          <Text style={{marginHorizontal: 10, color: 'black'}}>Hoặc</Text>
+          <View style={{height: 1, width: '40%', backgroundColor: '#D9D9D9'}} />
         </View>
         <View
           style={{
@@ -213,7 +211,7 @@ export default Register = () => {
               source={require('../../Resource/icon/facebook.png')}
             />
           </TouchableOpacity>
-          <View style={{ width: 20 }} />
+          <View style={{width: 20}} />
           <TouchableOpacity style={styles.btn}>
             <Image
               style={{
@@ -231,7 +229,7 @@ export default Register = () => {
             onPress={() => {
               nav.navigate('Login2');
             }}>
-            <Text style={{ fontWeight: 'bold', color: 'black' }}>Đăng nhập</Text>
+            <Text style={{fontWeight: 'bold', color: 'black'}}>Đăng nhập</Text>
           </TouchableOpacity>
         </View>
       </View>

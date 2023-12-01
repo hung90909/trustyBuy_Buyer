@@ -1,69 +1,52 @@
-import {Text, View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
+import {Text, View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+
+const Header = () => (
+  <View style={styles.headerContainer}>
+    <Text style={styles.headerText}>TrustyBuy</Text>
+  </View>
+);
+
+const ContinueButton = ({source, text}) => (
+  <TouchableOpacity style={styles.continue}>
+    <View style={{width: 70}} />
+    <Image style={styles.icon} source={source} />
+    <Text style={styles.buttonText}>{text}</Text>
+  </TouchableOpacity>
+);
 
 const Login = () => {
   const nav = useNavigation();
+
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text
-          style={{
-            fontSize: 40,
-            fontFamily: 'sans-serif-condensed',
-            fontWeight: 'bold',
-            color: 'black',
-            fontStyle: 'normal',
-          }}>
-          TrustyBuy
-        </Text>
+      <Header />
+      <View style={styles.bodyContainer}>
+        <ContinueButton
+          source={require('../../Resource/icon/facebook.png')}
+          text="Tiếp tục với Facebook"
+        />
+        <ContinueButton
+          source={require('../../Resource/icon/google.png')}
+          text="Tiếp tục với Google"
+        />
       </View>
-      <View style={styles.body}>
-        <TouchableOpacity style={styles.continue}>
-          <View style={{width: 70}} />
-          <Image
-            style={{
-              width: 30,
-              height: 30,
-              marginRight: 10,
-            }}
-            source={require('../../Resource/icon/facebook.png')}
-          />
-          <Text style={{color: 'black'}}>Tiếp tục với Facebook</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.continue}>
-          <View style={{width: 70}} />
-          <Image
-            style={{
-              width: 30,
-              height: 30,
-              marginRight: 10,
-            }}
-            source={require('../../Resource/icon/google.png')}
-          />
-          <Text style={{color: 'black'}}>Tiếp tục với Google</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.footer}>
+      <View style={styles.footerContainer}>
         <View style={styles.line}>
-          <View style={{height: 0.3, width: '40%', backgroundColor: 'black'}} />
-          <Text style={{marginHorizontal: 10, color: 'black'}}>Hoặc</Text>
-          <View style={{height: 0.3, width: '40%', backgroundColor: 'black'}} />
+          <View style={styles.lineSeparator} />
+          <Text style={styles.lineText}>Hoặc</Text>
+          <View style={styles.lineSeparator} />
         </View>
         <TouchableOpacity
-          onPress={() => {
-            nav.navigate('Login2');
-          }}
+          onPress={() => nav.navigate('Login2')}
           style={styles.btnLogin}>
-          <Text style={{color: 'white', fontWeight: '600'}}>Đăng nhập</Text>
+          <Text style={{color: 'white'}}>Đăng nhập</Text>
         </TouchableOpacity>
         <View style={styles.notAcount}>
           <Text>Chưa có tài khoản? </Text>
-          <TouchableOpacity
-            onPress={() => {
-              nav.navigate('Register');
-            }}>
-            <Text style={{fontWeight: 'bold', color: 'black'}}>Đăng ký</Text>
+          <TouchableOpacity onPress={() => nav.navigate('Register')}>
+            <Text style={styles.boldText}>Đăng ký</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -76,17 +59,15 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
   },
-  header: {
+  headerContainer: {
     width: '100%',
     height: '30%',
-    // backgroundColor: "yellow",
     justifyContent: 'center',
     alignItems: 'center',
   },
-  body: {
+  bodyContainer: {
     width: '100%',
     height: '30%',
-    // backgroundColor:"red"
   },
   continue: {
     width: '100%',
@@ -94,13 +75,16 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: 'gray',
     borderRadius: 10,
-    // justifyContent:"center",
     alignItems: 'center',
     flexDirection: 'row',
     marginTop: 20,
   },
-  footer: {
-    // backgroundColor:"orange",
+  icon: {
+    width: 30,
+    height: 30,
+    marginRight: 10,
+  },
+  footerContainer: {
     flex: 1,
   },
   line: {
@@ -109,7 +93,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor:"red"
+  },
+  lineSeparator: {
+    height: 0.3,
+    width: '40%',
+    backgroundColor: 'black',
+  },
+  lineText: {
+    marginHorizontal: 10,
+    color: 'black',
   },
   btnLogin: {
     width: '100%',
@@ -126,5 +118,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 50,
   },
+  headerText: {
+    fontSize: 40,
+    fontFamily: 'sans-serif-condensed',
+    fontWeight: 'bold',
+    color: 'black',
+    fontStyle: 'normal',
+  },
+  buttonText: {
+    color: 'black',
+  },
+  boldText: {
+    fontWeight: 'bold',
+    color: 'black',
+  },
 });
+
 export default Login;
