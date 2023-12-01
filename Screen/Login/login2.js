@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   Text,
   View,
@@ -6,50 +7,49 @@ import {
   Image,
   TextInput,
 } from 'react-native';
-import React, {useState} from 'react';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
-import {checkEmail, checkPassword} from '../../compoment/checkValidate';
-import {API_Login} from '../../API/getAPI';
+import { useNavigation } from '@react-navigation/native';
+import { checkEmail, checkPassword } from '../../compoment/checkValidate';
+import { API_Login } from '../../API/getAPI';
 
-export default Login2 = () => {
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
+const Login2 = () => {
   const [errorEmail, setErrorEmail] = useState('');
   const [errorPassword, setErrorPassword] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const nav = useNavigation();
-
+  const [showPassword, setShowPassword] = useState(false);
   const checkValidateLogin = () => {
-    if (email.length === 0 && password.length === 0) {
+    if (email.length === 0 || password.length === 0) {
       setErrorEmail('Vui lòng nhập đầy đủ thông tin');
       setErrorPassword('Vui lòng nhập đầy đủ thông tin');
       return;
     }
-    if (email.length === 0) {
-      setErrorEmail('Vui lòng nhập đầy đủ thông tin');
+
+    if (!checkEmail(email)) {
+      setErrorEmail('Email không đúng định dạng');
       return;
     }
-    if (password.length === 0) {
-      setErrorPassword('Vui lòng nhập đầy đủ thông tin');
+
+    if (!checkPassword(password)) {
+      setErrorPassword('Password không quá 15 ký tự');
       return;
     }
-    if (errorEmail.length !== 0 || errorPassword.length !== 0) {
-      return;
-    }
+
+    // Nếu không có lỗi, thực hiện đăng nhập
     fetch(API_Login, {
       method: 'POST',
-      body: JSON.stringify({email, password}),
+      body: JSON.stringify({ email, password }),
       headers: {
         'Content-Type': 'application/json',
       },
     })
-      .then(response => response.json()) // Chuyển phản hồi thành JSON
+      .then(response => response.json())
       .then(data => {
         const accessToken = data.message.accessToken;
-        // Lưu token vào AsyncStorage
         nav.navigate('Main');
         AsyncStorage.setItem('access_token', JSON.stringify(accessToken))
           .then(() => {
@@ -61,94 +61,81 @@ export default Login2 = () => {
       })
       .catch(err => console.log(err));
   };
+
   return (
+
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.Text}>TrustyBuy</Text>
+        <Image
+          source={require('../../Resource/Image/logo.png')}
+          style={styles.image}
+        />
         <Text
           style={{
-            marginTop: 16,
+            marginVertical: 20,
             alignContent: 'center',
             alignSelf: 'center',
             fontSize: 30,
             color: 'black',
+            fontWeight: '800',
           }}>
           Đăng nhập
         </Text>
       </View>
-      <View style={styles.body}>
-        <View style={styles.textInput}>
-          <Fontisto name="email" size={25} color={'black'} />
-          <TextInput
-            onChangeText={text => {
-              if (checkEmail(text)) {
-                setEmail(text);
-                setErrorEmail('');
-              } else {
-                setEmail(text);
-                setErrorEmail('Email không đúng định dạng');
-              }
-            }}
-            style={{
-              marginStart: 10,
-            }}
-            placeholder="Email"
-          />
-        </View>
-        {errorEmail && (
-          <Text
-            style={{
-              color: 'red',
-              marginTop: 5,
-              marginStart: 15,
-            }}>
-            {errorEmail}
-          </Text>
-        )}
-        <View style={styles.textInput}>
-          <SimpleLineIcons name="lock" size={25} />
-          <TextInput
-            onChangeText={text => {
-              if (checkPassword(text)) {
-                setPassword(text);
-                setErrorPassword('');
-              } else {
-                setErrorPassword('Password không quá 15 ký tự');
-              }
-            }}
-            style={{
-              marginStart: 10,
-            }}
-            placeholder="Mật khẩu"
-            secureTextEntry
-          />
-        </View>
-        {errorPassword && (
-          <Text
-            style={{
-              color: 'red',
-              marginTop: 5,
-              marginStart: 15,
-            }}>
-            {errorPassword}
-          </Text>
-        )}
-        <TouchableOpacity
-          onPress={() => {
-            checkValidateLogin();
+      <View style={styles.textInput}>
+        <Fontisto name="email" size={25} color={'black'} />
+        <TextInput
+          onChangeText={text => {
+            setEmail(text);
+            setErrorEmail('');
           }}
           style={{
-            width: '100%',
-            height: 40,
-            backgroundColor: 'black',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: errorPassword ? 20 : 40,
-            borderRadius: 5,
-          }}>
-          <Text style={{color: 'white', fontSize: 18}}>Đăng nhập</Text>
+            marginStart: 10,
+            width: '100%'
+          }}
+          placeholder="Email"
+        />
+      </View>
+      {errorEmail !== '' && (
+        <Text style={styles.errorText}>{errorEmail}</Text>
+      )}
+      <View style={styles.textInput}>
+        <SimpleLineIcons name="lock" size={25} />
+        <TextInput
+          onChangeText={text => {
+            setPassword(text);
+            setErrorPassword('');
+          }}
+          style={{
+            marginStart: 10,
+            flex: 1,
+            width: '100%'
+          }}
+          placeholder="Mật khẩu"
+          secureTextEntry={!showPassword}
+        />
+        <TouchableOpacity
+          style={styles.passwordToggle}
+          onPress={() => setShowPassword(!showPassword)}
+        >
+          <Feather
+            name={showPassword ? 'eye' : 'eye-off'}
+            size={20}
+            color="black"
+          />
         </TouchableOpacity>
       </View>
+      {errorPassword !== '' && (
+        <Text style={styles.errorText}>{errorPassword}</Text>
+      )}
+      <TouchableOpacity
+        onPress={() => {
+          checkValidateLogin();
+        }}
+        style={styles.loginButton}>
+        <Text style={styles.buttonText}>Đăng nhập</Text>
+      </TouchableOpacity>
       <View style={styles.footer}>
         <View style={styles.notAcount}>
           <Text>Chưa có tài khoản? </Text>
@@ -156,7 +143,7 @@ export default Login2 = () => {
             onPress={() => {
               nav.navigate('Register');
             }}>
-            <Text style={{fontWeight: 'bold', color: 'black'}}>Đăng ký</Text>
+            <Text style={{ fontWeight: 'bold', color: 'black' }}>Đăng ký</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -165,35 +152,29 @@ export default Login2 = () => {
 };
 
 const styles = StyleSheet.create({
-  btn: {
-    width: 80,
-    height: 50,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: 'gray',
-  },
   container: {
     flex: 1,
+    paddingTop: 50,
+    backgroundColor: 'white',
+    paddingHorizontal: 30,
   },
   header: {
-    height: '25%',
-    alignContent: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 20,
+    alignItems: 'center',
   },
   Text: {
     alignSelf: 'center',
     fontSize: 35,
     fontWeight: 'bold',
     color: 'black',
-    marginTop: 15,
+    marginTop: 25,
   },
   body: {
-    height: checkPassword ? '50%' : '40%',
+    height: 400,
     justifyContent: 'center',
     paddingHorizontal: 20,
-    // backgroundColor:"red"
+
+
   },
   textInput: {
     width: '100%',
@@ -202,22 +183,46 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: checkEmail ? 20 : 10,
+    marginTop: 20,
     paddingHorizontal: 15,
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 5,
+    marginStart: 15,
+  },
+  loginButton: {
+    width: '100%',
+    height: 40,
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 40,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
   },
   footer: {
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
-    //    backgroundColor:"red"
   },
-  line: {
-    height: 20,
-    width: '100%',
+  notAcount: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
-    // backgroundColor:"red"
+    marginTop: 20,
   },
-  notAcount: {flexDirection: 'row', justifyContent: 'center', marginTop: 20},
+  image: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
+  }, passwordToggle: {
+    position: 'absolute',
+    right: 20,
+
+  },
 });
+
+export default Login2;
