@@ -39,7 +39,7 @@ const Welcome1 = () => {
 
   const onIndexChanged = index => {
     if (index === data.length) {
-      nav.navigate('Login');
+      nav.navigate('Login2');
     }
   };
 

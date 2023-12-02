@@ -86,7 +86,7 @@ export default Register = () => {
           <Ionicons name="arrow-back" size={25} color={'black'} />
         </TouchableOpacity>
 
-        <Text style={styles.Text}>TrustyBuy</Text>
+        {/* <Text style={styles.Text}>TrustyBuy</Text> */}
       </View>
       <View style={styles.header}>
         <Image
@@ -279,7 +279,6 @@ const styles = StyleSheet.create({
   btn: {
     width: 80,
     height: 50,
-    borderWidth: 1,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
