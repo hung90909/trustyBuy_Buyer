@@ -115,7 +115,7 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="RegisterInformation">
+      <Stack.Navigator initialRouteName="Main">
         <Stack.Screen
           name="Main"
           component={BotBottomTabNavigator}

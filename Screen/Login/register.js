@@ -53,11 +53,11 @@ export default Register = () => {
         'Content-Type': 'application/json',
       },
     })
-      .then(reponse => reponse.json())
-      .then(reponse => {
-        console.log(reponse);
-        if (reponse.status === 200) {
-          AsyncStorage.setItem('access_token', JSON.stringify(reponse.newUser))
+      .then(response => response.json()) // Fix typo here
+      .then(response => {
+        console.log(response);
+        if (response.status === 200) {
+          AsyncStorage.setItem('access_token', JSON.stringify(response.newUser))
             .then(() => {
               console.log('Token đã được lưu vào AsyncStorage.');
             })
@@ -67,7 +67,7 @@ export default Register = () => {
 
           nav.navigate('RegisterInformation');
         } else {
-          console.log(reponse.message);
+          console.log(response.message);
         }
       })
       .catch(err => console.log(err));
