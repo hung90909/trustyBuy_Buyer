@@ -49,7 +49,10 @@ const Login2 = () => {
       .then(response => response.json())
       .then(async data => {
         const accessToken = data.message;
-        nav.navigate('Main');
+        if (accessToken) {
+          nav.replace('Main');
+        }
+
         await setItem('token', accessToken);
       })
       .catch(err => console.log(err));

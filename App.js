@@ -120,6 +120,7 @@ const App = () => (
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="ChangePassword" component={ChangePassword} />
       <Stack.Screen name="AdressScreen" component={AdressScreen} />
+      <Stack.Screen name="Checkout" component={CheckoutScreen} />
     </Stack.Navigator>
   </NavigationContainer>
 );

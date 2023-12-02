@@ -44,46 +44,6 @@ export default function DaGiao() {
       .then(() => nav.navigate('XuLy'))
       .catch(err => console.log(err));
   };
-
-  // const dataOrderDaGiao = [
-  //     {
-  //         id: 1,
-  //         avatarShop: "https://th.bing.com/th/id/OIP.4DxmdHCqdqCgoe9rESRuyAHaHa?w=178&h=180&c=7&r=0&o=5&dpr=1.7&pid=1.7",
-  //         nameShop: "Tia To",
-  //         image: "https://th.bing.com/th/id/OIP.KUOCcLMoEvgXlpy8_Q_LZQHaHa?w=187&h=187&c=7&r=0&o=5&dpr=1.7&pid=1.7",
-  //         name: "Đồng Hồ Đeo Tay Thông Minh FD68S Đo Nhịp Tim Huyết Áp Cho Android Ios 2022",
-  //         color: "trăng",
-  //         size: "XL",
-  //         price: 20000000,
-  //         quantity: 3,
-  //         status: 0
-  //     },
-  //     {
-  //         id: 2,
-  //         avatarShop: "https://th.bing.com/th/id/OIP.4DxmdHCqdqCgoe9rESRuyAHaHa?w=178&h=180&c=7&r=0&o=5&dpr=1.7&pid=1.7",
-  //         nameShop: "Tia To",
-  //         image: "https://th.bing.com/th/id/OIP.KUOCcLMoEvgXlpy8_Q_LZQHaHa?w=187&h=187&c=7&r=0&o=5&dpr=1.7&pid=1.7",
-  //         name: "Đồng Hồ Đeo Tay Thông Minh FD68S Đo Nhịp Tim Huyết Áp Cho Android Ios 2022",
-  //         color: "trăng",
-  //         size: "XL",
-  //         price: 20000000,
-  //         quantity: 3,
-  //         status: 0
-  //     },
-  //     {
-  //         id: 3,
-  //         avatarShop: "https://th.bing.com/th/id/OIP.4DxmdHCqdqCgoe9rESRuyAHaHa?w=178&h=180&c=7&r=0&o=5&dpr=1.7&pid=1.7",
-  //         nameShop: "Tia To",
-  //         image: "https://th.bing.com/th/id/OIP.KUOCcLMoEvgXlpy8_Q_LZQHaHa?w=187&h=187&c=7&r=0&o=5&dpr=1.7&pid=1.7",
-  //         name: "Đồng Hồ Đeo Tay Thông Minh FD68S Đo Nhịp Tim Huyết Áp Cho Android Ios 2022",
-  //         color: "trăng",
-  //         size: "XL",
-  //         price: 20000000,
-  //         quantity: 3,
-  //         status: 0
-  //     },
-  // ]
-
   const formatPrice = priceSP => {
     return `₫${priceSP.toLocaleString('vi-VN')}`;
   };
@@ -102,86 +62,110 @@ export default function DaGiao() {
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-between',
+                    padding: 10,
                   }}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
                     <Image
                       style={{
                         width: 30,
                         height: 30,
-                        borderRadius: 16,
+                        borderRadius: 20,
                       }}
+                      // source={{
+                      //   uri:
+                      //     'https://158f-2a09-bac1-7aa0-50-00-246-66.ngrok-free.app/' +
+                      //     item.avatar_shop,
+                      // }}
                       source={{
-                        uri:
-                          'https://158f-2a09-bac1-7aa0-50-00-246-66.ngrok-free.app/' +
-                          item.avatar_shop,
+                        // uri:
+                        //   'https://19a5-2a09-bac1-7a80-50-00-17-25e.ngrok-free.app/uploads/' +
+                        //   item.product_thumb[0],
+                        uri: 'https://images2.thanhnien.vn/528068263637045248/2023/12/2/messi-1701497642597535849236.png',
                       }}
                     />
                     <Text
                       style={{
                         marginLeft: 6,
                         color: 'black',
+                        fontSize: 14,
                       }}>
                       {item.name_shop}
                     </Text>
                   </View>
-                  <Text style={{color: 'black', fontWeight: 'bold'}}>
-                    Đánh giá
-                  </Text>
+                  <Text style={{color: 'black'}}>Đã giao</Text>
                 </View>
 
-                <View style={{flexDirection: 'row', marginTop: 10}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    paddingHorizontal: 10,
+                    marginVertical: 10,
+                  }}>
                   <Image
                     style={{
-                      width: 80,
-                      height: 90,
+                      width: 100,
+                      height: 100,
+                      borderRadius: 5,
                     }}
                     source={{
-                      uri:
-                        'https://7324-116-96-44-199.ngrok-free.app/uploads/' +
-                        item.product_thumb[0],
+                      // uri:
+                      //   'https://19a5-2a09-bac1-7a80-50-00-17-25e.ngrok-free.app/uploads/' +
+                      //   item.product_thumb[0],
+                      uri: 'https://images2.thanhnien.vn/528068263637045248/2023/12/2/messi-1701497642597535849236.png',
                     }}
                   />
-                  <View style={{width: 200, marginLeft: 15}}>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      paddingHorizontal: 10,
+                    }}>
                     <Text
                       style={{
-                        fontWeight: 'bold',
                         color: 'black',
+                        fontSize: 16,
                       }}
-                      numberOfLines={2}>
+                      numberOfLines={1}>
                       {item.product_name}
                     </Text>
                     <View
                       style={{
                         flexDirection: 'row',
-                        marginTop: 5,
-                        width: 200,
                         justifyContent: 'space-between',
+                        marginVertical: 10,
                       }}>
-                      <View style={{flexDirection: 'row'}}>
-                        <Text>{item?.color ? item.color : 'red'} | </Text>
-                        <Text>{item?.size ? item.size : 'XL'}</Text>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                        }}>
+                        <Text>{item.color}Đen</Text>
+                        <View
+                          style={{
+                            backgroundColor: 'black',
+                            width: 1,
+                            height: 10,
+                            marginHorizontal: 5,
+                          }}></View>
+                        <Text>{item.size}XL</Text>
                       </View>
                       <Text>{item.product_attributes.quantity} sản phẩm</Text>
                     </View>
                     <Text style={{color: 'red', marginTop: 5}}>
-                      {formatPrice(item.product_attributes.price)}
+                      {formatPrice(item.order_checkout.totalCheckout)}
                     </Text>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginTop: 5,
-                      }}>
-                      <TouchableOpacity style={styles.btnReturns}>
-                        <Text>Yêu cầu trả hàng</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity style={styles.btn}>
-                        <Text style={{color: 'white'}}>Mua lại</Text>
-                      </TouchableOpacity>
-                    </View>
                   </View>
                 </View>
+                <TouchableOpacity style={styles.btnReturns}>
+                  <Text>Yêu cầu trả hàng</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btn}>
+                  <Text style={{color: 'white'}}>Mua lại</Text>
+                </TouchableOpacity>
               </TouchableOpacity>
             );
           }}
@@ -208,8 +192,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   itemOrder: {
-    marginTop: 20,
-    minHeight: 100,
     backgroundColor: 'white',
     padding: 10,
     width: '100%',

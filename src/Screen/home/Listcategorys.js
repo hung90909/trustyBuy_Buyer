@@ -23,11 +23,7 @@ const Listcategorys = () => {
 
   const renderItem = ({item}) => {
     return (
-      <Pressable
-        style={styles.categoryItem}
-        onPress={() =>
-          navigation.navigate('ListProduct', {danhmucspId: item.id})
-        }>
+      <Pressable style={styles.categoryItem}>
         <Image
           source={{
             uri: `${API_BASE_URL}/${item?.category_thumb}`,

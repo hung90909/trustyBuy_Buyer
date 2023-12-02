@@ -33,7 +33,8 @@ const DetailProducts = ({route, navigation}) => {
   const [quantity, setQuantity] = useState(1);
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [bottomSheetAction, setBottomSheetAction] = useState('addToCart');
-
+  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [selectedProductId, setSelectedProductId] = useState(null);
   const handleIncreaseQuantity = () => {
     if (selectedColor && selectedSize) {
       const totalQuantity = getTotalQuantityForColorAndSize(
@@ -182,10 +183,7 @@ const DetailProducts = ({route, navigation}) => {
           selectedSize,
         );
 
-        // Alert.alert(
-        //   'Thêm vào giỏ hàng thành công',
-        //   `Tổng số lượng sản phẩm: ${updatedTotalQuantity}`,
-        // );
+        Alert.alert('Thông báo', `Thêm giỏ hàng thành công`);
       } else {
         if (!selectedColor) {
           Alert.alert('Vui lòng chọn màu sắc của sản phẩm');
@@ -218,15 +216,30 @@ const DetailProducts = ({route, navigation}) => {
       try {
         const response = await apiGet(`${PRODUCT_API}/getProduct/${productId}`);
         setProductDetail(response?.message);
+        setSelectedProductId(productId);
       } catch (error) {
         console.error(error.response.data);
       } finally {
         resetQuantity(); // Reset quantity when product details are loaded
       }
     };
-    getDetailProduct();
-  }, [selectedColor, selectedSize]);
 
+    const getAllProduct = async () => {
+      try {
+        const response = await apiGet(`${PRODUCT_API}/getAllProductByUser`);
+        setRelatedProducts(response.message.allProduct);
+      } catch (error) {
+        console.error(error.response.data);
+      }
+    };
+    getDetailProduct();
+  }, [selectedColor, selectedSize, productId]);
+  const navigateToDetail = newProductId => {
+    // Nếu ID sản phẩm mới trùng với ID đang hiển thị, không chuyển hướng
+    if (newProductId !== productId) {
+      navigation.navigate('ProductDetail', {productId: newProductId});
+    }
+  };
   const renderImage = useCallback(({item}) => {
     return (
       <Image
