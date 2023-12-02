@@ -22,7 +22,7 @@ const CartScreen = () => {
     try {
       const res = await apiGet(ADD_CART_API);
       console.log(res);
-      setListCart(res.cart.cart_products);
+      setListCart(res.message.cart.cart_products);
     } catch (error) {
       console.log(error);
     }

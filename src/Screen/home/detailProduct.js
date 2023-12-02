@@ -21,6 +21,7 @@ import {formatPrice, formatSoldSP} from '../Format';
 import Listproducts from './Listproducts';
 import {API_BASE_URL, PRODUCT_API} from '../../config/urls';
 import {apiGet, apiPost} from '../../utils/utils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DetailProducts = ({route, navigation}) => {
   const {productId} = route.params;
@@ -148,8 +149,11 @@ const DetailProducts = ({route, navigation}) => {
           selectedColor,
           selectedSize,
         );
-
+        const data = await AsyncStorage.getItem('token');
+        const userID = JSON.parse(data).userId;
+        console.log(userID);
         const cartItem = {
+          userId: userID,
           product: {
             productId: productId,
             shopId: productDetail.shop_id,
@@ -158,8 +162,6 @@ const DetailProducts = ({route, navigation}) => {
             price: productDetail.product_price,
             color: selectedColor,
             size: selectedSize,
-            imageShop: productDetail.shop_avatar,
-            nameShop: productDetail.shop_name,
           },
         };
 
@@ -194,7 +196,7 @@ const DetailProducts = ({route, navigation}) => {
         }
       }
     } catch (error) {
-      console.error('Error adding to cart:', error.response.data);
+      console.error('Error adding to cart:', error);
     }
   };
 
