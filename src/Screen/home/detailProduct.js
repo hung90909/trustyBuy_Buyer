@@ -678,9 +678,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   nameProduct: {
-    fontSize: 24,
+    fontSize: 20,
     color: 'black',
-    fontWeight: 'bold',
   },
   ratingSoldPr: {
     flexDirection: 'row',
@@ -752,9 +751,8 @@ const styles = StyleSheet.create({
   },
   titelSuggestions: {
     color: 'black',
-    fontSize: 20,
+    fontSize: 16,
     textAlign: 'center',
-    fontWeight: 'bold',
   },
   containerProductdetail: {},
   titleDetail: {
