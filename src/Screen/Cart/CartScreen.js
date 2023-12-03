@@ -28,6 +28,8 @@ const CartScreen = () => {
     }
   };
 
+   
+
   useEffect(() => {
     getCart();
   }, []);
@@ -48,11 +50,11 @@ const CartScreen = () => {
   const handleCheckboxChange = item => {
     console.log('new cart: ' + item);
     setUpdatePrice(!isUpdatePrice);
-    const ids = selectedItems.map(item => item.productId);
-    if (ids.includes(item.productId)) {
+    const ids = selectedItems.map(item => item.itemId);
+    if (ids.includes(item.itemId)) {
       // Nếu sản phẩm đã được chọn, loại bỏ khỏi danh sách
       setSelectedItems(
-        selectedItems.filter(i => i.productId !== item.productId),
+        selectedItems.filter(i => i.itemId !== item.itemId),
       );
     } else {
       // Nếu sản phẩm chưa được chọn, thêm vào danh sách
@@ -60,31 +62,33 @@ const CartScreen = () => {
     }
   };
 
+
+
   useEffect(() => {
     setTotalPrice(
       selectedItems.reduce(
-        (total, item) => item.product_price * item.product_quantity + total,
+        (total, item) => item.price * item.quantity + total,
         0,
       ),
     );
   }, [isUpdatePrice]);
 
-  const handleDecreaseQuantity = productID => {
+  const handleDecreaseQuantity = itemId => {
     setUpdatePrice(!isUpdatePrice);
     setListCart(item =>
       item.map(product =>
-        product.product_id === productID
-          ? {...product, product_quantity: product.product_quantity - 1}
+        product.itemId === itemId
+          ? {...product, quantity: product.quantity - 1}
           : product,
       ),
     );
   };
-  const handleIncreaseQuantity = productID => {
+  const handleIncreaseQuantity = itemId => {
     setUpdatePrice(!isUpdatePrice);
     setListCart(item =>
       item.map(product =>
-        product.product_id === productID
-          ? {...product, product_quantity: product.product_quantity + 1}
+        product.itemId === itemId
+          ? {...product, quantity: product.quantity + 1}
           : product,
       ),
     );
@@ -117,7 +121,7 @@ const CartScreen = () => {
           </View>
         </View>
 
-        <TextInput style={styles.inputSearch} placeholder="Search" />
+        {/* <TextInput style={styles.inputSearch} placeholder="Search" />
         <View
           style={{
             position: 'absolute',
@@ -125,13 +129,13 @@ const CartScreen = () => {
             top: 63,
           }}>
           <Ionicons name="search-outline" size={26} color="#878787" />
-        </View>
+        </View> */}
       </View>
       <View style={styles.listProduct}>
         {listCart.length > 0 ? (
           <FlatList
             data={listCart}
-            keyExtractor={item => item.product_id}
+            keyExtractor={item => item.itemId}
             renderItem={({item, index}) => {
               return (
                 <View style={styles.product}>
@@ -149,7 +153,7 @@ const CartScreen = () => {
                       }}
                       source={{
                         uri:
-                          'https://10a8-116-96-44-199.ngrok-free.app/' +
+                          'https://b0aa-116-96-44-199.ngrok-free.app/' +
                           item.avatar_shop,
                       }}
                     />
@@ -175,7 +179,7 @@ const CartScreen = () => {
                         checked={
                           selectedItems.filter(
                             selectedItem =>
-                              selectedItem.productId === item.productId,
+                              selectedItem.itemId === item.itemId,
                           ).length > 0
                         }
                         onPress={() => handleCheckboxChange(item)}
@@ -185,17 +189,17 @@ const CartScreen = () => {
                     <Image
                       resizeMode="stretch"
                       style={{
-                        width: 100,
-                        height: 90,
+                        width: 90,
+                        height: 90, borderRadius:5
                       }}
                       source={{
                         uri:
-                          'https://10a8-116-96-44-199.ngrok-free.app/uploads/' +
+                          'https://b0aa-116-96-44-199.ngrok-free.app/uploads/' +
                           item.product_thumb,
                       }}
                     />
-                    <View style={{marginStart: 7, width: 140}}>
-                      <Text numberOfLines={2}>{item.product_name}</Text>
+                    <View style={{marginStart: 15, width: 140}}>
+                      <Text numberOfLines={2}>{item.name}</Text>
                       <View style={{flexDirection: 'row', marginTop: 5}}>
                         <Text>{item.color} | </Text>
                         <Text>{item.size}</Text>
@@ -215,8 +219,8 @@ const CartScreen = () => {
                         }}>
                         <TouchableOpacity
                           onPress={() => {
-                            if (item.product_quantity > 1) {
-                              handleDecreaseQuantity(item.product_id);
+                            if (item.quantity > 1) {
+                              handleDecreaseQuantity(item.itemId);
                             }
                           }}
                           style={{borderRightWidth: 1, paddingHorizontal: 5}}>
@@ -231,7 +235,7 @@ const CartScreen = () => {
                         </Text>
                         <TouchableOpacity
                           onPress={() => {
-                            handleIncreaseQuantity(item.productId);
+                            handleIncreaseQuantity(item.itemId);
                           }}
                           style={{borderLeftWidth: 1, paddingHorizontal: 5}}>
                           <Ionicons
@@ -296,6 +300,10 @@ const CartScreen = () => {
           </Text>
         </View>
         <TouchableOpacity
+        onPress={() =>{
+          nav.navigate("Checkouts",{item: selectedItems})
+    
+        }}
           style={{
             flex: 1,
             height: 60,
@@ -325,7 +333,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   header: {
-    height: '20%',
+    height: '10%',
     paddingHorizontal: 20,
   },
   inputSearch: {
@@ -339,6 +347,6 @@ const styles = StyleSheet.create({
   },
   listProduct: {
     paddingHorizontal: 20,
-    height: '73%',
+    height: '80%',
   },
 });

@@ -27,6 +27,7 @@ import EditProfile from './src/Screen/Profile/EditProfile';
 import CartScreen from './src/Screen/Cart/CartScreen';
 import ChangePassword from './src/Screen/ChangePassword';
 import CheckoutScreen from './src/Screen/CheckoutScreen';
+import Checkouts from './src/Screen/Cart/Checkouts';
 
 const TabTop = createMaterialTopTabNavigator();
 
@@ -120,6 +121,8 @@ const App = () => (
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="ChangePassword" component={ChangePassword} />
       <Stack.Screen name="AdressScreen" component={AdressScreen} />
+      <Stack.Screen name="CheckoutScreen" component={CheckoutScreen} />
+      <Stack.Screen name="Checkouts" component={Checkouts} />
     </Stack.Navigator>
   </NavigationContainer>
 );
