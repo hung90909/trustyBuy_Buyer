@@ -216,6 +216,7 @@ const DetailProducts = ({route, navigation}) => {
       try {
         const response = await apiGet(`${PRODUCT_API}/getProduct/${productId}`);
         setProductDetail(response?.message);
+        console.log(response?.message);
         setSelectedProductId(productId);
       } catch (error) {
         console.error(error.response.data);
@@ -259,7 +260,11 @@ const DetailProducts = ({route, navigation}) => {
     );
     resetQuantity();
   };
-
+  const handleShopPress = shopId => {
+    navigation.navigate('ShopInformation', {shopId});
+    // console.log(shopId);
+    // setSelectedProductId(productId);
+  };
   const getTotalQuantity = () => {
     // Calculate the total quantity based on all available colors
     return productDetail.product_attributes.reduce(
@@ -348,8 +353,8 @@ const DetailProducts = ({route, navigation}) => {
                       {productDetail?.shop_name}
                     </Text>
                     <Pressable
-                      style={styles.butonDetailShop}
-                      onPress={() => navigation.navigate('ShopInformation')}>
+                      onPress={() => handleShopPress(productDetail?.shop_id)}
+                      style={styles.butonDetailShop}>
                       <Text style={styles.titleButon}>Xem cửa hàng</Text>
                     </Pressable>
                   </View>
@@ -365,9 +370,13 @@ const DetailProducts = ({route, navigation}) => {
                 <Text style={styles.titelSuggestions}>Gợi ý các sản phẩm</Text>
                 <Listproducts />
               </View>
-              <TouchableOpacity style={styles.btnShowShop}>
-                <Text style={{color: 'white', fontSize: 12}}>Xem cửa hàng</Text>
-              </TouchableOpacity>
+              {/* <TouchableOpacity
+                style={styles.btnShowShop}
+                onPress={() => handleShopPress(productDetail?.shop_id)}>
+                <Text style={{color: 'white', fontSize: 12}}>
+                  Xem cửa hàngfsdgf
+                </Text>
+              </TouchableOpacity> */}
             </View>
           </ScrollView>
           <View style={styles.butonCartBuy}>
