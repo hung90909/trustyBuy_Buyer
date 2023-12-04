@@ -154,7 +154,7 @@ export default Register = () => {
         style={styles.loginButton}>
         <Text style={styles.buttonText}>Đăng ký</Text>
       </TouchableOpacity>
-      <View style={{paddingHorizontal: 20, marginVertical: 90}}>
+      <View style={styles.footer}>
         <View style={styles.line}>
           <View style={{height: 1, width: '40%', backgroundColor: '#D9D9D9'}} />
           <Text style={{marginHorizontal: 10, color: 'black'}}>Hoặc</Text>
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footer: {
-    flex: 1,
+    marginTop: '30%',
     justifyContent: 'center',
     paddingHorizontal: 20,
   },

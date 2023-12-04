@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {
-  Text,
   View,
+  Text,
   StyleSheet,
   TouchableOpacity,
   Image,
@@ -13,16 +13,17 @@ import Feather from 'react-native-vector-icons/Feather';
 import {useNavigation} from '@react-navigation/native';
 import {checkEmail, checkPassword} from '../../compoment/checkValidate';
 import {Login_API} from '../../config/urls';
-import {setItem} from '../../utils/utils';
+import {apiPost, setItem} from '../../utils/utils';
 
 const Login2 = () => {
   const [errorEmail, setErrorEmail] = useState('');
   const [errorPassword, setErrorPassword] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const nav = useNavigation();
   const [showPassword, setShowPassword] = useState(false);
-  const checkValidateLogin = () => {
+  const nav = useNavigation();
+
+  const checkValidateLogin = async () => {
     if (email.length === 0 || password.length === 0) {
       setErrorEmail('Vui lòng nhập đầy đủ thông tin');
       setErrorPassword('Vui lòng nhập đầy đủ thông tin');
@@ -39,45 +40,25 @@ const Login2 = () => {
       return;
     }
 
-    fetch(Login_API, {
-      method: 'POST',
-      body: JSON.stringify({email, password}),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(response => response.json())
-      .then(async data => {
-        const accessToken = data.message;
-        if (accessToken) {
-          nav.replace('Main');
-        }
-
-        await setItem('token', accessToken);
-      })
-      .catch(err => console.log(err));
+    try {
+      const res = await apiPost(Login_API, {email, password});
+      setItem('token', res?.message);
+      nav.replace('Main');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        {/* <Text style={styles.Text}>TrustyBuy</Text> */}
         <Image
           source={require('../../Resource/Image/logo.png')}
           style={styles.image}
         />
-        <Text
-          style={{
-            marginVertical: 20,
-            alignContent: 'center',
-            alignSelf: 'center',
-            fontSize: 30,
-            color: 'black',
-            fontWeight: '800',
-          }}>
-          Đăng nhập
-        </Text>
+        <Text style={styles.title}>Đăng nhập</Text>
       </View>
+
       <View style={styles.textInput}>
         <Fontisto name="email" size={25} color={'black'} />
         <TextInput
@@ -85,14 +66,12 @@ const Login2 = () => {
             setEmail(text);
             setErrorEmail('');
           }}
-          style={{
-            marginStart: 10,
-            width: '100%',
-          }}
+          style={styles.input}
           placeholder="Email"
         />
       </View>
       {errorEmail !== '' && <Text style={styles.errorText}>{errorEmail}</Text>}
+
       <View style={styles.textInput}>
         <SimpleLineIcons name="lock" size={25} />
         <TextInput
@@ -100,11 +79,7 @@ const Login2 = () => {
             setPassword(text);
             setErrorPassword('');
           }}
-          style={{
-            marginStart: 10,
-            flex: 1,
-            width: '100%',
-          }}
+          style={styles.passwordInput}
           placeholder="Mật khẩu"
           secureTextEntry={!showPassword}
         />
@@ -121,13 +96,11 @@ const Login2 = () => {
       {errorPassword !== '' && (
         <Text style={styles.errorText}>{errorPassword}</Text>
       )}
-      <TouchableOpacity
-        onPress={() => {
-          checkValidateLogin();
-        }}
-        style={styles.loginButton}>
+
+      <TouchableOpacity onPress={checkValidateLogin} style={styles.loginButton}>
         <Text style={styles.buttonText}>Đăng nhập</Text>
       </TouchableOpacity>
+
       <View style={styles.footer}>
         <View style={styles.line}>
           <View style={{height: 1, width: '40%', backgroundColor: '#D9D9D9'}} />
@@ -188,17 +161,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  Text: {
+  title: {
+    marginVertical: 20,
     alignSelf: 'center',
-    fontSize: 35,
-    fontWeight: 'bold',
+    fontSize: 30,
     color: 'black',
-    marginTop: 25,
+    fontWeight: '800',
   },
-  body: {
-    height: 400,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
+  image: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
   },
   textInput: {
     width: '100%',
@@ -209,6 +182,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
     paddingHorizontal: 15,
+  },
+  input: {
+    marginStart: 10,
+    width: '100%',
+  },
+  passwordInput: {
+    marginStart: 10,
+    flex: 1,
+    width: '100%',
+  },
+  passwordToggle: {
+    position: 'absolute',
+    right: 20,
   },
   errorText: {
     color: 'red',
@@ -233,7 +219,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footer: {
-    flex: 1,
+    marginTop: '30%',
     justifyContent: 'center',
     paddingHorizontal: 20,
   },
@@ -241,15 +227,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 20,
-  },
-  image: {
-    width: 150,
-    height: 150,
-    resizeMode: 'contain',
-  },
-  passwordToggle: {
-    position: 'absolute',
-    right: 20,
   },
   btn: {
     width: 80,

@@ -11,7 +11,7 @@ const ProfileScreen = () => {
   const fetchData = async () => {
     try {
       const res = await apiGet(`${USER_API}/getProfile`);
-      // setUser(res.data.message.checkUser.information);
+      // setUser(res.message.checkUser.information);
       console.log(res);
     } catch (error) {
       console.log(error);

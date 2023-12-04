@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -15,7 +15,7 @@ import XuLy from './src/Screen/Order/xuLy';
 import DangGiao from './src/Screen/Order/dangGiao';
 import DaGiao from './src/Screen/Order/daGiao';
 import DaHuy from './src/Screen/Order/daHuy';
-import ChatScreen from './src/Screen/Chat/Chat';
+import ChatScreen from './src/Screen/Chat/ChatScreen';
 import DetailProducts from './src/Screen/home/detailProduct';
 import login2 from './src/Screen/Login/login2';
 import register from './src/Screen/Login/register';
@@ -27,6 +27,8 @@ import EditProfile from './src/Screen/Profile/EditProfile';
 import CartScreen from './src/Screen/Cart/CartScreen';
 import ChangePassword from './src/Screen/ChangePassword';
 import CheckoutScreen from './src/Screen/CheckoutScreen';
+import ChatItem from './src/Screen/Chat/ChatItem';
+import socketServices from './src/utils/socketService';
 
 const TabTop = createMaterialTopTabNavigator();
 
@@ -69,7 +71,7 @@ const BotBottomTabNavigator = () => (
         let iconName;
         if (route.name === 'Home') {
           iconName = 'home-outline';
-        } else if (route.name === 'Chat') {
+        } else if (route.name === 'ChatScreen') {
           iconName = 'chatbubble-ellipses-outline';
         } else if (route.name === 'TabOrder') {
           iconName = 'document-text-outline';
@@ -80,7 +82,11 @@ const BotBottomTabNavigator = () => (
       },
     })}>
     <Tab.Screen name="Home" component={HomeScreen} options={{title: 'Home'}} />
-    <Tab.Screen name="Chat" component={ChatScreen} options={{title: 'Chat'}} />
+    <Tab.Screen
+      name="ChatScreen"
+      component={ChatScreen}
+      options={{title: 'Chat'}}
+    />
     <Tab.Screen
       name="TabOrder"
       component={TabOrder}
@@ -96,33 +102,43 @@ const BotBottomTabNavigator = () => (
 
 const Stack = createNativeStackNavigator();
 
-const App = () => (
-  <NavigationContainer>
-    <Stack.Navigator
-      initialRouteName="Welcome1"
-      screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Welcome" component={Welcome} />
-      <Stack.Screen name="Welcome1" component={Welcome1} />
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Register" component={register} />
-      <Stack.Screen name="Login2" component={login2} />
-      <Stack.Screen
-        name="RegisterInformation"
-        component={RegisterInformation}
-      />
-      <Stack.Screen name="Main" component={BotBottomTabNavigator} />
-      <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
-      <Stack.Screen name="Search" component={SearchScreen} />
-      <Stack.Screen name="ListProduct" component={ListProduct} />
-      <Stack.Screen name="ShopInformation" component={ShopInformation} />
-      <Stack.Screen name="Cart" component={CartScreen} />
-      <Stack.Screen name="DetailProducts" component={DetailProducts} />
-      <Stack.Screen name="EditProfile" component={EditProfile} />
-      <Stack.Screen name="ChangePassword" component={ChangePassword} />
-      <Stack.Screen name="AdressScreen" component={AdressScreen} />
-      <Stack.Screen name="Checkout" component={CheckoutScreen} />
-    </Stack.Navigator>
-  </NavigationContainer>
-);
+const App = () => {
+  useEffect(() => {
+    socketServices.initializeSocket();
+  }, []);
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Login2"
+        screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Welcome" component={Welcome} />
+        <Stack.Screen name="Welcome1" component={Welcome1} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Login2" component={login2} />
+        <Stack.Screen name="Register" component={register} />
+        <Stack.Screen
+          name="RegisterInformation"
+          component={RegisterInformation}
+        />
+        <Stack.Screen name="Main" component={BotBottomTabNavigator} />
+        <Stack.Screen name="ChatItem" component={ChatItem} />
+        <Stack.Screen
+          name="NotificationScreen"
+          component={NotificationScreen}
+        />
+        <Stack.Screen name="Search" component={SearchScreen} />
+        <Stack.Screen name="ListProduct" component={ListProduct} />
+        <Stack.Screen name="ShopInformation" component={ShopInformation} />
+        <Stack.Screen name="Cart" component={CartScreen} />
+        <Stack.Screen name="DetailProducts" component={DetailProducts} />
+        <Stack.Screen name="EditProfile" component={EditProfile} />
+        <Stack.Screen name="ChangePassword" component={ChangePassword} />
+        <Stack.Screen name="AdressScreen" component={AdressScreen} />
+        <Stack.Screen name="Checkout" component={CheckoutScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
 
 export default App;

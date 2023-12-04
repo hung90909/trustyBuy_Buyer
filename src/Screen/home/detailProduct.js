@@ -349,7 +349,11 @@ const DetailProducts = ({route, navigation}) => {
                     </Text>
                     <Pressable
                       style={styles.butonDetailShop}
-                      onPress={() => navigation.navigate('ShopInformation')}>
+                      onPress={() =>
+                        navigation.navigate('ShopInformation', {
+                          shop_id: productDetail?.shop_id,
+                        })
+                      }>
                       <Text style={styles.titleButon}>Xem cửa hàng</Text>
                     </Pressable>
                   </View>

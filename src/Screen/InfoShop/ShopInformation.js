@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -12,10 +12,38 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import Listproducts from '../home/Listproducts';
+import {API_BASE_URL, CHAT_API, SHOP_API} from '../../config/urls';
+import {apiGet, apiPost} from '../../utils/utils';
 
-const ShopInformation = () => {
+const ShopInformation = ({route}) => {
   const navigation = useNavigation();
   const [isFollowing, setIsFollowing] = useState(false);
+  const {shop_id} = route.params;
+  const [data, setData] = useState([]);
+
+  const chatApi = async () => {
+    try {
+      const res = await apiPost(`${CHAT_API}/createConvarsation`, {
+        shopId: shop_id,
+      });
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getapi = async () => {
+    try {
+      const res = await apiGet(`${SHOP_API}/getShop/${shop_id}`);
+      setData(res?.message);
+    } catch (error) {
+      console.log('Call api: ', error);
+    }
+  };
+
+  useEffect(() => {
+    getapi();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -39,12 +67,12 @@ const ShopInformation = () => {
         <View style={styles.shopInfoContainer}>
           <Image
             source={{
-              uri: 'https://inkythuatso.com/uploads/thumbnails/800/2021/09/logo-adidas-vector-inkythuatso-01-29-09-08-58.jpg',
+              uri: `${API_BASE_URL}${data?.shop?.avatarShop}`,
             }}
             style={styles.shopLogo}
           />
           <View style={styles.shopDetails}>
-            <Text style={styles.shopName}>Adidas Việt Nam</Text>
+            <Text style={styles.shopName}>{data?.shop?.nameShop}</Text>
             <View style={styles.shopActions}>
               <Pressable
                 style={styles.shopActionButton}
@@ -59,7 +87,7 @@ const ShopInformation = () => {
                 </Text>
               </Pressable>
 
-              <Pressable style={styles.shopActionButton}>
+              <Pressable onPress={chatApi} style={styles.shopActionButton}>
                 <Ionicons
                   name="chatbubble-ellipses-outline"
                   size={16}
@@ -75,7 +103,9 @@ const ShopInformation = () => {
               />
               <Text style={styles.ratingText}>4.9/5.0</Text>
               <View style={styles.ratingSeparator} />
-              <Text style={styles.followersText}>345.6k Người theo dõi</Text>
+              <Text style={styles.followersText}>
+                {data?.shop?.follower.length} Người theo dõi
+              </Text>
             </View>
           </View>
         </View>

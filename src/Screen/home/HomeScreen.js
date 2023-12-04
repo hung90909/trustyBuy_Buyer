@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -14,17 +14,27 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Slideshow from './Slideshow';
 import Listproducts from './Listproducts';
 import Listcategorys from './Listcategorys';
+import {apiGet} from '../../utils/utils';
+import {USER_API} from '../../config/urls';
+import socketServices from '../../utils/socketService';
 
 const HomeScreen = ({navigation}) => {
-  async function getToken() {
-    const token = await AsyncStorage.getItem('access_token');
-    const tokenUser = token ? JSON.parse(token) : null;
-    console.log('Token save : ', tokenUser);
-  }
+  const [account, setAccount] = useState();
+
+  const getApi = async () => {
+    try {
+      const res = await apiGet(`${USER_API}/getProfile`);
+      setAccount(res?.message?.checkUser);
+      socketServices.emit('new-user-add', res?.message?.checkUser?._id);
+    } catch (error) {
+      console.log('Post api: ', error.message);
+    }
+  };
 
   useEffect(() => {
-    getToken();
+    getApi();
   }, []);
+
   const navigateToProfile = () => {
     navigation.navigate('Profile');
   };
@@ -52,7 +62,7 @@ const HomeScreen = ({navigation}) => {
             </Pressable>
             <View style={styles.profileInfo}>
               <Text style={styles.profileText}>Xin chào 👋</Text>
-              <Text style={styles.profileTextBold}>Iron Man</Text>
+              <Text style={styles.profileTextBold}>{account?.user_name}</Text>
             </View>
           </View>
           <View style={styles.headerIcons}>

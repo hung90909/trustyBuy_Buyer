@@ -3,14 +3,15 @@ import React from 'react';
 import {Modal, View, TouchableOpacity, StyleSheet, Text} from 'react-native';
 import {LOGOUT_API} from '../../config/urls';
 import {apiDelete} from '../../utils/utils';
+import socketServices from '../../utils/socketService';
 
 const Logout = ({visible, onClose}) => {
   const navigation = useNavigation();
 
   const handlerLogout = async () => {
     try {
-      const res = await apiDelete(`${LOGOUT_API}`);
-      console.log(res);
+      await apiDelete(`${LOGOUT_API}`);
+      socketServices.emit('logout');
       navigation.replace('Login2');
     } catch (error) {
       console.log(error);
