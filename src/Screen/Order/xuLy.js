@@ -115,7 +115,7 @@ export default function XuLy() {
                       // uri:
                       //   'https://19a5-2a09-bac1-7a80-50-00-17-25e.ngrok-free.app/uploads/' +
                       //   item.product_thumb[0],
-                      uri: 'https://images2.thanhnien.vn/528068263637045248/2023/12/2/messi-1701497642597535849236.png',
+                      uri: 'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
                     }}
                   />
                   <View

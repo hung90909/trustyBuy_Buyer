@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -71,22 +72,6 @@ export default Register = () => {
   };
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          marginTop: 20,
-        }}>
-        <TouchableOpacity
-          onPress={() => {
-            nav.goBack();
-          }}>
-          <Ionicons name="arrow-back" size={25} color={'black'} />
-        </TouchableOpacity>
-
-        {/* <Text style={styles.Text}>TrustyBuy</Text> */}
-      </View>
       <View style={styles.header}>
         <Image
           source={require('../../Resource/Image/logo.png')}
@@ -153,11 +138,16 @@ export default Register = () => {
         style={styles.loginButton}>
         <Text style={styles.buttonText}>Đăng ký</Text>
       </TouchableOpacity>
-      <View style={{paddingHorizontal: 20, marginVertical: 90}}>
+      <View
+        style={{
+          paddingHorizontal: 20,
+          marginVertical: 50,
+          alignItems: 'center',
+        }}>
         <View style={styles.line}>
-          <View style={{height: 1, width: '40%', backgroundColor: '#D9D9D9'}} />
+          <View style={{height: 1, width: '30%', backgroundColor: '#D9D9D9'}} />
           <Text style={{marginHorizontal: 10, color: 'black'}}>Hoặc</Text>
-          <View style={{height: 1, width: '40%', backgroundColor: '#D9D9D9'}} />
+          <View style={{height: 1, width: '30%', backgroundColor: '#D9D9D9'}} />
         </View>
         <View
           style={{
@@ -165,26 +155,38 @@ export default Register = () => {
             justifyContent: 'center',
             alignItems: 'center',
             marginTop: 20,
-            flexDirection: 'row',
           }}>
-          <TouchableOpacity style={styles.btn}>
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              borderWidth: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingHorizontal: 60,
+              borderColor: 'blue',
+              paddingVertical: 6,
+              borderRadius: 5,
+            }}
+            onPress={() =>
+              Alert.alert('Thông báo', 'Chức năng đang phát triển')
+            }>
             <Image
               style={{
-                width: 30,
-                height: 30,
+                width: 26,
+                height: 26,
               }}
               source={require('../../Resource/icon/facebook.png')}
+              resizeMode="cover"
             />
-          </TouchableOpacity>
-          <View style={{width: 20}} />
-          <TouchableOpacity style={styles.btn}>
-            <Image
+            <Text
               style={{
-                width: 30,
-                height: 30,
-              }}
-              source={require('../../Resource/icon/google.png')}
-            />
+                fontSize: 14,
+                marginHorizontal: 10,
+                fontWeight: 'bold',
+                color: 'blue',
+              }}>
+              Đăng nhập với Facebook
+            </Text>
           </TouchableOpacity>
         </View>
 
@@ -226,7 +228,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     width: '100%',
-    height: 50,
+    height: 60,
     backgroundColor: 'rgba(232, 232, 232, 1)',
     borderRadius: 5,
     flexDirection: 'row',
@@ -241,7 +243,7 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     width: '100%',
-    height: 40,
+    height: 50,
     backgroundColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
