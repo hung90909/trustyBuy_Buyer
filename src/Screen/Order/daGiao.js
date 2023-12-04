@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -56,7 +57,7 @@ export default function DaGiao() {
           keyExtractor={item => item.oderId}
           renderItem={({item}) => {
             return (
-              <TouchableOpacity style={styles.itemOrder}>
+              <Pressable style={styles.itemOrder}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -64,26 +65,17 @@ export default function DaGiao() {
                     justifyContent: 'space-between',
                     padding: 10,
                   }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Image
                       style={{
                         width: 30,
                         height: 30,
                         borderRadius: 20,
                       }}
-                      // source={{
-                      //   uri:
-                      //     'https://158f-2a09-bac1-7aa0-50-00-246-66.ngrok-free.app/' +
-                      //     item.avatar_shop,
-                      // }}
                       source={{
                         // uri:
-                        //   'https://19a5-2a09-bac1-7a80-50-00-17-25e.ngrok-free.app/uploads/' +
-                        //   item.product_thumb[0],
+                        //   'https://158f-2a09-bac1-7aa0-50-00-246-66.ngrok-free.app/' +
+                        //   item.avatar_shop,
                         uri: 'https://images2.thanhnien.vn/528068263637045248/2023/12/2/messi-1701497642597535849236.png',
                       }}
                     />
@@ -96,7 +88,7 @@ export default function DaGiao() {
                       {item.name_shop}
                     </Text>
                   </View>
-                  <Text style={{color: 'black'}}>Đã giao</Text>
+                  <Text style={{color: 'black'}}>Đang giao</Text>
                 </View>
 
                 <View
@@ -160,13 +152,19 @@ export default function DaGiao() {
                     </Text>
                   </View>
                 </View>
-                <TouchableOpacity style={styles.btnReturns}>
-                  <Text>Yêu cầu trả hàng</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btn}>
-                  <Text style={{color: 'white'}}>Mua lại</Text>
-                </TouchableOpacity>
-              </TouchableOpacity>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignSelf: 'flex-end',
+                  }}>
+                  <TouchableOpacity style={styles.btnReturns}>
+                    <Text style={{color: 'black'}}>Yêu cầu trả hàng</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.btn}>
+                    <Text style={{color: 'white'}}>Mua lại</Text>
+                  </TouchableOpacity>
+                </View>
+              </Pressable>
             );
           }}
         />
@@ -189,30 +187,23 @@ export default function DaGiao() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
   },
   itemOrder: {
     backgroundColor: 'white',
-    padding: 10,
-    width: '100%',
-    borderRadius: 10,
+    marginVertical: 5,
   },
   btn: {
-    width: 80,
-    height: 30,
     backgroundColor: 'black',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 5,
+    paddingHorizontal: 30,
     borderRadius: 5,
-    marginLeft: 10,
+    margin: 10,
+    paddingVertical: 10,
   },
   btnReturns: {
-    width: 120,
-    height: 30,
+    paddingHorizontal: 30,
     borderRadius: 5,
+    margin: 10,
+    paddingVertical: 10,
     borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });

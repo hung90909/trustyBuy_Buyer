@@ -19,6 +19,7 @@ import {PermissionsAndroid} from 'react-native';
 import {Alert} from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {apiGet} from '../../utils/utils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const data = [
   {label: 'Nam', value: '1'},
@@ -114,7 +115,8 @@ const EditProfile = () => {
     ) {
       age--;
     }
-    const userId = '655992c8b8ffe55cb44e9673';
+    const data = await AsyncStorage.getItem('token');
+    const userId = JSON.parse(data).userId;
     const accessToken =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTU5OTJjOGI4ZmZlNTVjYjQ0ZTk2NzMiLCJlbWFpbCI6Im5na2hhY2RhaUBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRiN2lJci9SenpGbXZ1QWxUMzc5SmNPOU9FOUJpT1hITUY3M0o5cGtmZENJQ1BJNVV1alRyNiIsImlhdCI6MTcwMDk4Mzk0MSwiZXhwIjoxNzAxODQ3OTQxfQ.M-TK8_IU6x-TyT3ufeE8pX90zqzKWdDk6wTWkdYean8';
 

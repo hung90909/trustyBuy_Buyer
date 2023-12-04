@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -29,51 +30,6 @@ export default function DaHuy() {
 
   const [listProducts, setListProducts] = useState([]);
 
-  const dataOrderDaHuy = [
-    {
-      id: 1,
-      avatarShop:
-        'https://th.bing.com/th/id/OIP.4DxmdHCqdqCgoe9rESRuyAHaHa?w=178&h=180&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      nameShop: 'Tia To',
-      image:
-        'https://th.bing.com/th/id/OIP.KUOCcLMoEvgXlpy8_Q_LZQHaHa?w=187&h=187&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      name: 'Đồng Hồ Đeo Tay Thông Minh FD68S Đo Nhịp Tim Huyết Áp Cho Android Ios 2022',
-      color: 'trăng',
-      size: 'XL',
-      price: 20000000,
-      quantity: 3,
-      status: 0,
-    },
-    {
-      id: 2,
-      avatarShop:
-        'https://th.bing.com/th/id/OIP.4DxmdHCqdqCgoe9rESRuyAHaHa?w=178&h=180&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      nameShop: 'Tia To',
-      image:
-        'https://th.bing.com/th/id/OIP.KUOCcLMoEvgXlpy8_Q_LZQHaHa?w=187&h=187&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      name: 'Đồng Hồ Đeo Tay Thông Minh FD68S Đo Nhịp Tim Huyết Áp Cho Android Ios 2022',
-      color: 'trăng',
-      size: 'XL',
-      price: 20000000,
-      quantity: 3,
-      status: 0,
-    },
-    {
-      id: 3,
-      avatarShop:
-        'https://th.bing.com/th/id/OIP.4DxmdHCqdqCgoe9rESRuyAHaHa?w=178&h=180&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      nameShop: 'Tia To',
-      image:
-        'https://th.bing.com/th/id/OIP.KUOCcLMoEvgXlpy8_Q_LZQHaHa?w=187&h=187&c=7&r=0&o=5&dpr=1.7&pid=1.7',
-      name: 'Đồng Hồ Đeo Tay Thông Minh FD68S Đo Nhịp Tim Huyết Áp Cho Android Ios 2022',
-      color: 'trăng',
-      size: 'XL',
-      price: 20000000,
-      quantity: 3,
-      status: 0,
-    },
-  ];
-
   const formatPrice = priceSP => {
     return `₫${priceSP?.toLocaleString('vi-VN')}`;
   };
@@ -86,7 +42,7 @@ export default function DaHuy() {
           keyExtractor={item => item.oderId}
           renderItem={({item}) => {
             return (
-              <TouchableOpacity style={styles.itemOrder}>
+              <Pressable style={styles.itemOrder}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -193,7 +149,7 @@ export default function DaHuy() {
                 <TouchableOpacity style={styles.btn}>
                   <Text style={{color: 'white'}}>Mua lại</Text>
                 </TouchableOpacity>
-              </TouchableOpacity>
+              </Pressable>
             );
           }}
         />

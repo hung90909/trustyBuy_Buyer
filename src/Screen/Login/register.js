@@ -1,3 +1,4 @@
+import React, {useState} from 'react';
 import {
   Text,
   View,
@@ -5,14 +6,18 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  Alert,
+  Dimensions,
 } from 'react-native';
-import React, {useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {useNavigation} from '@react-navigation/native';
 import {SIGNUP_API} from '../../config/urls';
 import Feather from 'react-native-vector-icons/Feather';
+
+const {width, height} = Dimensions.get('window');
+
 export default Register = () => {
   const [errorEmail, setErrorEmail] = useState('');
   const [errorPassword, setErrorPassword] = useState('');
@@ -51,7 +56,7 @@ export default Register = () => {
         'Content-Type': 'application/json',
       },
     })
-      .then(response => response.json()) // Fix typo here
+      .then(response => response.json())
       .then(response => {
         console.log(response);
         if (response.status === 200) {
@@ -62,47 +67,22 @@ export default Register = () => {
             .catch(err =>
               console.log('Lỗi khi lưu token vào AsyncStorage:', err),
             );
-
-          nav.navigate('RegisterInformation');
         } else {
           console.log(response.message);
         }
       })
       .catch(err => console.log(err));
+    nav.navigate('RegisterInformation');
   };
+
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          marginTop: 20,
-        }}>
-        <TouchableOpacity
-          onPress={() => {
-            nav.goBack();
-          }}>
-          <Ionicons name="arrow-back" size={25} color={'black'} />
-        </TouchableOpacity>
-
-        {/* <Text style={styles.Text}>TrustyBuy</Text> */}
-      </View>
       <View style={styles.header}>
         <Image
           source={require('../../Resource/Image/logo.png')}
           style={styles.image}
         />
-        <Text
-          style={{
-            alignContent: 'center',
-            alignSelf: 'center',
-            fontSize: 30,
-            color: 'black',
-            marginBottom: 40,
-          }}>
-          Tạo tài khoản
-        </Text>
+        <Text style={styles.heading}>Tạo tài khoản</Text>
       </View>
       <View style={styles.textInput}>
         <Fontisto name="email" size={25} color={'black'} />
@@ -111,10 +91,7 @@ export default Register = () => {
             setEmail(text);
             setErrorEmail('');
           }}
-          style={{
-            marginStart: 10,
-            width: '100%',
-          }}
+          style={styles.input}
           placeholder="Email"
         />
       </View>
@@ -126,11 +103,7 @@ export default Register = () => {
             setPassword(text);
             setErrorPassword('');
           }}
-          style={{
-            marginStart: 10,
-            flex: 1,
-            width: '100%',
-          }}
+          style={styles.passwordInput}
           placeholder="Mật khẩu"
           secureTextEntry={!showPassword}
         />
@@ -151,53 +124,32 @@ export default Register = () => {
         onPress={() => {
           checkValidateLogin();
         }}
-        style={styles.loginButton}>
+        style={styles.registerButton}>
         <Text style={styles.buttonText}>Đăng ký</Text>
       </TouchableOpacity>
-      <View style={{paddingHorizontal: 20, marginVertical: 90}}>
-        <View style={styles.line}>
-          <View style={{height: 1, width: '40%', backgroundColor: '#D9D9D9'}} />
-          <Text style={{marginHorizontal: 10, color: 'black'}}>Hoặc</Text>
-          <View style={{height: 1, width: '40%', backgroundColor: '#D9D9D9'}} />
-        </View>
-        <View
-          style={{
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: 20,
-            flexDirection: 'row',
+      <View style={styles.orContainer}>
+        <View style={styles.divider} />
+        <Text style={styles.orText}>Hoặc</Text>
+        <View style={styles.divider} />
+      </View>
+      <TouchableOpacity
+        style={styles.socialButton}
+        onPress={() => Alert.alert('Thông báo', 'Chức năng đang phát triển')}>
+        <Image
+          style={styles.socialIcon}
+          source={require('../../Resource/icon/facebook.png')}
+          resizeMode="cover"
+        />
+        <Text style={styles.socialButtonText}>Đăng nhập với Facebook</Text>
+      </TouchableOpacity>
+      <View style={styles.notAcount}>
+        <Text>Chưa có tài khoản? </Text>
+        <TouchableOpacity
+          onPress={() => {
+            nav.navigate('Login2');
           }}>
-          <TouchableOpacity style={styles.btn}>
-            <Image
-              style={{
-                width: 30,
-                height: 30,
-              }}
-              source={require('../../Resource/icon/facebook.png')}
-            />
-          </TouchableOpacity>
-          <View style={{width: 20}} />
-          <TouchableOpacity style={styles.btn}>
-            <Image
-              style={{
-                width: 30,
-                height: 30,
-              }}
-              source={require('../../Resource/icon/google.png')}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.notAcount}>
-          <Text>Chưa có tài khoản? </Text>
-          <TouchableOpacity
-            onPress={() => {
-              nav.navigate('Login2');
-            }}>
-            <Text style={{fontWeight: 'bold', color: 'black'}}>Đăng nhập</Text>
-          </TouchableOpacity>
-        </View>
+          <Text style={styles.loginLink}>Đăng nhập</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -207,27 +159,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    paddingHorizontal: 30,
+    paddingHorizontal: '5%',
+    width: width,
+    height: height,
   },
   header: {
     justifyContent: 'center',
     alignItems: 'center',
   },
-  Text: {
-    alignSelf: 'center',
-    fontSize: 35,
-    fontWeight: 'bold',
-    color: 'black',
-    marginLeft: 70,
+  image: {
+    width: width * 0.8,
+    height: height * 0.2,
+    resizeMode: 'contain',
   },
-  body: {
-    height: 400,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
+  heading: {
+    marginVertical: 20,
+    alignSelf: 'center',
+    fontSize: 30,
+    color: 'black',
+    fontWeight: '800',
   },
   textInput: {
     width: '100%',
-    height: 50,
+    height: 60,
     backgroundColor: 'rgba(232, 232, 232, 1)',
     borderRadius: 5,
     flexDirection: 'row',
@@ -235,14 +189,27 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingHorizontal: 15,
   },
+  input: {
+    marginStart: 10,
+    width: '100%',
+  },
   errorText: {
     color: 'red',
     marginTop: 5,
     marginStart: 15,
   },
-  loginButton: {
+  passwordInput: {
+    marginStart: 10,
+    flex: 1,
     width: '100%',
-    height: 40,
+  },
+  passwordToggle: {
+    position: 'absolute',
+    right: 20,
+  },
+  registerButton: {
+    width: '100%',
+    height: 50,
     backgroundColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
@@ -253,35 +220,51 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
   },
-  line: {
+  orContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  footer: {
-    flex: 1,
+    marginTop: 30,
     justifyContent: 'center',
-    paddingHorizontal: 20,
+  },
+  divider: {
+    height: 1,
+    width: '30%',
+    backgroundColor: '#D9D9D9',
+  },
+  orText: {
+    marginHorizontal: 10,
+    color: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+  },
+  socialButton: {
+    width: '100%',
+    height: 50,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#3b5998',
+    marginTop: 20,
+    flexDirection: 'row',
+  },
+  socialIcon: {
+    width: 30,
+    height: 30,
+  },
+  socialButtonText: {
+    fontSize: 14,
+    marginHorizontal: 10,
+    fontWeight: 'bold',
+    color: 'white',
   },
   notAcount: {
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 20,
   },
-  image: {
-    width: 150,
-    height: 150,
-    resizeMode: 'contain',
-  },
-  passwordToggle: {
-    position: 'absolute',
-    right: 20,
-  },
-  btn: {
-    width: 80,
-    height: 50,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: 'gray',
+  loginLink: {
+    fontWeight: 'bold',
+    color: 'black',
   },
 });

@@ -14,6 +14,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Slideshow from './Slideshow';
 import Listproducts from './Listproducts';
 import Listcategorys from './Listcategorys';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = ({navigation}) => {
   async function getToken() {

@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -55,7 +56,7 @@ export default function DangGiao() {
           keyExtractor={item => item.oderId}
           renderItem={({item}) => {
             return (
-              <TouchableOpacity style={styles.itemOrder}>
+              <Pressable style={styles.itemOrder}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -157,7 +158,7 @@ export default function DangGiao() {
                   style={styles.btn}>
                   <Text style={{color: 'white'}}>Đã nhận</Text>
                 </TouchableOpacity>
-              </TouchableOpacity>
+              </Pressable>
             );
           }}
         />
