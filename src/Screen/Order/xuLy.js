@@ -61,78 +61,111 @@ export default function XuLy() {
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-between',
+                    padding: 10,
                   }}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
                     <Image
                       style={{
                         width: 30,
                         height: 30,
-                        borderRadius: 16,
+                        borderRadius: 20,
                       }}
+                      // source={{
+                      //   uri:
+                      //     'https://158f-2a09-bac1-7aa0-50-00-246-66.ngrok-free.app/' +
+                      //     item.avatar_shop,
+                      // }}
                       source={{
-                        uri:
-                          'https://158f-2a09-bac1-7aa0-50-00-246-66.ngrok-free.app/' +
-                          item.avatar_shop,
+                        // uri:
+                        //   'https://19a5-2a09-bac1-7a80-50-00-17-25e.ngrok-free.app/uploads/' +
+                        //   item.product_thumb[0],
+                        uri: 'https://images2.thanhnien.vn/528068263637045248/2023/12/2/messi-1701497642597535849236.png',
                       }}
                     />
                     <Text
                       style={{
                         marginLeft: 6,
                         color: 'black',
+                        fontSize: 14,
                       }}>
                       {item.name_shop}
                     </Text>
                   </View>
-                  <Text>Chờ xác nhận</Text>
+                  <Text style={{color: 'black'}}>Chờ xác nhận</Text>
                 </View>
 
-                <View style={{flexDirection: 'row', marginTop: 10}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    paddingHorizontal: 10,
+                    marginVertical: 10,
+                  }}>
                   <Image
                     style={{
-                      width: 80,
-                      height: 90,
+                      width: 100,
+                      height: 100,
+                      borderRadius: 5,
                     }}
                     source={{
-                      uri:
-                        'https://19a5-2a09-bac1-7a80-50-00-17-25e.ngrok-free.app/uploads/' +
-                        item.product_thumb[0],
+                      // uri:
+                      //   'https://19a5-2a09-bac1-7a80-50-00-17-25e.ngrok-free.app/uploads/' +
+                      //   item.product_thumb[0],
+                      uri: 'https://images2.thanhnien.vn/528068263637045248/2023/12/2/messi-1701497642597535849236.png',
                     }}
                   />
-                  <View style={{width: 200, marginLeft: 15}}>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      paddingHorizontal: 10,
+                    }}>
                     <Text
                       style={{
-                        fontWeight: 'bold',
                         color: 'black',
+                        fontSize: 16,
                       }}
-                      numberOfLines={2}>
+                      numberOfLines={1}>
                       {item.product_name}
                     </Text>
                     <View
                       style={{
                         flexDirection: 'row',
-                        marginTop: 5,
-                        width: 200,
                         justifyContent: 'space-between',
+                        marginVertical: 10,
                       }}>
-                      <View style={{flexDirection: 'row'}}>
-                        <Text>{item.color} | </Text>
-                        <Text>{item.size}</Text>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                        }}>
+                        <Text>{item.color}Đen</Text>
+                        <View
+                          style={{
+                            backgroundColor: 'black',
+                            width: 1,
+                            height: 10,
+                            marginHorizontal: 5,
+                          }}></View>
+                        <Text>{item.size}XL</Text>
                       </View>
                       <Text>{item.product_attributes.quantity} sản phẩm</Text>
                     </View>
                     <Text style={{color: 'red', marginTop: 5}}>
                       {formatPrice(item.order_checkout.totalCheckout)}
                     </Text>
-
-                    <TouchableOpacity
-                      onPress={() => {
-                        onClickCancel(item.oderId);
-                      }}
-                      style={styles.btn}>
-                      <Text style={{color: 'white'}}>Hủy</Text>
-                    </TouchableOpacity>
                   </View>
                 </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    onClickCancel(item.oderId);
+                  }}
+                  style={styles.btn}>
+                  <Text style={{color: 'white'}}>Hủy</Text>
+                </TouchableOpacity>
               </TouchableOpacity>
             );
           }}
@@ -156,25 +189,19 @@ export default function XuLy() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
   },
   itemOrder: {
-    marginTop: 20,
-    minHeight: 100,
     backgroundColor: 'white',
-    padding: 10,
-    width: '100%',
-    borderRadius: 10,
+    marginVertical: 5,
   },
   btn: {
-    width: 80,
-    height: 30,
     backgroundColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 5,
+    paddingHorizontal: 30,
     borderRadius: 5,
-    marginTop: 5,
     alignSelf: 'flex-end',
+    margin: 10,
+    paddingVertical: 10,
   },
 });

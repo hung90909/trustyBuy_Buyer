@@ -49,7 +49,10 @@ const Login2 = () => {
       .then(response => response.json())
       .then(async data => {
         const accessToken = data.message;
-        nav.navigate('Main');
+        if (accessToken) {
+          nav.replace('Main');
+        }
+
         await setItem('token', accessToken);
       })
       .catch(err => console.log(err));
@@ -58,7 +61,7 @@ const Login2 = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.Text}>TrustyBuy</Text>
+        {/* <Text style={styles.Text}>TrustyBuy</Text> */}
         <Image
           source={require('../../Resource/Image/logo.png')}
           style={styles.image}
@@ -251,7 +254,6 @@ const styles = StyleSheet.create({
   btn: {
     width: 80,
     height: 50,
-    borderWidth: 1,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',

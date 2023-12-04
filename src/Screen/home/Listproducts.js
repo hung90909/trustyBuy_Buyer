@@ -8,7 +8,7 @@ import {apiGet} from '../../utils/utils';
 const Listproducts = ({count}) => {
   const navigation = useNavigation();
   const [product, setProduct] = useState([]);
-
+  const [selectedProductId, setSelectedProductId] = useState(null);
   useEffect(() => {
     getAllProduct();
   }, []);
@@ -20,10 +20,6 @@ const Listproducts = ({count}) => {
     } catch (error) {
       console.error(error.response.data);
     }
-  };
-
-  const handleProductPress = productId => {
-    navigation.navigate('DetailProducts', {productId});
   };
 
   const renderSanpham = ({item}) => {
@@ -51,10 +47,15 @@ const Listproducts = ({count}) => {
       </Pressable>
     );
   };
+  const handleProductPress = productId => {
+    navigation.navigate('DetailProducts', {productId});
+    // console.log(productId);
+    setSelectedProductId(productId);
+  };
   return (
     <View>
       <FlatList
-        data={product}
+        data={product.filter(item => item._id !== selectedProductId)}
         scrollEnabled={false}
         keyExtractor={item => item?._id}
         renderItem={renderSanpham}
