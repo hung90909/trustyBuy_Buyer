@@ -50,7 +50,7 @@ const Login2 = () => {
       .then(async data => {
         const accessToken = data.message;
         if (accessToken) {
-          nav.replace('Main');
+          nav.navigate('Main');
         }
 
         await setItem('token', accessToken);

@@ -352,11 +352,13 @@ const DetailProducts = ({route, navigation}) => {
                     <Text style={styles.nameShop}>
                       {productDetail?.shop_name}
                     </Text>
-                    <Pressable
-                      onPress={() => handleShopPress(productDetail?.shop_id)}
-                      style={styles.butonDetailShop}>
-                      <Text style={styles.titleButon}>Xem cửa hàng</Text>
-                    </Pressable>
+                    <View>
+                      <Pressable
+                        onPress={() => handleShopPress(productDetail?.shop_id)}
+                        style={styles.butonDetailShop}>
+                        <Text style={styles.titleButon}>Xem cửa hàng</Text>
+                      </Pressable>
+                    </View>
                   </View>
                 </View>
                 <View style={styles.containerProductdetail}>
@@ -370,13 +372,6 @@ const DetailProducts = ({route, navigation}) => {
                 <Text style={styles.titelSuggestions}>Gợi ý các sản phẩm</Text>
                 <Listproducts />
               </View>
-              {/* <TouchableOpacity
-                style={styles.btnShowShop}
-                onPress={() => handleShopPress(productDetail?.shop_id)}>
-                <Text style={{color: 'white', fontSize: 12}}>
-                  Xem cửa hàngfsdgf
-                </Text>
-              </TouchableOpacity> */}
             </View>
           </ScrollView>
           <View style={styles.butonCartBuy}>
@@ -708,7 +703,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
   },
-  nameShowShop: {marginLeft: 20},
+  nameShowShop: {marginLeft: 20, flexDirection: 'column'},
   butonDetailShop: {
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -718,6 +713,7 @@ const styles = StyleSheet.create({
   },
   titleButon: {
     color: 'white',
+    alignSelf: 'center',
   },
   suggestionsProduct: {
     marginTop: 20,

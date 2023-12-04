@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -55,7 +56,7 @@ export default function XuLy() {
           keyExtractor={item => item.oderId}
           renderItem={({item}) => {
             return (
-              <TouchableOpacity style={styles.itemOrder}>
+              <Pressable style={styles.itemOrder}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -166,7 +167,7 @@ export default function XuLy() {
                   style={styles.btn}>
                   <Text style={{color: 'white'}}>Hủy</Text>
                 </TouchableOpacity>
-              </TouchableOpacity>
+              </Pressable>
             );
           }}
         />

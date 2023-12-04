@@ -62,13 +62,12 @@ export default Register = () => {
             .catch(err =>
               console.log('Lỗi khi lưu token vào AsyncStorage:', err),
             );
-
-          nav.navigate('RegisterInformation');
         } else {
           console.log(response.message);
         }
       })
       .catch(err => console.log(err));
+    nav.navigate('RegisterInformation');
   };
   return (
     <View style={styles.container}>

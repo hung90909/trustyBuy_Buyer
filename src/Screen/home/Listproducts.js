@@ -1,4 +1,12 @@
-import {StyleSheet, Text, View, Pressable, Image, FlatList} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  Image,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {formatPrice, formatSoldSP} from '../Format';
@@ -9,16 +17,26 @@ const Listproducts = ({count}) => {
   const navigation = useNavigation();
   const [product, setProduct] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [loadingMore, setLoadingMore] = useState(false);
   useEffect(() => {
     getAllProduct();
   }, []);
-
+  const handleEndReached = () => {
+    if (!loadingMore) {
+      // Ngăn chặn việc kích hoạt nếu đang tải thêm dữ liệu
+      setLoadingMore(true);
+      getAllProduct(); // Triển khai hàm để tải thêm dữ liệu
+    }
+  };
   const getAllProduct = async () => {
     try {
       const response = await apiGet(`${PRODUCT_API}/getAllProductByUser`);
       setProduct(response.message.allProduct);
     } catch (error) {
       console.error(error.response.data);
+    } finally {
+      // Kết thúc việc tải thêm dữ liệu, set loadingMore về false
+      setLoadingMore(false);
     }
   };
 
@@ -60,6 +78,13 @@ const Listproducts = ({count}) => {
         keyExtractor={item => item?._id}
         renderItem={renderSanpham}
         numColumns={2}
+        onEndReached={handleEndReached}
+        onEndReachedThreshold={0.1} // Có thể điều chỉnh ngưỡng tùy thuộc vào yêu cầu
+        ListFooterComponent={() =>
+          loadingMore ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : null
+        }
       />
     </View>
   );
