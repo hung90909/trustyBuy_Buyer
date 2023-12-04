@@ -7,6 +7,7 @@ import {
   Image,
   TextInput,
   Alert,
+  Dimensions,
 } from 'react-native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
@@ -16,6 +17,8 @@ import {checkEmail, checkPassword} from '../../compoment/checkValidate';
 import {Login_API} from '../../config/urls';
 import {setItem} from '../../utils/utils';
 import axios from 'axios';
+
+const {width, height} = Dimensions.get('window');
 
 const Login2 = () => {
   const [errorEmail, setErrorEmail] = useState('');
@@ -129,68 +132,29 @@ const Login2 = () => {
       <TouchableOpacity onPress={checkValidateLogin} style={styles.loginButton}>
         <Text style={styles.buttonText}>Đăng nhập</Text>
       </TouchableOpacity>
-      <View
-        style={{
-          marginTop: 50,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <View style={styles.line}>
-          <View style={styles.divider} />
-          <Text style={styles.dividerText}>Hoặc</Text>
-          <View style={styles.divider} />
-        </View>
-        <View style={styles.socialButtons}>
-          <View
-            style={{
-              width: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: 20,
-            }}>
-            <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                borderWidth: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                paddingHorizontal: 60,
-                borderColor: 'blue',
-                paddingVertical: 6,
-                borderRadius: 5,
-              }}
-              onPress={() =>
-                Alert.alert('Thông báo', 'Chức năng đang phát triển')
-              }>
-              <Image
-                style={{
-                  width: 30,
-                  height: 30,
-                }}
-                source={require('../../Resource/icon/facebook.png')}
-                resizeMode="cover"
-              />
-              <Text
-                style={{
-                  fontSize: 14,
-                  marginHorizontal: 10,
-                  fontWeight: 'bold',
-                  color: 'blue',
-                }}>
-                Đăng nhập với Facebook
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={styles.notAcount}>
-          <Text>Chưa có tài khoản? </Text>
-          <TouchableOpacity
-            onPress={() => {
-              nav.navigate('Register');
-            }}>
-            <Text style={styles.registerLink}>Đăng ký</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.orContainer}>
+        <View style={styles.divider} />
+        <Text style={styles.orText}>Hoặc</Text>
+        <View style={styles.divider} />
+      </View>
+      <TouchableOpacity
+        style={styles.socialButton}
+        onPress={() => Alert.alert('Thông báo', 'Chức năng đang phát triển')}>
+        <Image
+          style={styles.socialIcon}
+          source={require('../../Resource/icon/facebook.png')}
+          resizeMode="cover"
+        />
+        <Text style={styles.socialButtonText}>Đăng nhập với Facebook</Text>
+      </TouchableOpacity>
+      <View style={styles.notAcount}>
+        <Text>Chưa có tài khoản? </Text>
+        <TouchableOpacity
+          onPress={() => {
+            nav.navigate('Register');
+          }}>
+          <Text style={styles.registerLink}>Đăng ký</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -199,17 +163,18 @@ const Login2 = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 50,
     backgroundColor: 'white',
-    paddingHorizontal: 30,
+    paddingHorizontal: '5%',
+    width: width,
+    height: height,
   },
   header: {
     justifyContent: 'center',
     alignItems: 'center',
   },
   image: {
-    width: 150,
-    height: 150,
+    width: width * 0.8,
+    height: height * 0.2,
     resizeMode: 'contain',
   },
   heading: {
@@ -260,41 +225,43 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
   },
-  line: {
+  orContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 30,
+    justifyContent: 'center',
   },
   divider: {
     height: 1,
     width: '30%',
     backgroundColor: '#D9D9D9',
   },
-  dividerText: {
+  orText: {
     marginHorizontal: 10,
     color: 'black',
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: 'center',
   },
-  socialButtons: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-    flexDirection: 'row',
-  },
   socialButton: {
-    width: 80,
+    width: '100%',
     height: 50,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  socialButtonSpacer: {
-    width: 20,
+    backgroundColor: '#3b5998',
+    marginTop: 20,
+    flexDirection: 'row',
   },
   socialIcon: {
     width: 30,
     height: 30,
+  },
+  socialButtonText: {
+    fontSize: 14,
+    marginHorizontal: 10,
+    fontWeight: 'bold',
+    color: 'white',
   },
   notAcount: {
     flexDirection: 'row',

@@ -10,6 +10,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -22,7 +23,8 @@ import Listproducts from './Listproducts';
 import {API_BASE_URL, PRODUCT_API} from '../../config/urls';
 import {apiGet, apiPost} from '../../utils/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+const {width} = Dimensions.get('window');
+const {height} = Dimensions.get('window');
 const DetailProducts = ({route, navigation}) => {
   const {productId} = route.params;
   const bottomSheetModalRef = useRef(null);
@@ -35,6 +37,7 @@ const DetailProducts = ({route, navigation}) => {
   const [bottomSheetAction, setBottomSheetAction] = useState('addToCart');
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
+
   const handleIncreaseQuantity = () => {
     if (selectedColor && selectedSize) {
       const totalQuantity = getTotalQuantityForColorAndSize(
@@ -244,11 +247,11 @@ const DetailProducts = ({route, navigation}) => {
   const renderImage = useCallback(({item}) => {
     return (
       <Image
-        style={{height: 400, width: 420}}
+        style={{height: 400, width: width}}
         source={{
           uri: `${API_BASE_URL}uploads/${item}`,
         }}
-        resizeMode="cover"
+        resizeMode="contain"
       />
     );
   });
@@ -320,8 +323,18 @@ const DetailProducts = ({route, navigation}) => {
               <FlatList
                 data={productDetail?.product_thumb || []}
                 renderItem={renderImage}
+                keyExtractor={(item, index) => index.toString()}
                 horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                initialNumToRender={3}
+                getItemLayout={(data, index) => ({
+                  length: 420, // Độ dài của mỗi mục
+                  offset: 420 * index,
+                  index,
+                })}
               />
+
               <View style={styles.container}>
                 <Text style={styles.nameProduct}>
                   {productDetail?.product_name}
@@ -671,6 +684,8 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
     flex: 1,
+    width: width,
+    height: height,
   },
   nameProduct: {
     fontSize: 20,

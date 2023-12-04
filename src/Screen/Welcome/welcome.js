@@ -1,5 +1,5 @@
-import {Text, View, StyleSheet, ImageBackground, Image} from 'react-native';
 import React from 'react';
+import {View, StyleSheet, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 const Welcome = () => {
@@ -30,8 +30,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   image: {
-    height: '50%',
-    width: '50%',
+    height: '50%', // Đặt kích thước theo chiều cao của màn hình
+    aspectRatio: 1, // Giữ tỉ lệ khung hình của hình ảnh
+    maxWidth: '50%', // Đặt chiều rộng tối đa
   },
 });
 
