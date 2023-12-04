@@ -79,7 +79,7 @@ const HomeScreen = ({navigation}) => {
           </Pressable>
         </View>
         <Slideshow />
-        {/* <Listcategorys /> */}
+        <Listcategorys />
         <Listproducts />
       </ScrollView>
     </SafeAreaView>
