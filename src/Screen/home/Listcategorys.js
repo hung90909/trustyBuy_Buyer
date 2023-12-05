@@ -9,7 +9,7 @@ const Listcategorys = () => {
   const fetchData = async () => {
     try {
       const response = await apiGet(
-        'https://49a2-116-96-44-199.ngrok-free.app/v1/api/category/getAllCategory',
+        'https://serverapiecommercefashion.onrender.com/v1/api/category/getAllCategory',
       );
       console.log(response);
       setData(response.message.category);
@@ -27,7 +27,7 @@ const Listcategorys = () => {
       <Pressable style={styles.categoryItem}>
         <Image
           source={{
-            uri: `https://49a2-116-96-44-199.ngrok-free.app/${item?.category_thumb}`,
+            uri: `https://serverapiecommercefashion.onrender.com/${item?.category_thumb}`,
           }}
           style={{height: 35, width: 35}}
           resizeMode="contain"

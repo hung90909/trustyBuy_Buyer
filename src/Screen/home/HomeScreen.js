@@ -140,6 +140,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     height: 40,
+    paddingHorizontal: 10,
   },
   searchText: {
     marginLeft: 10,
