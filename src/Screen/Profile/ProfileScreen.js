@@ -97,7 +97,7 @@ const ProfileScreen = () => {
           <Image
             style={styles.avatar}
             source={{
-              uri: `${API_BASE_URL}uploads/${user.avatar}`,
+              uri: `${API_BASE_URL}uploads/${user?.avatar}`,
             }}
             resizeMode="contain"
           />
@@ -119,9 +119,9 @@ const ProfileScreen = () => {
             marginTop: 10,
             marginBottom: 5,
           }}>
-          {user.fullName}
+          {user?.fullName}
         </Text>
-        <Text style={{fontSize: 13, color: 'black'}}>0{user.phoneNumber}</Text>
+        <Text style={{fontSize: 13, color: 'black'}}>0{user?.phoneNumber}</Text>
       </View>
       {features.map((item, index) => (
         <TouchableOpacity

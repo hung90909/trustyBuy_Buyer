@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'https://49a2-116-96-44-199.ngrok-free.app/';
+export const API_BASE_URL = 'https://3575-116-96-45-73.ngrok-free.app/';
 
 export const getApiUrl = endpoint => API_BASE_URL + endpoint;
 

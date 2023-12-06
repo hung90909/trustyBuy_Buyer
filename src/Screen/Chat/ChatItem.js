@@ -9,25 +9,22 @@ import {GiftedChat, Send} from 'react-native-gifted-chat';
 import socketServices from '../../utils/socketService';
 import {launchImageLibrary} from 'react-native-image-picker';
 
-const ChatItem = ({navigation, route}) => {
-  const {_id, name, avatar} = route.params;
+const MessageItem = ({navigation, route}) => {
+  const {data} = route.params;
   const [messages, setMessages] = useState([]);
-  const [userId, setUserId] = useState();
 
   const getApi = async () => {
     try {
-      const res = await apiGet(`${CHAT_API}/getMessages/${_id}`);
-      const data = res?.message;
-      const formattedMessages = data?.messagers.map(message => ({
+      const res = await apiGet(`${CHAT_API}/getMessages/${data?.idRoom}`);
+      const mess = res?.message?.messagers.map(message => ({
         ...message,
         user: {
           _id: message?.senderId,
-          name: message?.senderId === userId ? name : 'Me',
-          avatar: `${API_BASE_URL}${avatar}`,
+          name: message?.senderId === data?.idShop ? 'Me' : data.useName,
+          avatar: `${API_BASE_URL}${data.avatar}`,
         },
       }));
-      setUserId(data?.userId);
-      setMessages(formattedMessages.reverse());
+      setMessages(mess.reverse());
     } catch (error) {
       console.log('API Error:', error);
     }
@@ -43,7 +40,7 @@ const ChatItem = ({navigation, route}) => {
           image: result.assets[0].uri,
           createdAt: new Date(),
           user: {
-            _id: userId,
+            _id: data?.idShop,
           },
         };
 
@@ -55,25 +52,24 @@ const ChatItem = ({navigation, route}) => {
   };
 
   const onSend = newMessages => {
-    console.log(newMessages);
     socketServices.emit('chat message', {
-      senderId: userId,
+      senderId: data?.idShop,
       message: newMessages[0].text,
-      conversationId: _id,
+      conversationId: data?.idRoom,
     });
   };
 
   useEffect(() => {
     getApi();
-    socketServices.emit('joinRoom', _id);
+    socketServices.emit('joinRoom', data?.idRoom);
     socketServices.on('send message', msg => {
       setMessages(previousMessages =>
         GiftedChat.append(previousMessages, {
           ...msg,
           user: {
             _id: msg?.senderId,
-            name: msg?.senderId === userId ? 'Me' : name,
-            avatar: `${API_BASE_URL}${avatar}`,
+            name: msg?.senderId === data?.idShop ? 'Me' : name,
+            avatar: `${API_BASE_URL}${data.avatar}`,
           },
         }),
       );
@@ -85,7 +81,11 @@ const ChatItem = ({navigation, route}) => {
       <View style={MessageItemStyles.header}>
         <TouchableOpacity
           onPress={() => {
-            socketServices.emit('leaveRoom', _id), navigation.goBack();
+            socketServices.emit('leaveRoom', {
+              roomName: data?.idRoom,
+              userId: data?.idShop,
+            }),
+              navigation.goBack();
           }}
           style={{
             width: 40,
@@ -99,10 +99,10 @@ const ChatItem = ({navigation, route}) => {
         </TouchableOpacity>
         <View style={MessageItemStyles.userInfo}>
           <Image
-            source={{uri: `${API_BASE_URL}${avatar}`}}
+            source={{uri: `${API_BASE_URL}${data?.avatar}`}}
             style={MessageItemStyles.userAvatar}
           />
-          <Text style={MessageItemStyles.userName}>{name}</Text>
+          <Text style={MessageItemStyles.userName}>{data?.useName}</Text>
         </View>
         <TouchableOpacity onPress={() => {}}>
           <AntDesign name="questioncircleo" size={25} color={'black'} />
@@ -113,7 +113,7 @@ const ChatItem = ({navigation, route}) => {
         onSend={newMessages => onSend(newMessages)}
         placeholder="Nhập tin nhắn..."
         user={{
-          _id: userId,
+          _id: data?.idShop,
         }}
         textInputStyle={MessageItemStyles.input}
         renderSend={props => (
@@ -193,4 +193,4 @@ const MessageItemStyles = StyleSheet.create({
   },
 });
 
-export default ChatItem;
+export default MessageItem;

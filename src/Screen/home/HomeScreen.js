@@ -14,16 +14,22 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Slideshow from './Slideshow';
 import Listproducts from './Listproducts';
 import Listcategorys from './Listcategorys';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {saveChatData} from '../../redux/actions/chat';
+import {USER_API} from '../../config/urls';
+import {apiGet} from '../../utils/utils';
+import socketServices from '../../utils/socketService';
 
 const HomeScreen = ({navigation}) => {
   const [account, setAccount] = useState();
 
   const getApi = async () => {
     try {
+      await saveChatData();
+
       const res = await apiGet(`${USER_API}/getProfile`);
-      setAccount(res?.message?.checkUser);
-      socketServices.emit('new-user-add', res?.message?.checkUser?._id);
+      let data = res?.message?.checkUser;
+      setAccount(data);
+      socketServices.emit('new-user-add', data?._id);
     } catch (error) {
       console.log('Post api: ', error.message);
     }
@@ -60,7 +66,7 @@ const HomeScreen = ({navigation}) => {
             </Pressable>
             <View style={styles.profileInfo}>
               <Text style={styles.profileText}>Xin chào 👋</Text>
-              <Text style={styles.profileTextBold}>{account?.user_name}</Text>
+              <Text style={styles.profileTextBold}>{account?.fullName}</Text>
             </View>
           </View>
           <View style={styles.headerIcons}>

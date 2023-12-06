@@ -3,6 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {Provider} from 'react-redux';
 import HomeScreen from './src/Screen/home/HomeScreen';
 import Welcome from './src/Screen/Welcome/welcome';
 import ProfileScreen from './src/Screen/Profile/ProfileScreen';
@@ -29,6 +30,7 @@ import ChangePassword from './src/Screen/ChangePassword';
 import CheckoutScreen from './src/Screen/CheckoutScreen';
 import ChatItem from './src/Screen/Chat/ChatItem';
 import socketServices from './src/utils/socketService';
+import store from './src/redux/store';
 
 const TabTop = createMaterialTopTabNavigator();
 
@@ -108,36 +110,38 @@ const App = () => {
   }, []);
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="Main"
-        screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Welcome" component={Welcome} />
-        <Stack.Screen name="Welcome1" component={Welcome1} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Login2" component={login2} />
-        <Stack.Screen name="Register" component={register} />
-        <Stack.Screen
-          name="RegisterInformation"
-          component={RegisterInformation}
-        />
-        <Stack.Screen name="Main" component={BotBottomTabNavigator} />
-        <Stack.Screen name="ChatItem" component={ChatItem} />
-        <Stack.Screen
-          name="NotificationScreen"
-          component={NotificationScreen}
-        />
-        <Stack.Screen name="Search" component={SearchScreen} />
-        <Stack.Screen name="ListProduct" component={ListProduct} />
-        <Stack.Screen name="ShopInformation" component={ShopInformation} />
-        <Stack.Screen name="Cart" component={CartScreen} />
-        <Stack.Screen name="DetailProducts" component={DetailProducts} />
-        <Stack.Screen name="EditProfile" component={EditProfile} />
-        <Stack.Screen name="ChangePassword" component={ChangePassword} />
-        <Stack.Screen name="AdressScreen" component={AdressScreen} />
-        <Stack.Screen name="Checkout" component={CheckoutScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Main"
+          screenOptions={{headerShown: false}}>
+          <Stack.Screen name="Welcome" component={Welcome} />
+          <Stack.Screen name="Welcome1" component={Welcome1} />
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Login2" component={login2} />
+          <Stack.Screen name="Register" component={register} />
+          <Stack.Screen
+            name="RegisterInformation"
+            component={RegisterInformation}
+          />
+          <Stack.Screen name="Main" component={BotBottomTabNavigator} />
+          <Stack.Screen name="ChatItem" component={ChatItem} />
+          <Stack.Screen
+            name="NotificationScreen"
+            component={NotificationScreen}
+          />
+          <Stack.Screen name="Search" component={SearchScreen} />
+          <Stack.Screen name="ListProduct" component={ListProduct} />
+          <Stack.Screen name="ShopInformation" component={ShopInformation} />
+          <Stack.Screen name="Cart" component={CartScreen} />
+          <Stack.Screen name="DetailProducts" component={DetailProducts} />
+          <Stack.Screen name="EditProfile" component={EditProfile} />
+          <Stack.Screen name="ChangePassword" component={ChangePassword} />
+          <Stack.Screen name="AdressScreen" component={AdressScreen} />
+          <Stack.Screen name="Checkout" component={CheckoutScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 };
 

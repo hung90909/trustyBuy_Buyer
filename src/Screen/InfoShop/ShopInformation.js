@@ -12,9 +12,11 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
-import {API_BASE_URL, CHAT_API, SHOP_API} from '../../config/urls';
-import {apiGet, apiPost} from '../../utils/utils';
+import {API_BASE_URL, SHOP_API} from '../../config/urls';
+import {apiGet} from '../../utils/utils';
 import {formatPrice, formatSoldSP} from '../Format';
+import {changeChat} from '../../redux/actions/chat';
+import {useSelector} from 'react-redux';
 
 const ShopInformation = ({route}) => {
   const navigation = useNavigation();
@@ -23,14 +25,21 @@ const ShopInformation = ({route}) => {
   const [data, setData] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
+  const chatData = useSelector(state => state?.chat?.chatData);
+
   const chatApi = async () => {
-    try {
-      const res = await apiPost(`${CHAT_API}/createConvarsation`, {
-        shopId: shopId,
-      });
-      console.log(res);
-    } catch (error) {
-      console.log(error);
+    const isCheck = await changeChat(shopId);
+    if (isCheck) {
+      console.log(chatData);
+      const itemData = chatData.find(item => item.chat.shopId === shopId);
+      // navigation.navigate('ChatItem', {
+      //   data: {
+      //     idRoom: itemData?.chat?._id,
+      //     idShop: itemData?.chat?.userId,
+      //     useName: itemData?.user?.user_name,
+      //     avatar: itemData?.user?.user_avatar,
+      //   },
+      // });
     }
   };
 
@@ -52,7 +61,7 @@ const ShopInformation = ({route}) => {
     // console.log(productId);
     setSelectedProductId(productId);
   };
-  
+
   const renderSanpham = ({item}) => {
     return (
       <Pressable

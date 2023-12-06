@@ -11,11 +11,11 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {ListItem, Avatar} from '@rneui/themed';
 import {Icon} from 'react-native-elements';
-import {API_BASE_URL, CHAT_API} from '../../config/urls';
-import {apiGet} from '../../utils/utils';
+import {API_BASE_URL} from '../../config/urls';
+import {useSelector} from 'react-redux';
 
 const MessageScreen = ({navigation}) => {
-  const [data, setData] = useState([]);
+  const data = useSelector(state => state?.chat?.chatData);
 
   const renderButton = itemId => (
     <Pressable onPress={() => showAlert(itemId)} style={styles.deleteButton}>
@@ -45,19 +45,6 @@ const MessageScreen = ({navigation}) => {
     console.log(`Xóa tin nhắn có ID: ${itemId}`);
   };
 
-  const getApi = async () => {
-    try {
-      const res = await apiGet(`${CHAT_API}/getConvarsations`);
-      setData(res?.message);
-    } catch (error) {
-      console.log('Call api: ', error.message);
-    }
-  };
-
-  useEffect(() => {
-    getApi();
-  }, []);
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -74,9 +61,12 @@ const MessageScreen = ({navigation}) => {
           <ListItem.Swipeable
             onPress={() => {
               navigation.navigate('ChatItem', {
-                _id: item?.chat?._id,
-                name: item?.user?.user_name,
-                avatar: item?.user?.user_avatar,
+                data: {
+                  idRoom: item?.chat?._id,
+                  idShop: item?.chat?.userId,
+                  useName: item?.user?.user_name,
+                  avatar: item?.user?.user_avatar,
+                },
               });
             }}
             rightContent={() => renderButton(item?._id)}
