@@ -7,24 +7,26 @@ import {
   ScrollView,
   Pressable,
   Image,
+  FlatList,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
-import Listproducts from '../home/Listproducts';
 import {API_BASE_URL, CHAT_API, SHOP_API} from '../../config/urls';
 import {apiGet, apiPost} from '../../utils/utils';
+import {formatPrice, formatSoldSP} from '../Format';
 
 const ShopInformation = ({route}) => {
   const navigation = useNavigation();
   const [isFollowing, setIsFollowing] = useState(false);
-  const {shop_id} = route.params;
+  const {shopId} = route.params;
   const [data, setData] = useState([]);
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
   const chatApi = async () => {
     try {
       const res = await apiPost(`${CHAT_API}/createConvarsation`, {
-        shopId: shop_id,
+        shopId: shopId,
       });
       console.log(res);
     } catch (error) {
@@ -34,7 +36,7 @@ const ShopInformation = ({route}) => {
 
   const getapi = async () => {
     try {
-      const res = await apiGet(`${SHOP_API}/getShop/${shop_id}`);
+      const res = await apiGet(`${SHOP_API}/getShop/${shopId}`);
       setData(res?.message);
     } catch (error) {
       console.log('Call api: ', error);
@@ -45,6 +47,37 @@ const ShopInformation = ({route}) => {
     getapi();
   }, []);
 
+  const handleProductPress = productId => {
+    navigation.navigate('DetailProducts', {productId});
+    // console.log(productId);
+    setSelectedProductId(productId);
+  };
+  
+  const renderSanpham = ({item}) => {
+    return (
+      <Pressable
+        onPress={() => handleProductPress(item._id)}
+        style={styles.container1}>
+        <Image
+          style={styles.imageSP}
+          source={{
+            uri: `${API_BASE_URL}uploads/${item?.product_thumb[0]}`,
+          }}
+          resizeMode="contain"
+        />
+
+        <Text style={styles.nameSp} numberOfLines={2}>
+          {item.product_name}
+        </Text>
+        <View style={styles.containerGia}>
+          <Text style={styles.giaSp}>{formatPrice(item.product_price)}</Text>
+          <Text style={styles.daBan}>
+            Đã bán {formatSoldSP(item.product_sold)}
+          </Text>
+        </View>
+      </Pressable>
+    );
+  };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -109,18 +142,14 @@ const ShopInformation = ({route}) => {
             </View>
           </View>
         </View>
-
-        {/* Sản phẩm bán chạy nhất */}
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Sản phẩm bán chạy</Text>
-          <Listproducts />
-        </View>
-
-        {/* Tất cả sản phẩm */}
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Tất cả sản phẩm</Text>
-          <Listproducts />
-        </View>
+        <Text style={styles.sectionTitle}>Sản phẩm của shop</Text>
+        <FlatList
+          data={data?.products || []} // Use data?.products if available, or an empty array as a fallback
+          scrollEnabled={false}
+          renderItem={renderSanpham}
+          keyExtractor={item => item._id}
+          numColumns={2}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -247,6 +276,33 @@ const styles = StyleSheet.create({
   productSold: {
     color: '#1B2028',
     fontSize: 10,
+  },
+  imageSP: {
+    width: '100%',
+    height: 200,
+  },
+  nameSp: {
+    color: '#1B2028',
+    fontSize: 14,
+  },
+  containerGia: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 25,
+    alignItems: 'center',
+  },
+  giaSp: {
+    color: '#FC6D26',
+    fontSize: 14,
+  },
+  daBan: {
+    color: '#1B2028',
+    fontSize: 10,
+  },
+  container1: {
+    width: '50%',
+    justifyContent: 'center',
+    padding: '3%',
   },
 });
 

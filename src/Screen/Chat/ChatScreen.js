@@ -47,7 +47,7 @@ const MessageScreen = ({navigation}) => {
 
   const getApi = async () => {
     try {
-      const res = await apiGet(`${CHAT_API}/getConvarsationsForShop`);
+      const res = await apiGet(`${CHAT_API}/getConvarsations`);
       setData(res?.message);
     } catch (error) {
       console.log('Call api: ', error.message);

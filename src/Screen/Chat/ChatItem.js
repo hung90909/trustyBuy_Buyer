@@ -12,7 +12,7 @@ import {launchImageLibrary} from 'react-native-image-picker';
 const ChatItem = ({navigation, route}) => {
   const {_id, name, avatar} = route.params;
   const [messages, setMessages] = useState([]);
-  const [shopId, setShopId] = useState();
+  const [userId, setUserId] = useState();
 
   const getApi = async () => {
     try {
@@ -22,11 +22,11 @@ const ChatItem = ({navigation, route}) => {
         ...message,
         user: {
           _id: message?.senderId,
-          name: message?.senderId === shopId ? 'Me' : name,
+          name: message?.senderId === userId ? name : 'Me',
           avatar: `${API_BASE_URL}${avatar}`,
         },
       }));
-      setShopId(data?.shopId);
+      setUserId(data?.userId);
       setMessages(formattedMessages.reverse());
     } catch (error) {
       console.log('API Error:', error);
@@ -43,7 +43,7 @@ const ChatItem = ({navigation, route}) => {
           image: result.assets[0].uri,
           createdAt: new Date(),
           user: {
-            _id: shopId,
+            _id: userId,
           },
         };
 
@@ -55,8 +55,9 @@ const ChatItem = ({navigation, route}) => {
   };
 
   const onSend = newMessages => {
+    console.log(newMessages);
     socketServices.emit('chat message', {
-      senderId: shopId,
+      senderId: userId,
       message: newMessages[0].text,
       conversationId: _id,
     });
@@ -71,7 +72,7 @@ const ChatItem = ({navigation, route}) => {
           ...msg,
           user: {
             _id: msg?.senderId,
-            name: msg?.senderId === shopId ? 'Me' : name,
+            name: msg?.senderId === userId ? 'Me' : name,
             avatar: `${API_BASE_URL}${avatar}`,
           },
         }),
@@ -83,7 +84,9 @@ const ChatItem = ({navigation, route}) => {
     <View style={MessageItemStyles.container}>
       <View style={MessageItemStyles.header}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            socketServices.emit('leaveRoom', _id), navigation.goBack();
+          }}
           style={{
             width: 40,
             height: 40,
@@ -110,7 +113,7 @@ const ChatItem = ({navigation, route}) => {
         onSend={newMessages => onSend(newMessages)}
         placeholder="Nhập tin nhắn..."
         user={{
-          _id: shopId,
+          _id: userId,
         }}
         textInputStyle={MessageItemStyles.input}
         renderSend={props => (

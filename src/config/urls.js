@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'https://b44b-116-96-44-199.ngrok-free.app/';
+export const API_BASE_URL = 'https://49a2-116-96-44-199.ngrok-free.app/';
 
 export const getApiUrl = endpoint => API_BASE_URL + endpoint;
 
@@ -13,3 +13,4 @@ export const SHOP_API = getApiUrl('v1/api/shop');
 export const DISCOUNT_API = getApiUrl('v1/api/discount');
 export const ADD_CART_API = getApiUrl('v1/api/cartv2');
 export const USER_API = getApiUrl('v1/api/user');
+export const DETAILSHOP_API = getApiUrl('v1/shop/getShop/');

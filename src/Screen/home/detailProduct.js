@@ -10,6 +10,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -22,7 +23,8 @@ import Listproducts from './Listproducts';
 import {API_BASE_URL, PRODUCT_API} from '../../config/urls';
 import {apiGet, apiPost} from '../../utils/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+const {width} = Dimensions.get('window');
+const {height} = Dimensions.get('window');
 const DetailProducts = ({route, navigation}) => {
   const {productId} = route.params;
   const bottomSheetModalRef = useRef(null);
@@ -35,6 +37,7 @@ const DetailProducts = ({route, navigation}) => {
   const [bottomSheetAction, setBottomSheetAction] = useState('addToCart');
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
+
   const handleIncreaseQuantity = () => {
     if (selectedColor && selectedSize) {
       const totalQuantity = getTotalQuantityForColorAndSize(
@@ -216,6 +219,7 @@ const DetailProducts = ({route, navigation}) => {
       try {
         const response = await apiGet(`${PRODUCT_API}/getProduct/${productId}`);
         setProductDetail(response?.message);
+        console.log(response?.message);
         setSelectedProductId(productId);
       } catch (error) {
         console.error(error.response.data);
@@ -243,11 +247,11 @@ const DetailProducts = ({route, navigation}) => {
   const renderImage = useCallback(({item}) => {
     return (
       <Image
-        style={{height: 400, width: 420}}
+        style={{height: 400, width: width}}
         source={{
           uri: `${API_BASE_URL}uploads/${item}`,
         }}
-        resizeMode="cover"
+        resizeMode="contain"
       />
     );
   });
@@ -259,7 +263,11 @@ const DetailProducts = ({route, navigation}) => {
     );
     resetQuantity();
   };
-
+  const handleShopPress = shopId => {
+    navigation.navigate('ShopInformation', {shopId});
+    // console.log(shopId);
+    // setSelectedProductId(productId);
+  };
   const getTotalQuantity = () => {
     // Calculate the total quantity based on all available colors
     return productDetail.product_attributes.reduce(
@@ -315,8 +323,18 @@ const DetailProducts = ({route, navigation}) => {
               <FlatList
                 data={productDetail?.product_thumb || []}
                 renderItem={renderImage}
+                keyExtractor={(item, index) => index.toString()}
                 horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                initialNumToRender={3}
+                getItemLayout={(data, index) => ({
+                  length: 420, // Độ dài của mỗi mục
+                  offset: 420 * index,
+                  index,
+                })}
               />
+
               <View style={styles.container}>
                 <Text style={styles.nameProduct}>
                   {productDetail?.product_name}
@@ -347,15 +365,13 @@ const DetailProducts = ({route, navigation}) => {
                     <Text style={styles.nameShop}>
                       {productDetail?.shop_name}
                     </Text>
-                    <Pressable
-                      style={styles.butonDetailShop}
-                      onPress={() =>
-                        navigation.navigate('ShopInformation', {
-                          shop_id: productDetail?.shop_id,
-                        })
-                      }>
-                      <Text style={styles.titleButon}>Xem cửa hàng</Text>
-                    </Pressable>
+                    <View>
+                      <Pressable
+                        onPress={() => handleShopPress(productDetail?.shop_id)}
+                        style={styles.butonDetailShop}>
+                        <Text style={styles.titleButon}>Xem cửa hàng</Text>
+                      </Pressable>
+                    </View>
                   </View>
                 </View>
                 <View style={styles.containerProductdetail}>
@@ -369,9 +385,6 @@ const DetailProducts = ({route, navigation}) => {
                 <Text style={styles.titelSuggestions}>Gợi ý các sản phẩm</Text>
                 <Listproducts />
               </View>
-              <TouchableOpacity style={styles.btnShowShop}>
-                <Text style={{color: 'white', fontSize: 12}}>Xem cửa hàng</Text>
-              </TouchableOpacity>
             </View>
           </ScrollView>
           <View style={styles.butonCartBuy}>
@@ -671,11 +684,12 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
     flex: 1,
+    width: width,
+    height: height,
   },
   nameProduct: {
-    fontSize: 24,
+    fontSize: 20,
     color: 'black',
-    fontWeight: 'bold',
   },
   ratingSoldPr: {
     flexDirection: 'row',
@@ -704,7 +718,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
   },
-  nameShowShop: {marginLeft: 20},
+  nameShowShop: {marginLeft: 20, flexDirection: 'column'},
   butonDetailShop: {
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -714,6 +728,7 @@ const styles = StyleSheet.create({
   },
   titleButon: {
     color: 'white',
+    alignSelf: 'center',
   },
   suggestionsProduct: {
     marginTop: 20,
@@ -747,9 +762,8 @@ const styles = StyleSheet.create({
   },
   titelSuggestions: {
     color: 'black',
-    fontSize: 20,
+    fontSize: 16,
     textAlign: 'center',
-    fontWeight: 'bold',
   },
   containerProductdetail: {},
   titleDetail: {

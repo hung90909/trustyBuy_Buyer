@@ -16,10 +16,10 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import Bottomsheet from './Bottomsheet';
-import ListProduct from './ListProduct';
 import {formatPrice, formatSoldSP} from './Format';
 import {apiGet} from '../utils/utils';
 import {API_BASE_URL, PRODUCT_API} from '../config/urls';
+import Listproducts from './home/Listproducts';
 
 const SearchScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -202,7 +202,7 @@ const SearchScreen = () => {
                 style={{fontWeight: 'bold', color: 'black', marginLeft: 10}}>
                 Có thể bạn cũng thích
               </Text>
-              <ListProduct />
+              <Listproducts />
             </ScrollView>
           )}
           {/* FlatList item */}

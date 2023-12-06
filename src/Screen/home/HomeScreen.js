@@ -14,9 +14,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Slideshow from './Slideshow';
 import Listproducts from './Listproducts';
 import Listcategorys from './Listcategorys';
-import {apiGet} from '../../utils/utils';
-import {USER_API} from '../../config/urls';
-import socketServices from '../../utils/socketService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = ({navigation}) => {
   const [account, setAccount] = useState();

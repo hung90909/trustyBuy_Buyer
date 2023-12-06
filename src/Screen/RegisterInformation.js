@@ -1,23 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
   Image,
   TextInput,
   Pressable,
-  StatusBar,
-  SafeAreaView,
-  KeyboardAvoidingView,
   ScrollView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Dropdown } from 'react-native-element-dropdown';
-import { useNavigation } from '@react-navigation/native';
+import {Dropdown} from 'react-native-element-dropdown';
+import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const data = [
-  { label: 'Nam', value: 'Nam' },
-  { label: 'Nữ', value: 'Nữ' },
+
+const genders = [
+  {label: 'Nam', value: 'Nam'},
+  {label: 'Nữ', value: 'Nữ'},
 ];
 
 const RegisterInformation = () => {
@@ -25,17 +24,26 @@ const RegisterInformation = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [value, setValue] = useState(null);
   const [nameError, setNameError] = useState('');
   const [usernameError, setUsernameError] = useState('');
-  const [emailError, setEmailError] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [genderError, setGenderError] = useState('');
   const [tuoiError, setTuoiError] = useState('');
   const [userID, setUserID] = useState('');
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const getToken = async () => {
+      const token = await AsyncStorage.getItem('access_token');
+      const tokenUser = token ? JSON.parse(token) : null;
+      console.log('Token save:', tokenUser._id);
+      setUserID(tokenUser?._id || '');
+    };
+
+    getToken();
+  }, []);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -43,47 +51,18 @@ const RegisterInformation = () => {
     setDate(currentDate);
   };
 
-  async function getToken() {
-    const token = await AsyncStorage.getItem('access_token');
-    const tokenUser = token ? JSON.parse(token) : null;
-    console.log('Token save : ', tokenUser._id);
-    setUserID(tokenUser._id);
-  }
-
-  useEffect(() => {
-    getToken();
-  }, []);
-
   const handleSubmit = () => {
-    // Kiểm tra xem có lỗi nào không
-    const hasErrors =
-      !!nameError ||
-      !!usernameError ||
-      !!emailError ||
-      !!phoneError ||
-      !!genderError ||
-      !!tuoiError;
-
-    // Làm sạch các thông báo lỗi trước khi kiểm tra điều kiện
     setNameError('');
     setUsernameError('');
-    setEmailError('');
     setPhoneError('');
     setGenderError('');
     setTuoiError('');
 
-    // Kiểm tra các điều kiện và đặt các thông báo lỗi khi cần thiết
     if (!name) {
       setNameError('Vui lòng nhập họ và tên');
     }
     if (!username) {
       setUsernameError('Vui lòng nhập tên tài khoản');
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email) {
-      setEmailError('Vui lòng nhập email');
-    } else if (!emailRegex.test(email)) {
-      setEmailError('Email không hợp lệ');
     }
     if (!phone) {
       setPhoneError('Vui lòng nhập số điện thoại');
@@ -92,25 +71,7 @@ const RegisterInformation = () => {
     }
     if (!value) {
       setGenderError('Vui lòng chọn giới tính');
-    }
-
-    // const birthDate = new Date(date);
-    // const currentDate = new Date();
-    // let age = currentDate.getFullYear() - birthDate.getFullYear();
-    // if (
-    //   currentDate.getMonth() < birthDate.getMonth() ||
-    //   (currentDate.getMonth() === birthDate.getMonth() &&
-    //     currentDate.getDate() < birthDate.getDate())
-    // ) {
-    //   age--; // Chưa đến ngày sinh nhật trong năm nay
-    // }
-
-    // if (age < 18) {
-    //   setTuoiError('Bạn phải đủ 18 tuổi');
-    // }
-
-    // Chuyển hướng đến màn hình "Main" chỉ khi không có lỗi
-    else if (!hasErrors) {
+    } else if (!tuoiError) {
       onRegisterInformations();
     }
   };
@@ -121,9 +82,9 @@ const RegisterInformation = () => {
       phoneNumber: phone,
       gender: value,
     };
+
     fetch(
-      'https://fbf9-123-24-162-159.ngrok-free.app/v1/api/user/setUpAcc/' +
-      userID,
+      `https://fbf9-123-24-162-159.ngrok-free.app/v1/api/user/setUpAcc/${userID}`,
       {
         method: 'POST',
         headers: {
@@ -138,11 +99,8 @@ const RegisterInformation = () => {
 
   return (
     <ScrollView>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior="padding" // Choose the behavior you need (padding, position, height)
-      >
-        <View style={{ flex: 1 }}>
+      <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
+        <View style={{flex: 1}}>
           <View
             style={{
               flexDirection: 'row',
@@ -156,8 +114,8 @@ const RegisterInformation = () => {
               color="#000000"
               onPress={() => navigation.navigate('Register')}
             />
-            <View style={{ flex: 1, alignItems: 'center', marginRight: 20 }}>
-              <Text style={{ color: '#000000', fontWeight: '600', fontSize: 18 }}>
+            <View style={{flex: 1, alignItems: 'center', marginRight: 20}}>
+              <Text style={{color: '#000000', fontWeight: '600', fontSize: 18}}>
                 Thông tin cá nhân
               </Text>
             </View>
@@ -176,7 +134,7 @@ const RegisterInformation = () => {
             />
           </Pressable>
         </View>
-        <View style={{ marginTop: 20 }}>
+        <View style={{marginTop: 20}}>
           <TextInput
             style={styles.textinput}
             placeholder="Họ và tên"
@@ -186,7 +144,7 @@ const RegisterInformation = () => {
               setNameError('');
             }}
           />
-          {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
+          {nameError && <Text style={styles.errorText}>{nameError}</Text>}
 
           <TextInput
             style={styles.textinput}
@@ -197,16 +155,16 @@ const RegisterInformation = () => {
               setUsernameError('');
             }}
           />
-          {usernameError ? (
+          {usernameError && (
             <Text style={styles.errorText}>{usernameError}</Text>
-          ) : null}
+          )}
           <TextInput
             style={styles.textinput}
             placeholder="Ngày sinh"
             value={date.toLocaleDateString()}
             onFocus={() => setShowDatePicker(true)}
           />
-          {tuoiError ? <Text style={styles.errorText}>{tuoiError}</Text> : null}
+          {tuoiError && <Text style={styles.errorText}>{tuoiError}</Text>}
           {showDatePicker && (
             <DateTimePicker
               value={date}
@@ -215,7 +173,6 @@ const RegisterInformation = () => {
               onChange={onChange}
             />
           )}
-
 
           <TextInput
             style={styles.textinput}
@@ -227,17 +184,15 @@ const RegisterInformation = () => {
               setPhoneError('');
             }}
           />
-          {phoneError ? (
-            <Text style={styles.errorText}>{phoneError}</Text>
-          ) : null}
-          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          {phoneError && <Text style={styles.errorText}>{phoneError}</Text>}
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <Dropdown
               style={styles.dropdown}
               placeholderStyle={styles.placeholderStyle}
               selectedTextStyle={styles.selectedTextStyle}
               inputSearchStyle={styles.inputSearchStyle}
               iconStyle={styles.iconStyle}
-              data={data}
+              data={genders}
               maxHeight={150}
               labelField="label"
               valueField="value"
@@ -246,13 +201,10 @@ const RegisterInformation = () => {
               onChange={item => {
                 setValue(item.value);
                 setGenderError('');
-                console.log(item.value);
               }}
             />
           </View>
-          {genderError ? (
-            <Text style={styles.errorText}>{genderError}</Text>
-          ) : null}
+          {genderError && <Text style={styles.errorText}>{genderError}</Text>}
         </View>
 
         <Pressable style={styles.button} onPress={handleSubmit}>
@@ -278,7 +230,6 @@ const styles = {
     borderRadius: 10,
     paddingHorizontal: 15,
     fontSize: 16,
-    borderWidth: 1,
   },
   dropdown: {
     margin: 16,

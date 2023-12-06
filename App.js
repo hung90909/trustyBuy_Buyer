@@ -38,8 +38,8 @@ const TabOrder = () => (
       tabBarActiveTintColor: 'black',
       tabBarInactiveTintColor: 'gray',
       tabBarLabelStyle: {
-        fontSize: 12,
-        fontWeight: 'bold',
+        fontSize: 13,
+        // fontWeight: 'bold',
       },
       tabBarItemStyle: {},
       tabBarIndicatorStyle: {
@@ -110,7 +110,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Login2"
+        initialRouteName="Main"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="Welcome" component={Welcome} />
         <Stack.Screen name="Welcome1" component={Welcome1} />
