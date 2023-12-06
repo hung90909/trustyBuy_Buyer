@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     width: '100%',
-    height: 60,
+    height: 50,
     backgroundColor: 'rgba(232, 232, 232, 1)',
     borderRadius: 5,
     flexDirection: 'row',
@@ -245,8 +245,8 @@ const styles = StyleSheet.create({
   },
   socialButton: {
     width: '100%',
-    height: 50,
-    borderRadius: 10,
+    height: 45,
+    borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#3b5998',
