@@ -117,9 +117,7 @@ const EditProfile = () => {
     }
     const data = await AsyncStorage.getItem('token');
     const userId = JSON.parse(data).userId;
-    const accessToken =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTU5OTJjOGI4ZmZlNTVjYjQ0ZTk2NzMiLCJlbWFpbCI6Im5na2hhY2RhaUBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRiN2lJci9SenpGbXZ1QWxUMzc5SmNPOU9FOUJpT1hITUY3M0o5cGtmZENJQ1BJNVV1alRyNiIsImlhdCI6MTcwMDk4Mzk0MSwiZXhwIjoxNzAxODQ3OTQxfQ.M-TK8_IU6x-TyT3ufeE8pX90zqzKWdDk6wTWkdYean8';
-
+    const accessToken = accessToken;
     const formData = new FormData();
     formData.append('phoneNumber', phone);
     formData.append('address', address);
@@ -173,7 +171,7 @@ const EditProfile = () => {
             <Image
               style={styles.avatar}
               source={{
-                uri: selectedImages ?? `${API_BASE}/${avatar}`,
+                uri: selectedImages ?? `${API_BASE}uploads/${avatar}`,
               }}
               resizeMode="contain"
             />
@@ -199,16 +197,6 @@ const EditProfile = () => {
           Thông tin cá nhân
         </Text>
         <View style={{marginTop: 20}}>
-          <TextInput
-            style={styles.textinput}
-            placeholder="Họ và tên"
-            value={name}
-            onChangeText={text => {
-              setName(text);
-              setNameError('');
-            }}
-          />
-          {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
           <TextInput
             style={styles.textinput}
             placeholder="Họ và tên"

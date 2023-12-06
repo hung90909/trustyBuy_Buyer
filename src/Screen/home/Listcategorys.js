@@ -8,10 +8,11 @@ const Listcategorys = () => {
 
   const fetchData = async () => {
     try {
-      const response = await apiGet(`${CATEGORY_API}/getAllCategory`);
-
+      const response = await apiGet(
+        'https://serverapiecommercefashion.onrender.com/v1/api/category/getAllCategory',
+      );
       console.log(response);
-      // setData(response.message.getAllCategory);
+      setData(response.message.category);
     } catch (error) {
       console.error(error);
     }
@@ -26,8 +27,10 @@ const Listcategorys = () => {
       <Pressable style={styles.categoryItem}>
         <Image
           source={{
-            uri: `${API_BASE_URL}/${item?.category_thumb}`,
+            uri: `https://serverapiecommercefashion.onrender.com/${item?.category_thumb}`,
           }}
+          style={{height: 35, width: 35}}
+          resizeMode="contain"
         />
         <Text style={styles.categoryText}>{item.category_name}</Text>
       </Pressable>
@@ -38,11 +41,11 @@ const Listcategorys = () => {
     <View>
       <FlatList
         data={data}
-        scrollEnabled={false}
         keyExtractor={item => item._id}
         numColumns={4}
         renderItem={renderItem}
         style={styles.flatList}
+        scrollEnabled={false}
       />
     </View>
   );

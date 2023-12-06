@@ -97,7 +97,7 @@ const ProfileScreen = () => {
           <Image
             style={styles.avatar}
             source={{
-              uri: `${API_BASE_URL}${user.avatar}`,
+              uri: `${API_BASE_URL}uploads/${user.avatar}`,
             }}
             resizeMode="contain"
           />
