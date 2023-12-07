@@ -3,7 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {Provider} from 'react-redux';
+import {Provider, useSelector} from 'react-redux';
 import HomeScreen from './src/Screen/home/HomeScreen';
 import Welcome from './src/Screen/Welcome/welcome';
 import ProfileScreen from './src/Screen/Profile/ProfileScreen';
@@ -65,42 +65,59 @@ const TabOrder = () => (
 
 const Tab = createBottomTabNavigator();
 
-const BotBottomTabNavigator = () => (
-  <Tab.Navigator
-    screenOptions={({route}) => ({
-      headerShown: false,
-      tabBarIcon: ({color, size}) => {
-        let iconName;
-        if (route.name === 'Home') {
-          iconName = 'home-outline';
-        } else if (route.name === 'ChatScreen') {
-          iconName = 'chatbubble-ellipses-outline';
-        } else if (route.name === 'TabOrder') {
-          iconName = 'document-text-outline';
-        } else if (route.name === 'Profile') {
-          iconName = 'person-outline';
-        }
-        return <Ionicons name={iconName} size={size} color={color} />;
-      },
-    })}>
-    <Tab.Screen name="Home" component={HomeScreen} options={{title: 'Home'}} />
-    <Tab.Screen
-      name="ChatScreen"
-      component={ChatScreen}
-      options={{title: 'Chat'}}
-    />
-    <Tab.Screen
-      name="TabOrder"
-      component={TabOrder}
-      options={{title: 'Order'}}
-    />
-    <Tab.Screen
-      name="Profile"
-      component={ProfileScreen}
-      options={{title: 'Profile'}}
-    />
-  </Tab.Navigator>
-);
+const BotBottomTabNavigator = () => {
+  const data = useSelector(state => state?.chat?.chatData);
+  const notificationCount =
+    data > 0
+      ? data.reduce(
+          (count, item) => count + item.chat?.isRead?.user?.countNew,
+          0,
+        )
+      : null;
+  return (
+    <Tab.Navigator
+      screenOptions={({route}) => ({
+        headerShown: false,
+        tabBarIcon: ({color, size}) => {
+          let iconName;
+          if (route.name === 'Home') {
+            iconName = 'home-outline';
+          } else if (route.name === 'ChatScreen') {
+            iconName = 'chatbubble-ellipses-outline';
+          } else if (route.name === 'TabOrder') {
+            iconName = 'document-text-outline';
+          } else if (route.name === 'Profile') {
+            iconName = 'person-outline';
+          }
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+      })}>
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{title: 'Home'}}
+      />
+      <Tab.Screen
+        name="ChatScreen"
+        component={ChatScreen}
+        options={{
+          tabBarBadge: notificationCount,
+          title: 'Chat',
+        }}
+      />
+      <Tab.Screen
+        name="TabOrder"
+        component={TabOrder}
+        options={{title: 'Order'}}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{title: 'Profile'}}
+      />
+    </Tab.Navigator>
+  );
+};
 
 const Stack = createNativeStackNavigator();
 
@@ -113,7 +130,7 @@ const App = () => {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="Main"
+          initialRouteName="Welcome"
           screenOptions={{headerShown: false}}>
           <Stack.Screen name="Welcome" component={Welcome} />
           <Stack.Screen name="Welcome1" component={Welcome1} />

@@ -24,12 +24,14 @@ const HomeScreen = ({navigation}) => {
 
   const getApi = async () => {
     try {
-      await saveChatData();
-
       const res = await apiGet(`${USER_API}/getProfile`);
-      let data = res?.message?.checkUser;
+      const data = res?.message?.checkUser;
       setAccount(data);
       socketServices.emit('new-user-add', data?._id);
+      await saveChatData();
+      socketServices.on('newMessage', async () => {
+        await saveChatData();
+      });
     } catch (error) {
       console.log('Post api: ', error.message);
     }
@@ -52,7 +54,7 @@ const HomeScreen = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+    <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <StatusBar />
         <View style={styles.header}>
@@ -66,7 +68,9 @@ const HomeScreen = ({navigation}) => {
             </Pressable>
             <View style={styles.profileInfo}>
               <Text style={styles.profileText}>Xin chào 👋</Text>
-              <Text style={styles.profileTextBold}>{account?.fullName}</Text>
+              <Text style={styles.profileTextBold}>
+                {account?.information?.fullName}
+              </Text>
             </View>
           </View>
           <View style={styles.headerIcons}>
@@ -77,10 +81,7 @@ const HomeScreen = ({navigation}) => {
               color="#1B2028"
               onPress={navigateToNotification}
             />
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('Cart');
-              }}>
+            <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
               <Ionicons name="cart-outline" size={26} color="#1B2028" />
             </TouchableOpacity>
           </View>
@@ -100,6 +101,10 @@ const HomeScreen = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',

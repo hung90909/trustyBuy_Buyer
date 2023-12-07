@@ -18,6 +18,22 @@ import {formatPrice, formatSoldSP} from '../Format';
 import {changeChat} from '../../redux/actions/chat';
 import {useSelector} from 'react-redux';
 
+export const chatApi = async (shopId, chatData, navigation) => {
+  await changeChat(shopId);
+  const itemData = chatData.find(item => item.chat.shopId === shopId);
+
+  if (itemData) {
+    navigation.navigate('ChatItem', {
+      data: {
+        idRoom: itemData?.chat?._id,
+        idShop: itemData?.chat?.userId,
+        useName: itemData?.user?.user_name,
+        avatar: itemData?.user?.user_avatar,
+      },
+    });
+  }
+};
+
 const ShopInformation = ({route}) => {
   const navigation = useNavigation();
   const [isFollowing, setIsFollowing] = useState(false);
@@ -26,22 +42,6 @@ const ShopInformation = ({route}) => {
   const [selectedProductId, setSelectedProductId] = useState(null);
 
   const chatData = useSelector(state => state?.chat?.chatData);
-
-  const chatApi = async () => {
-    const isCheck = await changeChat(shopId);
-    if (isCheck) {
-      console.log(chatData);
-      const itemData = chatData.find(item => item.chat.shopId === shopId);
-      // navigation.navigate('ChatItem', {
-      //   data: {
-      //     idRoom: itemData?.chat?._id,
-      //     idShop: itemData?.chat?.userId,
-      //     useName: itemData?.user?.user_name,
-      //     avatar: itemData?.user?.user_avatar,
-      //   },
-      // });
-    }
-  };
 
   const getapi = async () => {
     try {
@@ -129,7 +129,9 @@ const ShopInformation = ({route}) => {
                 </Text>
               </Pressable>
 
-              <Pressable onPress={chatApi} style={styles.shopActionButton}>
+              <Pressable
+                onPress={() => chatApi(shopId, chatData, navigation)}
+                style={styles.shopActionButton}>
                 <Ionicons
                   name="chatbubble-ellipses-outline"
                   size={16}
