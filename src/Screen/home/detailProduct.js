@@ -205,7 +205,7 @@ const DetailProducts = ({route, navigation}) => {
     setSelectedSize(size);
     resetQuantity(); // Reset quantity when size is selected
   };
-  const snapPoints = ['100%'];
+  const snapPoints = ['80%'];
   const handlePresentModal = action => {
     setBottomSheetAction(action);
     bottomSheetModalRef.current?.present();
@@ -684,8 +684,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
     flex: 1,
-    width: width,
-    height: height,
   },
   nameProduct: {
     fontSize: 20,
@@ -805,9 +803,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   imgShop: {
-    height: 100,
-    width: 100,
-    borderRadius: 50,
+    height: 80,
+    width: 80,
+    borderRadius: 40,
   },
 });
 
