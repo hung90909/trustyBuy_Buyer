@@ -32,7 +32,6 @@ const EditProfile = () => {
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
   const [avatar, setAvatar] = useState('');
   const [value, setValue] = useState(null);
   const [nameError, setNameError] = useState('');
@@ -55,7 +54,6 @@ const EditProfile = () => {
       setName(res?.message.checkUser.user_name);
       setPhone(res?.message.checkUser.information.phoneNumber.toString());
       setAvatar(res?.message.checkUser.information.avatar);
-      setAddress(res?.message.checkUser.information.address);
       setValue(res?.message.checkUser.information.gender);
       console.log(res?.message.checkUser.information.gender);
     } catch (error) {
@@ -117,12 +115,10 @@ const EditProfile = () => {
     }
     const data = await AsyncStorage.getItem('token');
     const userId = JSON.parse(data).userId;
-    const accessToken =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTU5OTJjOGI4ZmZlNTVjYjQ0ZTk2NzMiLCJlbWFpbCI6Im5na2hhY2RhaUBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRiN2lJci9SenpGbXZ1QWxUMzc5SmNPOU9FOUJpT1hITUY3M0o5cGtmZENJQ1BJNVV1alRyNiIsImlhdCI6MTcwMDk4Mzk0MSwiZXhwIjoxNzAxODQ3OTQxfQ.M-TK8_IU6x-TyT3ufeE8pX90zqzKWdDk6wTWkdYean8';
+    const accessToken = JSON.parse(data).accessToken;
 
     const formData = new FormData();
     formData.append('phoneNumber', phone);
-    formData.append('address', address);
     formData.append('avatar', {
       uri: selectedImages,
       type: 'image/jpeg',
@@ -131,7 +127,7 @@ const EditProfile = () => {
     formData.append('fullName', username);
     formData.append('gender', value);
     await axios
-      .put(`${API_BASE}/v1/api/user/updateUser`, formData, {
+      .put(`${USER_API}/updateUser`, formData, {
         headers: {
           'x-xclient-id': userId,
           authorization: accessToken,
@@ -140,6 +136,7 @@ const EditProfile = () => {
       })
       .then(e => {
         console.log(e);
+        navigation.goBack();
       });
   };
 
@@ -263,15 +260,6 @@ const EditProfile = () => {
           {genderError ? (
             <Text style={styles.errorText}>{genderError}</Text>
           ) : null}
-          <TextInput
-            style={styles.textinput}
-            placeholder="Địa chỉ"
-            value={address}
-            onChangeText={text => {
-              setAddress(text);
-              setUsernameError('');
-            }}
-          />
         </View>
 
         <Pressable style={styles.button} onPress={handleSubmit}>
