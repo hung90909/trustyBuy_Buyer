@@ -11,8 +11,7 @@ const ProfileScreen = () => {
   const fetchData = async () => {
     try {
       const res = await apiGet(`${USER_API}/getProfile`);
-      // setUser(res.data.message.checkUser.information);
-      console.log(res);
+      setUser(res.message.checkUser.information);
     } catch (error) {
       console.log(error);
     }
@@ -98,7 +97,7 @@ const ProfileScreen = () => {
           <Image
             style={styles.avatar}
             source={{
-              uri: `${API_BASE_URL}uploads/${user.avatar}`,
+              uri: `${API_BASE_URL}uploads/${user?.avatar}`,
             }}
             resizeMode="contain"
           />
@@ -120,9 +119,9 @@ const ProfileScreen = () => {
             marginTop: 10,
             marginBottom: 5,
           }}>
-          {user.fullName}
+          {user?.fullName}
         </Text>
-        <Text style={{fontSize: 13, color: 'black'}}>0{user.phoneNumber}</Text>
+        <Text style={{fontSize: 13, color: 'black'}}>0{user?.phoneNumber}</Text>
       </View>
       {features.map((item, index) => (
         <TouchableOpacity

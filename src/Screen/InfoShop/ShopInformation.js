@@ -12,10 +12,27 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
-import Listproducts from '../home/Listproducts';
-import {API_BASE_URL, CHAT_API, SHOP_API} from '../../config/urls';
-import {apiGet, apiPost} from '../../utils/utils';
+import {API_BASE_URL, SHOP_API} from '../../config/urls';
+import {apiGet} from '../../utils/utils';
 import {formatPrice, formatSoldSP} from '../Format';
+import {changeChat} from '../../redux/actions/chat';
+import {useSelector} from 'react-redux';
+
+export const chatApi = async (shopId, chatData, navigation) => {
+  await changeChat(shopId);
+  const itemData = chatData.find(item => item.chat.shopId === shopId);
+
+  if (itemData) {
+    navigation.navigate('ChatItem', {
+      data: {
+        idRoom: itemData?.chat?._id,
+        idShop: itemData?.chat?.userId,
+        useName: itemData?.user?.user_name,
+        avatar: itemData?.user?.user_avatar,
+      },
+    });
+  }
+};
 
 const ShopInformation = ({route}) => {
   const navigation = useNavigation();
@@ -23,16 +40,8 @@ const ShopInformation = ({route}) => {
   const {shopId} = route.params;
   const [data, setData] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
-  const chatApi = async () => {
-    try {
-      const res = await apiPost(`${CHAT_API}/createConvarsation`, {
-        shopId: shopId,
-      });
-      console.log(res);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
+  const chatData = useSelector(state => state?.chat?.chatData);
 
   const getapi = async () => {
     try {
@@ -46,11 +55,13 @@ const ShopInformation = ({route}) => {
   useEffect(() => {
     getapi();
   }, []);
+
   const handleProductPress = productId => {
     navigation.navigate('DetailProducts', {productId});
     // console.log(productId);
     setSelectedProductId(productId);
   };
+
   const renderSanpham = ({item}) => {
     return (
       <Pressable
@@ -118,7 +129,9 @@ const ShopInformation = ({route}) => {
                 </Text>
               </Pressable>
 
-              <Pressable onPress={chatApi} style={styles.shopActionButton}>
+              <Pressable
+                onPress={() => chatApi(shopId, chatData, navigation)}
+                style={styles.shopActionButton}>
                 <Ionicons
                   name="chatbubble-ellipses-outline"
                   size={16}

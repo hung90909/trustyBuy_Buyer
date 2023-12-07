@@ -13,7 +13,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Dropdown} from 'react-native-element-dropdown';
 import {useNavigation} from '@react-navigation/native';
-import {API_BASE, USER_API} from '../../config/urls';
+import {API_BASE, API_BASE_URL, USER_API} from '../../config/urls';
 import axios from 'axios';
 import {PermissionsAndroid} from 'react-native';
 import {Alert} from 'react-native';
@@ -129,7 +129,7 @@ const EditProfile = () => {
     formData.append('fullName', username);
     formData.append('gender', value);
     await axios
-      .put(`${API_BASE}/v1/api/user/updateUser`, formData, {
+      .put(`${API_BASE_URL}/v1/api/user/updateUser`, formData, {
         headers: {
           'x-xclient-id': userId,
           authorization: accessToken,
@@ -137,7 +137,7 @@ const EditProfile = () => {
         },
       })
       .then(e => {
-        console.log(e);
+        throw e;
       });
   };
 
