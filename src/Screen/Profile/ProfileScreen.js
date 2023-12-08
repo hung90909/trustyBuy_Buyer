@@ -12,6 +12,7 @@ const ProfileScreen = () => {
     try {
       const res = await apiGet(`${USER_API}/getProfile`);
       setUser(res.message.checkUser.information);
+      console.log(res.message.checkUser.information);
     } catch (error) {
       console.log(error);
     }
@@ -97,7 +98,7 @@ const ProfileScreen = () => {
           <Image
             style={styles.avatar}
             source={{
-              uri: `${API_BASE_URL}uploads/${user?.avatar}`,
+              uri: `${API_BASE_URL}${user.avatar}`,
             }}
             resizeMode="contain"
           />

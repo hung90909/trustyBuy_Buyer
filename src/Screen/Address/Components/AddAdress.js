@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, {useState} from 'react';
 import {
   View,
@@ -7,9 +8,34 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import {USER_API} from '../../../config/urls';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AddAdress = ({isVisible, onClose}) => {
+  const handleNewAddress = async () => {
+    const data = await AsyncStorage.getItem('token');
+    const userId = JSON.parse(data).userId;
+    const token = JSON.parse(data).accessToken;
+    await axios
+      .post(
+        `${USER_API}/addAddress`,
+        {
+          nameAddress: name,
+          address: detail,
+        },
+        {
+          headers: {
+            'x-xclient-id': userId,
+            authorization: token,
+          },
+        },
+      )
+      .then(res => {
+        onClose(false);
+      });
+  };
   const [name, setName] = useState('');
+  const [detail, setDetail] = useState('');
   return (
     <Modal visible={isVisible} animationType="slide" transparent={true}>
       <View style={styles.modalContainer}>
@@ -29,8 +55,8 @@ const AddAdress = ({isVisible, onClose}) => {
           </Text>
           <TextInput
             style={styles.textInput}
-            onChangeText={text => setName(text)}
-            value={name}
+            onChangeText={text => setDetail(text)}
+            value={detail}
             placeholder="Nhập chi tiết địa chỉ"
           />
           <View style={styles.buttonsContainer}>
@@ -39,7 +65,7 @@ const AddAdress = ({isVisible, onClose}) => {
                 HỦY BỎ
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={() => handleNewAddress()}>
               <Text style={{color: 'red', fontSize: 17}}>THÊM VÀO</Text>
             </TouchableOpacity>
           </View>
