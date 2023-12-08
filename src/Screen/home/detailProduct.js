@@ -9,7 +9,6 @@ import {
   SafeAreaView,
   FlatList,
   Image,
-  TouchableOpacity,
   Dimensions,
 } from 'react-native';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
@@ -23,8 +22,12 @@ import Listproducts from './Listproducts';
 import {API_BASE_URL, PRODUCT_API} from '../../config/urls';
 import {apiGet, apiPost} from '../../utils/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {changeChat} from '../../redux/actions/chat';
+import {chatApi} from '../InfoShop/ShopInformation';
+import {useSelector} from 'react-redux';
 const {width} = Dimensions.get('window');
 const {height} = Dimensions.get('window');
+
 const DetailProducts = ({route, navigation}) => {
   const {productId} = route.params;
   const bottomSheetModalRef = useRef(null);
@@ -37,6 +40,8 @@ const DetailProducts = ({route, navigation}) => {
   const [bottomSheetAction, setBottomSheetAction] = useState('addToCart');
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
+
+  const chatData = useSelector(state => state?.chat?.chatData);
 
   const handleIncreaseQuantity = () => {
     if (selectedColor && selectedSize) {
@@ -314,6 +319,7 @@ const DetailProducts = ({route, navigation}) => {
       </Text>
     </Pressable>
   );
+
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <BottomSheetModalProvider>
@@ -388,10 +394,14 @@ const DetailProducts = ({route, navigation}) => {
             </View>
           </ScrollView>
           <View style={styles.butonCartBuy}>
-            <Pressable style={styles.btnChat}>
+            <Pressable
+              style={styles.btnChat}
+              onPress={() =>
+                chatApi(productDetail?.shop_id, chatData, navigation)
+              }>
               <Ionicons name="chatbubbles-outline" size={30} color={'black'} />
             </Pressable>
-            <View style={styles.line}></View>
+            <View style={styles.line} />
             <Pressable
               style={styles.btnCart}
               onPress={() => handlePresentModal('addToCart')}>

@@ -18,16 +18,20 @@ const Listproducts = ({count}) => {
   const [product, setProduct] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [loadingMore, setLoadingMore] = useState(false);
+
   useEffect(() => {
     getAllProduct();
   }, []);
-  const handleEndReached = () => {
-    if (!loadingMore) {
-      // Ngăn chặn việc kích hoạt nếu đang tải thêm dữ liệu
-      setLoadingMore(true);
-      getAllProduct(); // Triển khai hàm để tải thêm dữ liệu
-    }
-  };
+
+  //Lỗi loop server
+  // const handleEndReached = () => {
+  //   if (!loadingMore) {
+  //     // Ngăn chặn việc kích hoạt nếu đang tải thêm dữ liệu
+  //     setLoadingMore(true);
+  //     getAllProduct(); // Triển khai hàm để tải thêm dữ liệu
+  //   }
+  // };
+
   const getAllProduct = async () => {
     try {
       const response = await apiGet(`${PRODUCT_API}/getAllProductByUser`);
@@ -78,7 +82,7 @@ const Listproducts = ({count}) => {
         keyExtractor={item => item?._id}
         renderItem={renderSanpham}
         numColumns={2}
-        onEndReached={handleEndReached}
+        // onEndReached={handleEndReached}
         onEndReachedThreshold={0.1} // Có thể điều chỉnh ngưỡng tùy thuộc vào yêu cầu
         ListFooterComponent={() =>
           loadingMore ? (

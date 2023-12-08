@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {
-  Text,
   View,
+  Text,
   StyleSheet,
   TouchableOpacity,
   Image,
@@ -70,7 +70,7 @@ const Login2 = () => {
       // Handle errors
       if (error.response) {
         if (error.response.status === 403) {
-          setErrorPassword('Mật khẩu không chính xác');
+          setErrorPassword(error.response.data.message);
         } else {
           console.error('Server error:', error.response.data);
         }
@@ -93,6 +93,7 @@ const Login2 = () => {
         />
         <Text style={styles.heading}>Đăng nhập</Text>
       </View>
+
       <View style={styles.textInput}>
         <Fontisto name="email" size={25} color={'black'} />
         <TextInput
@@ -105,6 +106,7 @@ const Login2 = () => {
         />
       </View>
       {errorEmail !== '' && <Text style={styles.errorText}>{errorEmail}</Text>}
+
       <View style={styles.textInput}>
         <SimpleLineIcons name="lock" size={25} />
         <TextInput

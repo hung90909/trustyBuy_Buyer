@@ -81,7 +81,7 @@ const NotificationScreen = () => {
           name="arrow-back"
           size={28}
           color="#333333"
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => navigation.goBack()}
         />
         <Text style={styles.headerText}>Thông báo</Text>
       </View>

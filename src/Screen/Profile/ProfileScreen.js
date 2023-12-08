@@ -4,7 +4,7 @@ import Logout from './Logout';
 import {useNavigation} from '@react-navigation/native';
 import {API_BASE_URL, USER_API} from '../../config/urls';
 import {apiGet} from '../../utils/utils';
-
+import {useIsFocused} from '@react-navigation/native';
 const ProfileScreen = () => {
   const [user, setUser] = useState({});
 
@@ -20,7 +20,7 @@ const ProfileScreen = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [useIsFocused()]);
 
   const nav = useNavigation();
   const [showLogout, setShowLogout] = useState(false);
@@ -62,10 +62,10 @@ const ProfileScreen = () => {
         nav.navigate('ChangePassword');
         break;
       case 'Notification':
-        console.log('Notification');
+        nav.navigate('NotificationScreen');
         break;
       case 'Message':
-        console.log('Message');
+        nav.navigate('ChatScreen');
         break;
       case 'Setting':
         console.log('Setting');
@@ -98,18 +98,10 @@ const ProfileScreen = () => {
           <Image
             style={styles.avatar}
             source={{
-              uri: `${API_BASE_URL}${user?.avatar}`,
+              uri: `${API_BASE_URL}${user.avatar}`,
             }}
             resizeMode="contain"
           />
-          <TouchableOpacity
-            style={styles.edit_icon_container}
-            onPress={() => {}}>
-            <Image
-              source={require('../../Resource/icon/edit-text.png')}
-              style={styles.edit_icon}
-            />
-          </TouchableOpacity>
         </View>
 
         <Text
@@ -120,9 +112,8 @@ const ProfileScreen = () => {
             marginTop: 10,
             marginBottom: 5,
           }}>
-          {user.fullName}
+          {user?.fullName}
         </Text>
-        <Text style={{fontSize: 13, color: 'black'}}>0{user.phoneNumber}</Text>
       </View>
       {features.map((item, index) => (
         <TouchableOpacity
@@ -200,8 +191,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   avatar: {
-    width: 120,
-    height: 120,
+    width: 110,
+    height: 110,
     borderRadius: 60,
   },
   edit_icon_container: {
