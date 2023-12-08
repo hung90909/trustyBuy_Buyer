@@ -32,7 +32,6 @@ const EditProfile = () => {
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
   const [avatar, setAvatar] = useState('');
   const [value, setValue] = useState(null);
   const [nameError, setNameError] = useState('');
@@ -55,7 +54,6 @@ const EditProfile = () => {
       setName(res?.message.checkUser.user_name);
       setPhone(res?.message.checkUser.information.phoneNumber.toString());
       setAvatar(res?.message.checkUser.information.avatar);
-      setAddress(res?.message.checkUser.information.address);
       setValue(res?.message.checkUser.information.gender);
       console.log(res?.message.checkUser.information.gender);
     } catch (error) {
@@ -117,10 +115,10 @@ const EditProfile = () => {
     }
     const data = await AsyncStorage.getItem('token');
     const userId = JSON.parse(data).userId;
-    const accessToken = accessToken;
+    const accessToken = JSON.parse(data).accessToken;
+
     const formData = new FormData();
     formData.append('phoneNumber', phone);
-    formData.append('address', address);
     formData.append('avatar', {
       uri: selectedImages,
       type: 'image/jpeg',
@@ -129,7 +127,7 @@ const EditProfile = () => {
     formData.append('fullName', username);
     formData.append('gender', value);
     await axios
-      .put(`${API_BASE}/v1/api/user/updateUser`, formData, {
+      .put(`${USER_API}/updateUser`, formData, {
         headers: {
           'x-xclient-id': userId,
           authorization: accessToken,
@@ -138,6 +136,7 @@ const EditProfile = () => {
       })
       .then(e => {
         console.log(e);
+        navigation.goBack();
       });
   };
 
@@ -251,15 +250,6 @@ const EditProfile = () => {
           {genderError ? (
             <Text style={styles.errorText}>{genderError}</Text>
           ) : null}
-          <TextInput
-            style={styles.textinput}
-            placeholder="Địa chỉ"
-            value={address}
-            onChangeText={text => {
-              setAddress(text);
-              setUsernameError('');
-            }}
-          />
         </View>
 
         <Pressable style={styles.button} onPress={handleSubmit}>

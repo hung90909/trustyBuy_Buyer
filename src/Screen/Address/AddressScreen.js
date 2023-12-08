@@ -2,48 +2,51 @@ import {StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {Image, Text} from '@rneui/themed';
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, ScrollView} from 'react-native';
 import AddAdress from './Components/AddAdress';
 import UpdateAdress from './Components/UpdateAdress';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {apiDelete, apiGet} from '../../utils/utils';
+import {USER_API} from '../../config/urls';
+import axios from 'axios';
+// import {ScrollView} from 'react-native-gesture-handler';
 
 const AdressScreen = () => {
   const [listAddress, setListAddress] = useState([]);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
-  const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
   const nav = useNavigation();
-
-  useEffect(() => {
-    getAddress();
-  }, []);
   const toggleAddModal = () => {
     setIsAddModalVisible(!isAddModalVisible);
   };
-  const toggleUpdateModal = () => {
-    setIsUpdateModalVisible(!isUpdateModalVisible);
+
+  const fetchData = async () => {
+    try {
+      const res = await apiGet(`${USER_API}/getProfile`);
+      setListAddress(res?.message.checkUser.information.address);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleDelete = async addressId => {
+    await apiDelete(`${USER_API}/deleteAddress`, {
+      addressId: addressId,
+    })
+      .then(res => {
+        console.log(res);
+        fetchData();
+      })
+      .catch(e => {
+        console.log(e);
+      });
   };
 
-  const getAddress = async () => {
-    const dummyData = [
-      {
-        address: 'Nhà',
-        addressDetail: 'Ngõ 52, Vân Canh, Hoài Đức',
-      },
-      {
-        address: 'Văn phòng',
-        addressDetail: 'Khối 10, Quán Hành,Nghi Lộc',
-      },
-    ];
-    setListAddress(dummyData);
-  };
-
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <AddAdress isVisible={isAddModalVisible} onClose={toggleAddModal} />
-        <UpdateAdress
-          isVisible={isUpdateModalVisible}
-          onClose={toggleUpdateModal}
-        />
         <TouchableOpacity
           onPress={() => {
             nav.goBack();
@@ -60,32 +63,34 @@ const AdressScreen = () => {
           Địa chỉ
         </Text>
       </View>
-      {listAddress.map((address, index) => (
-        <View key={index} style={styles.item}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image
-              style={{
-                width: 55,
-                height: 55,
-                marginRight: 15,
-              }}
-              source={require('../../Resource/icon/gps.png')}></Image>
-            <View>
-              <Text style={{fontWeight: 'bold'}}>{address.address}</Text>
-              <Text>{address.addressDetail}</Text>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{marginBottom: 80}}>
+        {listAddress.map((address, index) => (
+          <View key={index} style={styles.item}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                style={{
+                  width: 55,
+                  height: 55,
+                  marginRight: 15,
+                }}
+                source={require('../../Resource/icon/gps.png')}></Image>
+              <View>
+                <Text style={{fontWeight: 'bold'}}>{address.nameAddress}</Text>
+                <Text>{address.customAddress}</Text>
+              </View>
             </View>
+            <Image
+              onPress={() => handleDelete(address._id)}
+              style={{
+                width: 40,
+                height: 40,
+              }}
+              source={require('../../Resource/icon/bin.png')}></Image>
           </View>
-          <Image
-            onPress={() => {
-              toggleUpdateModal();
-            }}
-            style={{
-              width: 22,
-              height: 22,
-            }}
-            source={require('../../Resource/icon/edit.png')}></Image>
-        </View>
-      ))}
+        ))}
+      </ScrollView>
       <TouchableOpacity
         onPress={() => {
           toggleAddModal();
