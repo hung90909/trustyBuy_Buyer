@@ -31,6 +31,7 @@ import CheckoutScreen from './src/Screen/CheckoutScreen';
 import ChatItem from './src/Screen/Chat/ChatItem';
 import socketServices from './src/utils/socketService';
 import store from './src/redux/store';
+import ListProductInCategory from './src/Screen/home/ListProductInCategory';
 
 const TabTop = createMaterialTopTabNavigator();
 
@@ -156,6 +157,10 @@ const App = () => {
           <Stack.Screen name="ChangePassword" component={ChangePassword} />
           <Stack.Screen name="AdressScreen" component={AdressScreen} />
           <Stack.Screen name="Checkout" component={CheckoutScreen} />
+          <Stack.Screen
+            name="ListProductInCategory"
+            component={ListProductInCategory}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

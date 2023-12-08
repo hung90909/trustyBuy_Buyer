@@ -2,10 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, Pressable, Image, FlatList, StyleSheet} from 'react-native';
 import {API_BASE_URL, CATEGORY_API} from '../../config/urls';
 import {apiGet} from '../../utils/utils';
+import {useNavigation} from '@react-navigation/native';
 
 const Listcategorys = () => {
   const [data, setData] = useState(null);
-
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const navigation = useNavigation();
   const fetchData = async () => {
     try {
       const response = await apiGet(
@@ -22,9 +24,16 @@ const Listcategorys = () => {
     fetchData();
   }, []);
 
+  const handleCategoryPress = categoryId => {
+    navigation.navigate('ListProductInCategory', {categoryId});
+    console.log(categoryId);
+    setSelectedCategoryId(categoryId);
+  };
   const renderItem = ({item}) => {
     return (
-      <Pressable style={styles.categoryItem}>
+      <Pressable
+        style={styles.categoryItem}
+        onPress={() => handleCategoryPress(item._id)}>
         <Image
           source={{
             uri: `https://serverapiecommercefashion.onrender.com/${item?.category_thumb}`,
