@@ -79,7 +79,11 @@ const AdressScreen = () => {
                 source={require('../../Resource/icon/gps.png')}></Image>
               <View>
                 <Text style={{fontWeight: 'bold'}}>{address.nameAddress}</Text>
-                <Text>{address.customAddress}</Text>
+                <Text>
+                  {address.customAddress.length > 30
+                    ? address.customAddress.slice(0, 30) + '\n'
+                    : address.customAddress}
+                </Text>
               </View>
             </View>
             <Image

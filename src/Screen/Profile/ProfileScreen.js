@@ -62,10 +62,10 @@ const ProfileScreen = () => {
         nav.navigate('ChangePassword');
         break;
       case 'Notification':
-        console.log('Notification');
+        nav.navigate('NotificationScreen');
         break;
       case 'Message':
-        console.log('Message');
+        nav.navigate('ChatScreen');
         break;
       case 'Setting':
         console.log('Setting');
@@ -114,7 +114,6 @@ const ProfileScreen = () => {
           }}>
           {user?.fullName}
         </Text>
-        <Text style={{fontSize: 13, color: 'black'}}>0{user?.phoneNumber}</Text>
       </View>
       {features.map((item, index) => (
         <TouchableOpacity
@@ -192,8 +191,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   avatar: {
-    width: 120,
-    height: 120,
+    width: 110,
+    height: 110,
     borderRadius: 60,
   },
   edit_icon_container: {

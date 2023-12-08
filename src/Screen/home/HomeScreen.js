@@ -18,7 +18,7 @@ import {saveChatData} from '../../redux/actions/chat';
 import {API_BASE_URL, USER_API} from '../../config/urls';
 import {apiGet} from '../../utils/utils';
 import socketServices from '../../utils/socketService';
-
+import {useIsFocused} from '@react-navigation/native';
 const HomeScreen = ({navigation}) => {
   const [account, setAccount] = useState();
 
@@ -39,7 +39,7 @@ const HomeScreen = ({navigation}) => {
 
   useEffect(() => {
     getApi();
-  }, []);
+  }, [useIsFocused()]);
 
   const navigateToProfile = () => {
     navigation.navigate('Profile');

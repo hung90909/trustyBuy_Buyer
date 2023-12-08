@@ -37,7 +37,6 @@ export default ChangePassword = () => {
       });
 
       console.log(res);
-
       if (res && res.data && res.data.success) {
         console.log('Password change successful');
         // Show success alert
@@ -180,7 +179,7 @@ export default ChangePassword = () => {
             justifyContent: 'center',
             alignItems: 'center',
             marginTop: errorPassword ? 20 : 40,
-            borderRadius: 20,
+            borderRadius: 5,
             elevation: 3,
             paddingVertical: 15,
           }}>
@@ -222,7 +221,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 50,
     backgroundColor: 'rgba(232, 232, 232, 1)',
-    borderRadius: 15,
+    borderRadius: 5,
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: checkEmail ? 20 : 10,
