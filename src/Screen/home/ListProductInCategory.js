@@ -3,11 +3,13 @@ import {StyleSheet, Text, View, FlatList, Pressable, Image} from 'react-native';
 import {apiGet} from '../../utils/utils';
 import {API_BASE_URL, PRODUCT_API} from '../../config/urls';
 import {formatPrice, formatSoldSP} from '../Format';
+import {useNavigation} from '@react-navigation/native';
 
 const ListProductInCategory = ({route}) => {
+  const navigation = useNavigation();
   const {categoryId} = route.params;
   const [productList, setProductList] = useState([]);
-
+  const [selectedProductId, setSelectedProductId] = useState(null);
   useEffect(() => {
     const getProduct = async () => {
       try {
@@ -21,45 +23,45 @@ const ListProductInCategory = ({route}) => {
     };
     getProduct();
   }, [categoryId]);
-
+  const handleProductPress = productId => {
+    navigation.navigate('DetailProducts', {productId});
+    // console.log(productId);
+    setSelectedProductId(productId);
+  };
   const renderSanpham = ({item}) => {
     return (
       <Pressable
-        style={{width: '50%'}}
-        onPress={() => handleProductPress(item)}>
+        onPress={() => handleProductPress(item._id)}
+        style={styles.container}>
         <Image
           style={styles.imageSP}
           source={{
-            uri: `${API_BASE_URL}uploads/${item?.product_thumb[0]}`, // Assuming product_thumb is an array of image URLs
+            uri: `${API_BASE_URL}uploads/${item?.product_thumb[0]}`,
           }}
           resizeMode="contain"
         />
 
         <Text style={styles.nameSp} numberOfLines={2}>
-          {item?.product_name}
+          {item.product_name}
         </Text>
         <View style={styles.containerGia}>
-          <Text style={styles.giaSp}>{formatPrice(item?.product_price)}</Text>
+          <Text style={styles.giaSp}>{formatPrice(item.product_price)}</Text>
           <Text style={styles.daBan}>
-            Đã bán {formatSoldSP(item?.product_sold)}
+            Đã bán {formatSoldSP(item.product_sold)}
           </Text>
         </View>
       </Pressable>
     );
   };
 
-  const handleProductPress = product => {
-    // Implement navigation or any action when a product is pressed
-    console.log('Product pressed:', product);
-  };
-
   return (
-    <View style={styles.container}>
+    <View>
       <FlatList
         data={productList}
-        keyExtractor={item => item._id}
-        numColumns={2}
+        scrollEnabled={false}
+        keyExtractor={item => item?._id}
         renderItem={renderSanpham}
+        numColumns={2}
       />
     </View>
   );
@@ -70,6 +72,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#F5F5F5',
+    width: '50%',
   },
   imageSP: {
     width: '100%',

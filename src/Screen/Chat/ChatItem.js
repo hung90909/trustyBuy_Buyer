@@ -92,8 +92,6 @@ const MessageItem = ({navigation, route}) => {
             height: 40,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '#EEEEEE',
-            borderRadius: 15,
           }}>
           <AntDesign name="left" size={20} color={'black'} />
         </TouchableOpacity>
@@ -105,7 +103,7 @@ const MessageItem = ({navigation, route}) => {
           <Text style={MessageItemStyles.userName}>{data?.useName}</Text>
         </View>
         <TouchableOpacity onPress={() => {}}>
-          <AntDesign name="questioncircleo" size={25} color={'black'} />
+          <AntDesign name="ellipsis1" size={25} color={'black'} />
         </TouchableOpacity>
       </View>
       <GiftedChat
@@ -121,7 +119,7 @@ const MessageItem = ({navigation, route}) => {
             <TouchableOpacity
               onPress={() => props.onSend({text: props.text.trim()}, true)}
               style={MessageItemStyles.sendButton}>
-              <MaterialIcons name="send" size={25} color={'white'} />
+              <MaterialIcons name="send" size={24} color={'white'} />
             </TouchableOpacity>
           </Send>
         )}
@@ -154,14 +152,14 @@ const MessageItemStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: '3%',
-    justifyContent: 'space-between',
     borderColor: '#D9D9D9',
     borderBottomWidth: 1,
   },
   userInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    right: '15%',
+    flex: 1,
+    paddingHorizontal: 20,
   },
   userAvatar: {
     width: 45,
@@ -175,12 +173,10 @@ const MessageItemStyles = StyleSheet.create({
     color: 'black',
   },
   input: {
-    marginTop: 7,
     paddingHorizontal: 12,
-    borderRadius: 20,
     backgroundColor: 'white',
-    borderWidth: 1,
     borderColor: '#999',
+    marginHorizontal: 20,
   },
   sendButton: {
     width: 40,
@@ -190,6 +186,7 @@ const MessageItemStyles = StyleSheet.create({
     borderRadius: 100,
     marginHorizontal: '2%',
     backgroundColor: '#19B9EC',
+    alignSelf: 'center',
   },
 });
 

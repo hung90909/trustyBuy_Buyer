@@ -102,14 +102,6 @@ const ProfileScreen = () => {
             }}
             resizeMode="contain"
           />
-          <TouchableOpacity
-            style={styles.edit_icon_container}
-            onPress={() => {}}>
-            <Image
-              source={require('../../Resource/icon/edit-text.png')}
-              style={styles.edit_icon}
-            />
-          </TouchableOpacity>
         </View>
 
         <Text
@@ -197,7 +189,8 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
   avatar_container: {
-    position: 'relative',
+    borderWidth: 1,
+    borderRadius: 60,
   },
   avatar: {
     width: 120,

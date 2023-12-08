@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderWidth: 1,
     borderColor: 'green',
-    borderRadius: 20,
+    borderRadius: 25,
   },
   title: {
     left: '20%',

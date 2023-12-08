@@ -13,7 +13,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Dropdown} from 'react-native-element-dropdown';
 import {useNavigation} from '@react-navigation/native';
-import {API_BASE, API_BASE_URL, USER_API} from '../../config/urls';
+import {API_BASE_URL, USER_API} from '../../config/urls';
 import axios from 'axios';
 import {PermissionsAndroid} from 'react-native';
 import {Alert} from 'react-native';
@@ -170,7 +170,7 @@ const EditProfile = () => {
             <Image
               style={styles.avatar}
               source={{
-                uri: selectedImages ?? `${API_BASE}uploads/${avatar}`,
+                uri: selectedImages ?? `${API_BASE_URL}uploads/${avatar}`,
               }}
               resizeMode="contain"
             />

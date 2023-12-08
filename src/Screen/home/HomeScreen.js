@@ -15,7 +15,7 @@ import Slideshow from './Slideshow';
 import Listproducts from './Listproducts';
 import Listcategorys from './Listcategorys';
 import {saveChatData} from '../../redux/actions/chat';
-import {USER_API} from '../../config/urls';
+import {API_BASE_URL, USER_API} from '../../config/urls';
 import {apiGet} from '../../utils/utils';
 import socketServices from '../../utils/socketService';
 
@@ -62,7 +62,7 @@ const HomeScreen = ({navigation}) => {
             <Pressable style={styles.profileButton} onPress={navigateToProfile}>
               <Image
                 style={styles.profileImage}
-                source={require('../../Resource/Image/img.png')}
+                source={{uri: `${API_BASE_URL}${account?.information?.avatar}`}}
                 resizeMode="contain"
               />
             </Pressable>
