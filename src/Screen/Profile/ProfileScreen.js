@@ -4,7 +4,7 @@ import Logout from './Logout';
 import {useNavigation} from '@react-navigation/native';
 import {API_BASE_URL, USER_API} from '../../config/urls';
 import {apiGet} from '../../utils/utils';
-
+import {useIsFocused} from '@react-navigation/native';
 const ProfileScreen = () => {
   const [user, setUser] = useState({});
 
@@ -20,7 +20,7 @@ const ProfileScreen = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [useIsFocused()]);
 
   const nav = useNavigation();
   const [showLogout, setShowLogout] = useState(false);
@@ -189,8 +189,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
   avatar_container: {
-    borderWidth: 1,
-    borderRadius: 60,
+    position: 'relative',
   },
   avatar: {
     width: 120,
