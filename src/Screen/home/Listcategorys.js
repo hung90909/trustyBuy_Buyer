@@ -13,7 +13,7 @@ const Listcategorys = () => {
       const response = await apiGet(
         'https://serverapiecommercefashion.onrender.com/v1/api/category/getAllCategory',
       );
-      console.log(response);
+      // console.log(response);
       setData(response.message.category);
     } catch (error) {
       console.error(error);
@@ -36,7 +36,7 @@ const Listcategorys = () => {
         onPress={() => handleCategoryPress(item._id)}>
         <Image
           source={{
-            uri: `https://serverapiecommercefashion.onrender.com/${item?.category_thumb}`,
+            uri: `${API_BASE_URL}${item?.category_thumb}`,
           }}
           style={{height: 35, width: 35}}
           resizeMode="contain"

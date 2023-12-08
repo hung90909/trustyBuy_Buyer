@@ -17,6 +17,7 @@ import {checkEmail, checkPassword} from '../../compoment/checkValidate';
 import {Login_API} from '../../config/urls';
 import {setItem} from '../../utils/utils';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width, height} = Dimensions.get('window');
 
@@ -61,6 +62,8 @@ const Login2 = () => {
       if (accessToken) {
         // Save the token before navigating
         await setItem('token', accessToken);
+        await AsyncStorage.setItem('email', email);
+        await AsyncStorage.setItem('password', password);
         nav.replace('Main');
       } else {
         // Handle the case where the token is not available
@@ -71,6 +74,7 @@ const Login2 = () => {
       if (error.response) {
         if (error.response.status === 403) {
           setErrorPassword(error.response.data.message);
+          console.log(error.response.data.message);
         } else {
           console.error('Server error:', error.response.data);
         }

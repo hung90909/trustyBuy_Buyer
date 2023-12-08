@@ -7,12 +7,16 @@ import {
   Pressable,
   ScrollView,
   KeyboardAvoidingView,
+  Alert,
+  PermissionsAndroid,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Dropdown} from 'react-native-element-dropdown';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {USER_API} from '../config/urls';
 
 const genders = [
   {label: 'Nam', value: 'Nam'},
@@ -32,6 +36,7 @@ const RegisterInformation = () => {
   const [genderError, setGenderError] = useState('');
   const [tuoiError, setTuoiError] = useState('');
   const [userID, setUserID] = useState('');
+  const [selectedImages, setSelectedImages] = useState('');
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -75,26 +80,59 @@ const RegisterInformation = () => {
       onRegisterInformations();
     }
   };
+  const openCamera = async isFrontCamera => {
+    try {
+      await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
 
-  const onRegisterInformations = () => {
+      const result = isFrontCamera
+        ? await launchCamera({mediaType: 'photo'})
+        : await launchImageLibrary({mediaType: 'photo'});
+
+      setSelectedImages(result.assets[0]?.uri);
+      console.log(selectedImages);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const selectImageOption = () => {
+    Alert.alert(
+      'Thông báo',
+      'Bạn muốn lấy ảnh từ?',
+      [
+        {text: 'Chụp ảnh ', onPress: () => openCamera(true)},
+        {text: 'Thư viện ', onPress: () => openCamera(false)},
+      ],
+      {cancelable: true},
+    );
+  };
+  const onRegisterInformations = async () => {
     const data = {
       fullName: name,
       phoneNumber: phone,
       gender: value,
     };
 
-    fetch(
-      `https://fbf9-123-24-162-159.ngrok-free.app/v1/api/user/setUpAcc/${userID}`,
-      {
+    try {
+      const response = await fetch(`${USER_API}/setUpAcc/${userID}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
-      },
-    )
-      .then(() => navigation.navigate('Login2'))
-      .catch(err => console.log(err));
+      });
+
+      if (!response.ok) {
+        // Handle non-OK response (e.g., show an error message)
+        console.error(`HTTP error! Status: ${response.status}`);
+        return;
+      }
+
+      // If the request is successful, navigate to 'Login2'
+      navigation.navigate('Login2');
+    } catch (error) {
+      // Handle any other errors that occur during the fetch
+      console.error('Error during fetch:', error);
+    }
   };
 
   return (
@@ -127,10 +165,14 @@ const RegisterInformation = () => {
             alignItems: 'center',
             marginTop: 20,
           }}>
-          <Pressable>
+          <Pressable onPress={selectImageOption}>
             <Image
               style={styles.profileImage}
-              source={require('../Resource/Image/imgpro.png')}
+              source={
+                selectedImages
+                  ? {uri: selectedImages}
+                  : require('../Resource/Image/imgpro.png')
+              }
             />
           </Pressable>
         </View>
@@ -145,34 +187,6 @@ const RegisterInformation = () => {
             }}
           />
           {nameError && <Text style={styles.errorText}>{nameError}</Text>}
-
-          <TextInput
-            style={styles.textinput}
-            placeholder="Tên tài khoản"
-            value={username}
-            onChangeText={text => {
-              setUsername(text);
-              setUsernameError('');
-            }}
-          />
-          {usernameError && (
-            <Text style={styles.errorText}>{usernameError}</Text>
-          )}
-          <TextInput
-            style={styles.textinput}
-            placeholder="Ngày sinh"
-            value={date.toLocaleDateString()}
-            onFocus={() => setShowDatePicker(true)}
-          />
-          {tuoiError && <Text style={styles.errorText}>{tuoiError}</Text>}
-          {showDatePicker && (
-            <DateTimePicker
-              value={date}
-              mode="date"
-              display="calendar"
-              onChange={onChange}
-            />
-          )}
 
           <TextInput
             style={styles.textinput}

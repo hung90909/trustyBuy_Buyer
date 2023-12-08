@@ -14,3 +14,4 @@ export const DISCOUNT_API = getApiUrl('v1/api/discount');
 export const ADD_CART_API = getApiUrl('v1/api/cartv2');
 export const USER_API = getApiUrl('v1/api/user');
 export const DETAILSHOP_API = getApiUrl('v1/shop/getShop/');
+export const OTP_API = getApiUrl('v1/api/access/verifyOtp');
