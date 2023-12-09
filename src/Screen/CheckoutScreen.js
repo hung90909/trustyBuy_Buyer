@@ -130,27 +130,6 @@ const CheckoutScreen = ({route}) => {
                 </Text>
               </View>
             </View>
-            <Pressable
-              style={{
-                padding: 10,
-                marginHorizontal: 10,
-                borderRadius: 10,
-              }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}>
-                <Text style={{color: 'black', fontSize: 15}}>
-                  Voucher khuyến mãi
-                </Text>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text>Chọn hoặc nhập mã</Text>
-                  <MaterialIcons name="navigate-next" size={30} color="black" />
-                </View>
-              </View>
-            </Pressable>
 
             <View
               style={{
@@ -171,7 +150,7 @@ const CheckoutScreen = ({route}) => {
                 maxHeight={150}
                 labelField="label"
                 valueField="value"
-                placeholder="Phương thức"
+                placeholder=""
                 value={value}
                 onChange={item => {
                   setValue(item.value);
@@ -252,14 +231,19 @@ const CheckoutScreen = ({route}) => {
               style={{
                 height: 60,
                 justifyContent: 'center',
-                backgroundColor: CheckData ? 'gray' : 'black', // Sử dụng điều kiện để xác định màu sắc của nút
+                backgroundColor: CheckData ? '#EEEEEE' : 'black', // Sử dụng điều kiện để xác định màu sắc của nút
                 flex: 1,
               }}
               disabled={CheckData} // Sử dụng giá trị của CheckData để disable nút
               onPress={() => {
                 !CheckData && console.log('hihi'); // Log khi nút được nhấn (nếu không bị disable)
               }}>
-              <Text style={{textAlign: 'center', color: 'white', fontSize: 16}}>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: CheckData ? '#CCCCCC' : 'white',
+                  fontSize: 16,
+                }}>
                 Đặt hàng
               </Text>
             </Pressable>

@@ -34,6 +34,7 @@ import store from './src/redux/store';
 import ListProductInCategory from './src/Screen/home/ListProductInCategory';
 import OtpScreen from './src/Screen/Login/OtpScreen';
 import OptionAddress from './src/Screen/OptionAddress';
+import Checkouts from './src/Screen/Cart/Checkouts';
 
 const TabTop = createMaterialTopTabNavigator();
 
@@ -165,6 +166,7 @@ const App = () => {
           />
           <Stack.Screen name="OtpScreen" component={OtpScreen} />
           <Stack.Screen name="OptionAddress" component={OptionAddress} />
+          <Stack.Screen name="Checkouts" component={Checkouts} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
