@@ -10,9 +10,7 @@ const Listcategorys = () => {
   const navigation = useNavigation();
   const fetchData = async () => {
     try {
-      const response = await apiGet(
-        'https://serverapiecommercefashion.onrender.com/v1/api/category/getAllCategory',
-      );
+      const response = await apiGet(`${CATEGORY_API}/getAllCategory`);
       // console.log(response);
       setData(response.message.category);
     } catch (error) {

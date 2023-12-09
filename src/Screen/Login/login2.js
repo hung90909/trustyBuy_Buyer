@@ -97,7 +97,9 @@ const Login2 = () => {
         />
         <Text style={styles.heading}>Đăng nhập</Text>
       </View>
-
+      <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
+        Email
+      </Text>
       <View style={styles.textInput}>
         <Fontisto name="email" size={25} color={'black'} />
         <TextInput
@@ -110,7 +112,9 @@ const Login2 = () => {
         />
       </View>
       {errorEmail !== '' && <Text style={styles.errorText}>{errorEmail}</Text>}
-
+      <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
+        Password
+      </Text>
       <View style={styles.textInput}>
         <SimpleLineIcons name="lock" size={25} />
         <TextInput
@@ -197,8 +201,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20,
     paddingHorizontal: 15,
+    marginVertical: 10,
   },
   input: {
     marginStart: 10,

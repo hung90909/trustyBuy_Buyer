@@ -81,6 +81,9 @@ export default Register = () => {
         />
         <Text style={styles.heading}>Tạo tài khoản</Text>
       </View>
+      <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
+        Email
+      </Text>
       <View style={styles.textInput}>
         <Fontisto name="email" size={25} color={'black'} />
         <TextInput
@@ -93,6 +96,9 @@ export default Register = () => {
         />
       </View>
       {errorEmail !== '' && <Text style={styles.errorText}>{errorEmail}</Text>}
+      <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
+        Password
+      </Text>
       <View style={styles.textInput}>
         <SimpleLineIcons name="lock" size={25} />
         <TextInput
@@ -129,18 +135,8 @@ export default Register = () => {
         <Text style={styles.orText}>Hoặc</Text>
         <View style={styles.divider} />
       </View>
-      <TouchableOpacity
-        style={styles.socialButton}
-        onPress={() => Alert.alert('Thông báo', 'Chức năng đang phát triển')}>
-        <Image
-          style={styles.socialIcon}
-          source={require('../../Resource/icon/facebook.png')}
-          resizeMode="cover"
-        />
-        <Text style={styles.socialButtonText}>Đăng nhập với Facebook</Text>
-      </TouchableOpacity>
       <View style={styles.notAcount}>
-        <Text>Chưa có tài khoản? </Text>
+        <Text>Bạn đã có tài khoản? </Text>
         <TouchableOpacity
           onPress={() => {
             nav.navigate('Login2');
@@ -183,7 +179,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20,
+    marginVertical: 15,
     paddingHorizontal: 15,
   },
   input: {
@@ -237,8 +233,8 @@ const styles = StyleSheet.create({
   },
   socialButton: {
     width: '100%',
-    height: 50,
-    borderRadius: 10,
+    height: 45,
+    borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#3b5998',
@@ -258,7 +254,7 @@ const styles = StyleSheet.create({
   notAcount: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 20,
+    marginTop: 100,
   },
   loginLink: {
     fontWeight: 'bold',

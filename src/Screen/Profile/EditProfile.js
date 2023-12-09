@@ -9,8 +9,9 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Dropdown} from 'react-native-element-dropdown';
 import {useNavigation} from '@react-navigation/native';
 import {API_BASE, API_BASE_URL, USER_API} from '../../config/urls';
@@ -27,25 +28,16 @@ const data = [
 ];
 
 const EditProfile = () => {
-  const [date, setDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [phone, setPhone] = useState('');
   const [avatar, setAvatar] = useState('');
   const [value, setValue] = useState(null);
   const [nameError, setNameError] = useState('');
-  const [usernameError, setUsernameError] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [genderError, setGenderError] = useState('');
   const navigation = useNavigation();
   const [selectedImages, setSelectedImages] = useState(null);
-
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShowDatePicker(false);
-    setDate(currentDate);
-  };
 
   const fetchData = async () => {
     try {
@@ -103,22 +95,12 @@ const EditProfile = () => {
       setGenderError('Vui lòng chọn giới tính');
     }
 
-    const birthDate = new Date(date);
-    const currentDate = new Date();
-    let age = currentDate.getFullYear() - birthDate.getFullYear();
-    if (
-      currentDate.getMonth() < birthDate.getMonth() ||
-      (currentDate.getMonth() === birthDate.getMonth() &&
-        currentDate.getDate() < birthDate.getDate())
-    ) {
-      age--;
-    }
     const data = await AsyncStorage.getItem('token');
     const userId = JSON.parse(data).userId;
     const accessToken = JSON.parse(data).accessToken;
 
     const formData = new FormData();
-    formData.append('phoneNumber', phone);
+    formData.append('phoneNumber', phone.toString());
     if (selectedImages) {
       formData.append('avatar', {
         uri: selectedImages,
@@ -195,49 +177,65 @@ const EditProfile = () => {
             </TouchableOpacity>
           </View>
         </View>
-        <Text
-          style={{
-            textAlign: 'center',
-            fontSize: 17,
-            color: '#000',
-            textDecorationLine: 'underline',
-          }}>
-          Thông tin cá nhân
-        </Text>
-        <View style={{marginTop: 20}}>
-          <TextInput
-            style={styles.textinput}
-            placeholder="Họ và tên"
-            value={username}
-            onChangeText={text => {
-              setUsername(text);
-              setNameError('');
-            }}
-          />
-          {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
-          {showDatePicker && (
-            <DateTimePicker
-              value={date}
-              mode="date"
-              display="calendar"
-              onChange={onChange}
-            />
-          )}
+        <View style={{paddingHorizontal: '5%'}}>
+          <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
+            Họ và tên
+          </Text>
 
-          <TextInput
-            style={styles.textinput}
-            placeholder="Số điện thoại"
-            keyboardType="numeric"
-            value={phone}
-            onChangeText={text => {
-              setPhone(text);
-              setPhoneError('');
-            }}
-          />
-          {phoneError ? (
-            <Text style={styles.errorText}>{phoneError}</Text>
-          ) : null}
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <View style={styles.inputContainer}>
+            <Feather name="user" size={22} style={styles.inputIcon} />
+            <TextInput
+              style={styles.textinput}
+              placeholder="Nhập họ và tên"
+              value={username}
+              onChangeText={text => {
+                setName(text);
+                setNameError('');
+              }}
+            />
+          </View>
+          {nameError && <Text style={styles.errorText}>{nameError}</Text>}
+
+          <Text
+            style={{
+              color: 'black',
+              fontSize: 16,
+              fontWeight: 'bold',
+              marginTop: 20,
+            }}>
+            Số điện thoại
+          </Text>
+
+          <View style={styles.inputContainer}>
+            <Feather name="phone" size={22} style={styles.inputIcon} />
+            <TextInput
+              style={styles.textinput}
+              placeholder="Nhập số điện thoại"
+              value={phone}
+              keyboardType="numeric"
+              onChangeText={text => {
+                setPhone(text);
+                setPhoneError('');
+              }}
+            />
+          </View>
+          {phoneError && <Text style={styles.errorText}>{phoneError}</Text>}
+          <Text
+            style={{
+              color: 'black',
+              fontSize: 16,
+              fontWeight: 'bold',
+              marginTop: 20,
+            }}>
+            Giới tính
+          </Text>
+
+          <View style={styles.inputContainer}>
+            <FontAwesome
+              name="transgender"
+              size={22}
+              style={styles.inputIcon}
+            />
             <Dropdown
               style={styles.dropdown}
               placeholderStyle={styles.placeholderStyle}
@@ -256,13 +254,11 @@ const EditProfile = () => {
               }}
             />
           </View>
-          {genderError ? (
-            <Text style={styles.errorText}>{genderError}</Text>
-          ) : null}
+          {genderError && <Text style={styles.errorText}>{genderError}</Text>}
         </View>
 
         <Pressable style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Tiếp Tục</Text>
+          <Text style={styles.buttonText}>Thay đổi</Text>
         </Pressable>
       </KeyboardAvoidingView>
     </ScrollView>
@@ -279,18 +275,15 @@ const styles = {
     borderColor: '#33CCFF',
   },
   textinput: {
-    marginHorizontal: 20,
     marginVertical: 5,
     borderRadius: 10,
-    paddingHorizontal: 15,
     fontSize: 16,
   },
   dropdown: {
-    margin: 16,
     height: 50,
     borderBottomColor: 'gray',
     width: '90%',
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
   },
   placeholderStyle: {
     fontSize: 16,
@@ -312,12 +305,13 @@ const styles = {
     justifyContent: 'center',
     height: 50,
     marginTop: 20,
-    borderRadius: 20,
+    borderRadius: 5,
     backgroundColor: '#0A0303',
   },
   buttonText: {
     color: '#FFFFFF',
     fontWeight: 'bold',
+    fontSize: 18,
   },
   errorText: {
     color: 'red',
@@ -352,6 +346,20 @@ const styles = {
     borderBottomColor: '#d0d0d0',
     paddingBottom: 20,
     marginBottom: 20,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    height: 50,
+    backgroundColor: 'rgba(232, 232, 232, 1)',
+    borderRadius: 5,
+    marginTop: 20,
+    paddingHorizontal: 10,
+  },
+  inputIcon: {
+    marginRight: 10,
+    color: 'black',
   },
 };
 

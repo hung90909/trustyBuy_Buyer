@@ -5,7 +5,7 @@ export const getApiUrl = endpoint => API_BASE_URL + endpoint;
 export const Login_API = getApiUrl('v1/api/access/login');
 export const SIGNUP_API = getApiUrl('v1/api/access/signup');
 export const LOGOUT_API = getApiUrl('v1/api/access/signOut');
-export const CATEGORY_API = getApiUrl(' v1/api/category');
+export const CATEGORY_API = getApiUrl('v1/api/category');
 export const PRODUCT_API = getApiUrl('v1/api/product');
 export const CHAT_API = getApiUrl('v1/api/chat');
 export const ORDER_API = getApiUrl('v1/api/checkout');
