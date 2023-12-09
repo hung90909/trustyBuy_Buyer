@@ -33,6 +33,7 @@ import socketServices from './src/utils/socketService';
 import store from './src/redux/store';
 import ListProductInCategory from './src/Screen/home/ListProductInCategory';
 import OtpScreen from './src/Screen/Login/OtpScreen';
+import OptionAddress from './src/Screen/OptionAddress';
 
 const TabTop = createMaterialTopTabNavigator();
 
@@ -163,6 +164,7 @@ const App = () => {
             component={ListProductInCategory}
           />
           <Stack.Screen name="OtpScreen" component={OtpScreen} />
+          <Stack.Screen name="OptionAddress" component={OptionAddress} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

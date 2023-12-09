@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -7,11 +7,27 @@ import {formatPrice} from './Format';
 import {useNavigation} from '@react-navigation/native';
 import {ScrollView} from 'react-native';
 import {Pressable} from 'react-native';
-
+import {saveAddressData} from '../redux/actions/address';
+import {useSelector} from 'react-redux';
+import {Dropdown} from 'react-native-element-dropdown';
 const CheckoutScreen = ({route}) => {
   const {orderDetails} = route.params;
   const product = orderDetails.product;
   const navigation = useNavigation();
+  const address = useSelector(state => state?.address?.addressData);
+  const [data, setData] = useState(address);
+  const [value, setValue] = useState('');
+  const [open, setOpen] = useState(false); // Assuming you have 'open' state
+  const pay = [
+    {label: 'Thanh toán khi nhận hàng', value: 'Cash'},
+    {label: 'Thanh toán bằng PayPal', value: 'PayPal'},
+  ];
+  useEffect(() => {
+    setData(address);
+    console.log(address);
+  }, [address]);
+  const CheckData = data === null || value === null;
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -24,6 +40,46 @@ const CheckoutScreen = ({route}) => {
         <View style={{justifyContent: 'center', flex: 1}}>
           <Text style={styles.titleHeader}>Thanh toán</Text>
         </View>
+      </View>
+
+      <View style={{}}>
+        <Pressable
+          style={{
+            justifyContent: 'center',
+
+            paddingHorizontal: 20,
+            paddingVertical: 10,
+          }}
+          onPress={() => navigation.navigate('OptionAddress')}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <View style={{flexDirection: 'row'}}>
+              <Image
+                source={require('../Resource/Image/placeholder.png')}
+                style={{height: 24, width: 24, marginRight: 10}}
+              />
+
+              <View style={{width: '90%'}}>
+                <Text style={{color: 'black', fontSize: 16, fontWeight: '500'}}>
+                  Địa chỉ nhận hàng
+                </Text>
+                {data ? (
+                  <View>
+                    <Text>{data?.nameAddress}</Text>
+                    <Text>{data?.customAddress}</Text>
+                  </View>
+                ) : (
+                  <View>
+                    <Text>Vui lòng chọn địa chỉ</Text>
+                  </View>
+                )}
+              </View>
+            </View>
+          </View>
+        </Pressable>
       </View>
       {product && (
         <View style={{flex: 1}}>
@@ -95,27 +151,36 @@ const CheckoutScreen = ({route}) => {
                 </View>
               </View>
             </Pressable>
-            <Pressable
+
+            <View
               style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flex: 1,
                 padding: 10,
                 marginHorizontal: 10,
                 borderRadius: 10,
               }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}>
-                <Text style={{color: 'black', fontSize: 15}}>
-                  Phương thức thanh toán
-                </Text>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text>Thanh toán khi nhận hàng</Text>
-                  <MaterialIcons name="navigate-next" size={30} color="black" />
-                </View>
-              </View>
-            </Pressable>
+              <Text style={{color: 'black', fontSize: 15}}>
+                Phương thức thanh toán
+              </Text>
+              <Dropdown
+                style={styles.dropdown}
+                data={pay}
+                maxHeight={150}
+                labelField="label"
+                valueField="value"
+                placeholder="Phương thức"
+                value={value}
+                onChange={item => {
+                  setValue(item.value);
+                }}
+                itemTextStyle={{fontSize: 14}}
+                selectedTextStyle={{fontSize: 14}}
+              />
+            </View>
+
             <View style={{padding: 20}}>
               <Text style={{fontSize: 16, fontWeight: 'bold', color: 'black'}}>
                 Chi tiết thanh toán
@@ -163,7 +228,6 @@ const CheckoutScreen = ({route}) => {
             style={{
               height: 60,
               backgroundColor: 'white',
-              borderWidth: 1,
               alignItems: 'center',
               flexDirection: 'row',
               justifyContent: 'space-between',
@@ -173,7 +237,11 @@ const CheckoutScreen = ({route}) => {
                 Tổng thanh toán:
               </Text>
               <Text
-                style={{color: '#FC6D26', fontSize: 16, fontWeight: 'bold'}}>
+                style={{
+                  color: '#FC6D26',
+                  fontSize: 16,
+                  fontWeight: 'bold',
+                }}>
                 {product
                   ? formatPrice(product.price * product.quantity - 100000)
                   : '0 VND'}
@@ -182,11 +250,14 @@ const CheckoutScreen = ({route}) => {
 
             <Pressable
               style={{
-                borderWidth: 1,
                 height: 60,
                 justifyContent: 'center',
-                backgroundColor: 'black',
+                backgroundColor: CheckData ? 'gray' : 'black', // Sử dụng điều kiện để xác định màu sắc của nút
                 flex: 1,
+              }}
+              disabled={CheckData} // Sử dụng giá trị của CheckData để disable nút
+              onPress={() => {
+                !CheckData && console.log('hihi'); // Log khi nút được nhấn (nếu không bị disable)
               }}>
               <Text style={{textAlign: 'center', color: 'white', fontSize: 16}}>
                 Đặt hàng
@@ -297,5 +368,16 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     color: '#FC6D26',
+  },
+  dropdown: {
+    marginVertical: 10,
+    height: 50,
+    borderBottomColor: 'gray',
+    backgroundColor: 'white',
+    borderColor: 'black', // Add this line for border color
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    flex: 1,
+    marginLeft: 8,
   },
 });
