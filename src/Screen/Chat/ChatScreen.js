@@ -13,7 +13,7 @@ import {ListItem, Avatar} from '@rneui/themed';
 import {Icon} from 'react-native-elements';
 import {useSelector} from 'react-redux';
 import {API_BASE_URL} from '../../config/urls';
-import moment from 'moment';
+import {formatMessageTime} from '../../compoment/DateTime';
 
 const MessageScreen = ({navigation}) => {
   const data = useSelector(state => state?.chat?.chatData);
@@ -32,11 +32,6 @@ const MessageScreen = ({navigation}) => {
 
   const renderItem = ({item}) => {
     const count = item?.chat?.isRead?.user?.countNew || 0;
-
-    const targetDate = moment(item?.updatedAt);
-    const now = moment();
-    const isToday = targetDate.isSameOrAfter(now.startOf('day'));
-
     return (
       <ListItem.Swipeable
         onPress={() => navigateToMessItem(item)}
@@ -74,9 +69,7 @@ const MessageScreen = ({navigation}) => {
               {item?.chat?.messagers[item?.chat?.messagers.length - 1]}
             </ListItem.Subtitle>
             <ListItem.Subtitle style={styles.timeText}>
-              {isToday
-                ? targetDate.format('HH:mm')
-                : targetDate.format('DD/MM')}
+              {formatMessageTime(item?.user?.updatedAt)}
             </ListItem.Subtitle>
           </View>
         </ListItem.Content>

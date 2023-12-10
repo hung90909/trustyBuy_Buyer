@@ -8,7 +8,6 @@ import {API_BASE_URL, CHAT_API} from '../../config/urls';
 import {GiftedChat, Send} from 'react-native-gifted-chat';
 import socketServices from '../../utils/socketService';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {saveChatData} from '../../redux/actions/chat';
 
 const MessageItem = ({navigation, route}) => {
   const {data} = route.params;
@@ -81,12 +80,11 @@ const MessageItem = ({navigation, route}) => {
     <View style={MessageItemStyles.container}>
       <View style={MessageItemStyles.header}>
         <TouchableOpacity
-          onPress={async () => {
+          onPress={() => {
             socketServices.emit('leaveRoom', {
               roomName: data?.idRoom,
               userId: data?.idShop,
             }),
-              await saveChatData(),
               navigation.goBack();
           }}
           style={{
