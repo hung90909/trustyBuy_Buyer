@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useState, useRef} from 'react';
 import {
   Text,
   View,
-  ScrollView,
   Pressable,
   TextInput,
   StyleSheet,
@@ -10,25 +9,11 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
-    Text,
-    View,
-    Pressable,
-    TextInput,
-    StyleSheet,
-    SafeAreaView,
-    FlatList,
-    Image,
-    TouchableOpacity,
 } from 'react-native';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {Alert} from 'react-native';
-import {formatPrice, formatSoldSP} from '../Format';
-import {API_BASE_URL, PRODUCT_API} from '../../config/urls';
-import {apiGet, apiPost} from '../../utils/utils';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Alert } from 'react-native';
 import { formatPrice, formatSoldSP } from '../Format';
@@ -43,8 +28,6 @@ const Checkouts = ({ navigation }) => {
     const nav = useNavigation()
     const route = useRoute()
     const { item, itemAddress, itemDiscount } = route.params
-    console.log("item product", item)
-    console.log("item discount", itemDiscount)
     const [address, setAddress] = useState({})
     const [user, setUser] = useState({})
     const [cartid, setCartid] = useState('')

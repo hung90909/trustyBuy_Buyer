@@ -12,7 +12,7 @@ import React, { useEffect, useState } from 'react';
 import { CheckBox } from '@rneui/themed';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
-import { ADD_CART_API } from '../../config/urls';
+import { ADD_CART_API, API_BASE_URL } from '../../config/urls';
 import { apiGet, getItem } from '../../utils/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
