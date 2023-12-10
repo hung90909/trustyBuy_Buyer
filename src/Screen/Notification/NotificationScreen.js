@@ -18,7 +18,7 @@ const NotificationScreen = ({navigation}) => {
 
   const getAPI = async () => {
     try {
-      const res = await apiGet(`${NOTIFI_API}`);
+      const res = await apiGet(NOTIFI_API);
       setData(res?.message.reverse());
     } catch (error) {
       throw error;
