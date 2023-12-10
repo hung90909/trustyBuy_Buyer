@@ -129,7 +129,7 @@ export default function DaHuy() {
                           flexDirection: 'row',
                           alignItems: 'center',
                         }}>
-                        <Text>{item.color}Đen</Text>
+                        <Text>{item.color}{item.product_attributes.color}</Text>
                         <View
                           style={{
                             backgroundColor: 'black',
@@ -137,7 +137,7 @@ export default function DaHuy() {
                             height: 10,
                             marginHorizontal: 5,
                           }}></View>
-                        <Text>{item.size}XL</Text>
+                        <Text>{item.size}{item.product_attributes.size}</Text>
                       </View>
                       <Text>{item.product_attributes.quantity} sản phẩm</Text>
                     </View>

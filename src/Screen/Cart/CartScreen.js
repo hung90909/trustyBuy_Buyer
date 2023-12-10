@@ -1,4 +1,5 @@
 import {
+  Alert,
   FlatList,
   Image,
   StyleSheet,
@@ -7,28 +8,39 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {CheckBox} from '@rneui/themed';
+import React, { useEffect, useState } from 'react';
+import { CheckBox } from '@rneui/themed';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
-import {ADD_CART_API} from '../../config/urls';
-import {apiGet} from '../../utils/utils';
+import { useNavigation } from '@react-navigation/native';
+import { ADD_CART_API } from '../../config/urls';
+import { apiGet, getItem } from '../../utils/utils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CartScreen = () => {
+  async function getToken() {
+    const token = await AsyncStorage.getItem('token');
+    const tokenUser = token ? JSON.parse(token) : null;
+    setUserID(tokenUser.userId)
+  }
+
+  useEffect(() => {
+    getToken();
+  }, []);
+
   const [listCart, setListCart] = useState([]);
   const nav = useNavigation();
 
   const getCart = async () => {
     try {
       const res = await apiGet(ADD_CART_API);
-      console.log(res);
       setListCart(res.message.cart.cart_products);
+     
     } catch (error) {
       console.log(error);
     }
   };
 
-   
+
 
   useEffect(() => {
     getCart();
@@ -42,10 +54,12 @@ const CartScreen = () => {
     }
   };
   const [isSelected, setSelection] = useState(false);
+  const [cartid , setCartid] = useState('')
   const [quantity, setQuantity] = useState(0);
   const [selectedItems, setSelectedItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [isUpdatePrice, setUpdatePrice] = useState(false);
+  const [userID , setUserID] = useState('')
 
   const handleCheckboxChange = item => {
     console.log('new cart: ' + item);
@@ -62,6 +76,10 @@ const CartScreen = () => {
     }
   };
 
+  const onDeleteItemCart = (productID) =>{
+     
+  }
+
 
 
   useEffect(() => {
@@ -74,21 +92,36 @@ const CartScreen = () => {
   }, [isUpdatePrice]);
 
   const handleDecreaseQuantity = itemId => {
+    console.log(itemId)
     setUpdatePrice(!isUpdatePrice);
+    setSelectedItems(item =>
+      item.map(product =>
+        product.itemId === itemId
+          ? { ...product, quantity: product.quantity - 1  }
+          : product,
+      ),
+    );
     setListCart(item =>
       item.map(product =>
         product.itemId === itemId
-          ? {...product, quantity: product.quantity - 1}
+          ? { ...product, quantity: product.quantity - 1  }
           : product,
       ),
     );
   };
   const handleIncreaseQuantity = itemId => {
     setUpdatePrice(!isUpdatePrice);
+    setSelectedItems(item =>
+      item.map(product =>
+        product.itemId === itemId
+          ? { ...product, quantity: product.quantity + 1  }
+          : product,
+      ),
+    );
     setListCart(item =>
       item.map(product =>
         product.itemId === itemId
-          ? {...product, quantity: product.quantity + 1}
+          ? { ...product, quantity: product.quantity + 1  }
           : product,
       ),
     );
@@ -109,7 +142,7 @@ const CartScreen = () => {
             }}>
             <Ionicons name="chevron-back-outline" size={30} />
           </TouchableOpacity>
-          <View style={{marginLeft: 85}}>
+          <View style={{ marginLeft: 85 }}>
             <Text
               style={{
                 fontSize: 25,
@@ -136,7 +169,7 @@ const CartScreen = () => {
           <FlatList
             data={listCart}
             keyExtractor={item => item.itemId}
-            renderItem={({item, index}) => {
+            renderItem={({ item, index }) => {
               return (
                 <View style={styles.product}>
                   <View
@@ -171,7 +204,7 @@ const CartScreen = () => {
                       flexDirection: 'row',
                       marginTop: 15,
                     }}>
-                    <View style={{justifyContent: 'center'}}>
+                    <View style={{ justifyContent: 'center' }}>
                       <CheckBox
                         checkedColor="black"
                         value={selectedItems.includes(item)}
@@ -190,7 +223,7 @@ const CartScreen = () => {
                       resizeMode="stretch"
                       style={{
                         width: 90,
-                        height: 90, borderRadius:5
+                        height: 90, borderRadius: 5
                       }}
                       source={{
                         uri:
@@ -198,13 +231,13 @@ const CartScreen = () => {
                           item.product_thumb,
                       }}
                     />
-                    <View style={{marginStart: 15, width: 140}}>
+                    <View style={{ marginStart: 15, width: 100 }}>
                       <Text numberOfLines={2}>{item.name}</Text>
-                      <View style={{flexDirection: 'row', marginTop: 5}}>
+                      <View style={{ flexDirection: 'row', marginTop: 5 }}>
                         <Text>{item.color} | </Text>
                         <Text>{item.size}</Text>
                       </View>
-                      <Text style={{marginTop: 5, color: 'red'}}>
+                      <Text style={{ marginTop: 5, color: 'red' }}>
                         {formatPrice(item.price)}
                       </Text>
                       <View
@@ -223,21 +256,21 @@ const CartScreen = () => {
                               handleDecreaseQuantity(item.itemId);
                             }
                           }}
-                          style={{borderRightWidth: 1, paddingHorizontal: 5}}>
+                          style={{ borderRightWidth: 1, paddingHorizontal: 5 }}>
                           <Ionicons
                             name="remove-outline"
                             color="black"
                             size={15}
                           />
                         </TouchableOpacity>
-                        <Text style={{marginHorizontal: 8}}>
+                        <Text style={{ marginHorizontal: 8 }}>
                           {item.quantity}
                         </Text>
                         <TouchableOpacity
                           onPress={() => {
                             handleIncreaseQuantity(item.itemId);
                           }}
-                          style={{borderLeftWidth: 1, paddingHorizontal: 5}}>
+                          style={{ borderLeftWidth: 1, paddingHorizontal: 5 }}>
                           <Ionicons
                             name="add-outline"
                             color="black"
@@ -245,8 +278,29 @@ const CartScreen = () => {
                           />
                         </TouchableOpacity>
                       </View>
+
                     </View>
+                    <TouchableOpacity
+                     onPress={()=>{
+                      Alert.alert("Thông báo","Bạn có chắc chẵn muốn xóa không ? ",[
+                        {
+                          text:"Cancel",
+                          onPress:() => console.log('Cancel Pressed'),
+                          style: 'cancel',
+                        },
+                        {
+                          text:"Ok",
+                          onPress:() => {
+                              onDeleteItemCart(item.productId)
+                          }
+                        }
+                      ])
+                     }}
+                     style={{marginTop:20}}>
+                      <Ionicons name='close-circle-outline' size={30} />
+                    </TouchableOpacity>
                   </View>
+
                 </View>
               );
             }}
@@ -284,12 +338,12 @@ const CartScreen = () => {
               }
             }}
           />
-          <Text style={{color: 'black', fontSize: 13, marginLeft: -15}}>
+          <Text style={{ color: 'black', fontSize: 13, marginLeft: -15 }}>
             Tất cả
           </Text>
         </View>
-        <View style={{flexDirection: 'row', marginHorizontal: 10}}>
-          <Text style={{fontSize: 13, color: 'black'}}>Tổng thanh toán</Text>
+        <View style={{ flexDirection: 'row', marginHorizontal: 10 }}>
+          <Text style={{ fontSize: 13, color: 'black' }}>Tổng thanh toán</Text>
           <Text
             style={{
               marginLeft: 5,
@@ -300,10 +354,10 @@ const CartScreen = () => {
           </Text>
         </View>
         <TouchableOpacity
-        onPress={() =>{
-          nav.navigate("Checkouts",{item: selectedItems})
-    
-        }}
+          onPress={() => {
+            nav.navigate("Checkout", { item: selectedItems})
+
+          }}
           style={{
             flex: 1,
             height: 60,
@@ -311,7 +365,7 @@ const CartScreen = () => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Text style={{color: 'white', fontWeight: 'bold'}}>Mua hàng</Text>
+          <Text style={{ color: 'white', fontWeight: 'bold' }}>Mua hàng</Text>
         </TouchableOpacity>
       </View>
     </View>

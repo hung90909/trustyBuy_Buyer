@@ -10,7 +10,7 @@ import {
 import React, {useCallback, useState} from 'react';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {ORDER_API} from '../../config/urls';
-import {apiGet} from '../../utils/utils';
+import {apiGet, apiPatch} from '../../utils/utils';
 
 export default function XuLy() {
   const nav = useNavigation();
@@ -19,6 +19,7 @@ export default function XuLy() {
     try {
       const res = await apiGet(`${ORDER_API}/getAllOrderForUser/pending`);
       setListProduct(res.message.orderRes.user);
+      console.log(res.message.orderRes.user)
     } catch (error) {
       console.log(error);
     }
@@ -32,14 +33,8 @@ export default function XuLy() {
     }, []),
   );
 
-  const onClickCancel = id => {
-    fetch(`${ORDER_API}/cancelByUser/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'x-xclient-id': '654c8a081f10540692bdc998',
-        authorization: token,
-      },
-    })
+  const onClickCancel = async id => {
+       await apiPatch(`${ORDER_API}/cancelByUser/${id}`)
       .then(() => nav.navigate('DaHuy'))
       .catch(err => console.log(err));
   };
@@ -143,7 +138,7 @@ export default function XuLy() {
                           flexDirection: 'row',
                           alignItems: 'center',
                         }}>
-                        <Text>{item.color}Đen</Text>
+                        <Text>{item.color}{item.product_attributes.color}</Text>
                         <View
                           style={{
                             backgroundColor: 'black',
@@ -151,7 +146,7 @@ export default function XuLy() {
                             height: 10,
                             marginHorizontal: 5,
                           }}></View>
-                        <Text>{item.size}XL</Text>
+                        <Text>{item.size}{item.product_attributes.size}</Text>
                       </View>
                       <Text>{item.product_attributes.quantity} sản phẩm</Text>
                     </View>

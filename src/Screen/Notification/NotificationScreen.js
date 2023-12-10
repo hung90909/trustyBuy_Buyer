@@ -8,17 +8,32 @@ import {
   Image,
   FlatList,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
-import {useNavigation} from '@react-navigation/native';
-import {thongbao} from '../data';
+import { useNavigation } from '@react-navigation/native';
+import { thongbao } from '../data';
+import { apiGet } from '../../utils/utils';
+import { NOTIFICATION_API } from '../../config/urls';
 
 const NotificationScreen = () => {
   const navigation = useNavigation();
+  const [listNotification , setListNotification] = useState()
 
-  const renderItem = ({item}) => {
-    const {day, month, year, hour, minute, image, title, content} = item;
+  const getNotification = async () => {
+    try {
+       const res = await apiGet(NOTIFICATION_API)
+       setListNotification(res.message)
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  useEffect(()=>{
+    getNotification()
+  },[])
+
+  const renderItem = ({ item }) => {
+    const { day, month, year, hour, minute, image, title, content } = item;
 
     const notificationDate = moment(
       `${day}/${month}/${year} ${hour}:${minute}`,
@@ -61,12 +76,12 @@ const NotificationScreen = () => {
       <TouchableOpacity style={styles.notificationItem}>
         <Image
           resizeMode="cover"
-          source={{uri: image}}
+          source={require("../../Resource/icon/notification-bell.png")}
           style={styles.notificationImage}
         />
         <View style={styles.notificationTextContainer}>
-          <Text style={styles.notificationTitle}>{title}</Text>
-          <Text style={styles.notificationContent}>{content}</Text>
+          <Text style={styles.notificationTitle}>{item.noti_content}</Text>
+          <Text style={styles.notificationContent}>{item.noti_options.product_name}</Text>
           <Text style={styles.notificationTime}>{timeAgo}</Text>
         </View>
       </TouchableOpacity>
@@ -86,8 +101,8 @@ const NotificationScreen = () => {
         <Text style={styles.headerText}>Thông báo</Text>
       </View>
       <FlatList
-        data={thongbao}
-        keyExtractor={item => item.id.toString()}
+        data={listNotification}
+        keyExtractor={item => item._id}
         renderItem={renderItem}
         style={styles.notificationList}
       />

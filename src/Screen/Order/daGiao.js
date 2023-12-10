@@ -135,7 +135,7 @@ export default function DaGiao() {
                           flexDirection: 'row',
                           alignItems: 'center',
                         }}>
-                        <Text>{item.color}Đen</Text>
+                         <Text>{item.color}{item.product_attributes.color}</Text>
                         <View
                           style={{
                             backgroundColor: 'black',
@@ -143,7 +143,7 @@ export default function DaGiao() {
                             height: 10,
                             marginHorizontal: 5,
                           }}></View>
-                        <Text>{item.size}XL</Text>
+                        <Text>{item.product_attributes.size}XL</Text>
                       </View>
                       <Text>{item.product_attributes.quantity} sản phẩm</Text>
                     </View>
