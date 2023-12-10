@@ -20,8 +20,10 @@ import {formatPrice, formatSoldSP} from './Format';
 import {apiGet} from '../utils/utils';
 import {API_BASE_URL, PRODUCT_API} from '../config/urls';
 import Listproducts from './home/Listproducts';
+import { useNavigation } from '@react-navigation/native';
 
 const SearchScreen = () => {
+  const nav = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredSanpham, setFilteredSanpham] = useState([]);
   const [data, setData] = useState(null);
@@ -81,6 +83,9 @@ const SearchScreen = () => {
   const renderSanpham = ({item}) => {
     return (
       <TouchableOpacity
+      onPress={() =>{
+        nav.navigate("DetailProducts",{productId:item._id})
+      }}
         style={{
           width: '50%',
           justifyContent: 'center',

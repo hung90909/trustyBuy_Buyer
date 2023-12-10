@@ -32,9 +32,12 @@ import ChatItem from './src/Screen/Chat/ChatItem';
 import socketServices from './src/utils/socketService';
 import store from './src/redux/store';
 import ListProductInCategory from './src/Screen/home/ListProductInCategory';
+import Checkouts from './src/Screen/Cart/Checkouts';
+import ListAddress from './src/Screen/Cart/ListAddress';
+import ListDiscount from './src/Screen/Cart/ListDiscount';
 import OtpScreen from './src/Screen/Login/OtpScreen';
 import OptionAddress from './src/Screen/OptionAddress';
-import Checkouts from './src/Screen/Cart/Checkouts';
+
 
 const TabTop = createMaterialTopTabNavigator();
 
@@ -159,7 +162,9 @@ const App = () => {
           <Stack.Screen name="EditProfile" component={EditProfile} />
           <Stack.Screen name="ChangePassword" component={ChangePassword} />
           <Stack.Screen name="AdressScreen" component={AdressScreen} />
-          <Stack.Screen name="Checkout" component={CheckoutScreen} />
+          <Stack.Screen name="Checkout" component={Checkouts} />
+          <Stack.Screen name="ListAddress" component={ListAddress} />
+          <Stack.Screen name="ListDiscount" component={ListDiscount} />
           <Stack.Screen
             name="ListProductInCategory"
             component={ListProductInCategory}

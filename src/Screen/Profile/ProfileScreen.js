@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import Logout from './Logout';
-import {useNavigation} from '@react-navigation/native';
-import {API_BASE_URL, USER_API} from '../../config/urls';
-import {apiGet} from '../../utils/utils';
-import {useIsFocused} from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { API_BASE_URL, USER_API } from '../../config/urls';
+import { apiGet } from '../../utils/utils';
+
 const ProfileScreen = () => {
   const [user, setUser] = useState({});
 
@@ -20,7 +20,7 @@ const ProfileScreen = () => {
 
   useEffect(() => {
     fetchData();
-  }, [useIsFocused()]);
+  }, []);
 
   const nav = useNavigation();
   const [showLogout, setShowLogout] = useState(false);
@@ -36,6 +36,10 @@ const ProfileScreen = () => {
     {
       name: 'Notification',
       image: require('../../Resource/icon/notification.png'),
+    },
+    {
+      name: "Mã giảm giá",
+      image: require("../../Resource/icon/discount.png"),
     },
     {
       name: 'Message',
@@ -61,6 +65,9 @@ const ProfileScreen = () => {
       case 'Change password':
         nav.navigate('ChangePassword');
         break;
+      case 'Mã giảm giá':
+         nav.navigate("listDiscount")
+        break;
       case 'Notification':
         nav.navigate('NotificationScreen');
         break;
@@ -79,12 +86,12 @@ const ProfileScreen = () => {
   return (
     <View style={styles.container_profile}>
       <View style={styles.header_profile}>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           <Image
             source={require('../../Resource/Image/shopping-bag.png')}
-            style={[styles.icon_profile, {marginRight: 10}]}
+            style={[styles.icon_profile, { marginRight: 10 }]}
           />
-          <Text style={{color: 'black', fontWeight: '500', fontSize: 18}}>
+          <Text style={{ color: 'black', fontWeight: '500', fontSize: 18 }}>
             Profile
           </Text>
         </View>
@@ -102,6 +109,14 @@ const ProfileScreen = () => {
             }}
             resizeMode="contain"
           />
+          <TouchableOpacity
+            style={styles.edit_icon_container}
+            onPress={() => { }}>
+            <Image
+              source={require('../../Resource/icon/edit-text.png')}
+              style={styles.edit_icon}
+            />
+          </TouchableOpacity>
         </View>
 
         <Text
@@ -114,36 +129,37 @@ const ProfileScreen = () => {
           }}>
           {user?.fullName}
         </Text>
+        <Text style={{ fontSize: 13, color: 'black' }}>0{user.phoneNumber}</Text>
       </View>
       {features.map((item, index) => (
         <TouchableOpacity
           key={index}
           onPress={() => handleFeatureClick(item.name)}>
           <View key={index} style={styles.feature_item}>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <Image
                 source={item.image}
-                style={[styles.icon_profile, {marginRight: 15}]}
+                style={[styles.icon_profile, { marginRight: 15 }]}
               />
-              <Text style={{color: 'black', fontWeight: '500', fontSize: 15}}>
+              <Text style={{ color: 'black', fontWeight: '500', fontSize: 15 }}>
                 {item.name}
               </Text>
             </View>
             <Image
               source={require('../../Resource/icon/next.png')}
-              style={{width: 15, height: 15}}
+              style={{ width: 15, height: 15 }}
             />
           </View>
         </TouchableOpacity>
       ))}
       <TouchableOpacity onPress={() => setShowLogout(!showLogout)}>
         <View style={styles.feature_item}>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             <Image
               source={require('../../Resource/icon/logout.png')}
-              style={[styles.icon_profile, {marginRight: 15}]}
+              style={[styles.icon_profile, { marginRight: 15 }]}
             />
-            <Text style={{color: 'red', fontWeight: '500', fontSize: 16}}>
+            <Text style={{ color: 'red', fontWeight: '500', fontSize: 16 }}>
               Logout
             </Text>
           </View>
