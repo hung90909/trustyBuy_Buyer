@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 export const API_BASE_URL = 'https://dai.tongdaihoidap.com/';
-=======
-export const API_BASE_URL = 'http://192.168.0.100:3000/';
->>>>>>> 4ebfed0138e2072d105232ec0a5f28432ee9cfeb
 
 export const getApiUrl = endpoint => API_BASE_URL + endpoint;
 
