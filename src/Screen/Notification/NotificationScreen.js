@@ -1,30 +1,36 @@
+import React, {useEffect, useState} from 'react';
 import {
-  SafeAreaView,
-  StatusBar,
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   Image,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
-import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {apiGet} from '../../utils/utils';
+import {NOTIFI_API} from '../../config/urls';
 import moment from 'moment';
-import {useNavigation} from '@react-navigation/native';
-import {thongbao} from '../data';
 
-const NotificationScreen = () => {
-  const navigation = useNavigation();
+const NotificationScreen = ({navigation}) => {
+  const [data, setData] = useState(null);
+
+  const getAPI = async () => {
+    try {
+      const res = await apiGet(`${NOTIFI_API}`);
+      setData(res?.message.reverse());
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    getAPI();
+  }, []);
 
   const renderItem = ({item}) => {
-    const {day, month, year, hour, minute, image, title, content} = item;
-
-    const notificationDate = moment(
-      `${day}/${month}/${year} ${hour}:${minute}`,
-      'DD/MM/YYYY HH:mm',
-    );
-
+    const notificationDate = moment(item?.createdAt);
     const now = moment();
 
     const isToday = notificationDate.isSame(now, 'day');
@@ -56,17 +62,19 @@ const NotificationScreen = () => {
     } else {
       timeAgo = 'Vừa xong';
     }
-
     return (
-      <TouchableOpacity style={styles.notificationItem}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('NotiItem', {item})}
+        style={styles.notificationItem}>
         <Image
-          resizeMode="cover"
-          source={{uri: image}}
+          resizeMode="contain"
+          source={{
+            uri: 'https://th.bing.com/th/id/OIP.iZrlA44xilXu5howRorUOAHaE8?w=278&h=185&c=7&r=0&o=5&pid=1.7',
+          }}
           style={styles.notificationImage}
         />
         <View style={styles.notificationTextContainer}>
-          <Text style={styles.notificationTitle}>{title}</Text>
-          <Text style={styles.notificationContent}>{content}</Text>
+          <Text style={styles.notificationTitle}>{item?.noti_content}</Text>
           <Text style={styles.notificationTime}>{timeAgo}</Text>
         </View>
       </TouchableOpacity>
@@ -74,8 +82,7 @@ const NotificationScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+    <View style={styles.container}>
       <View style={styles.header}>
         <Ionicons
           name="arrow-back"
@@ -85,13 +92,16 @@ const NotificationScreen = () => {
         />
         <Text style={styles.headerText}>Thông báo</Text>
       </View>
-      <FlatList
-        data={thongbao}
-        keyExtractor={item => item.id.toString()}
-        renderItem={renderItem}
-        style={styles.notificationList}
-      />
-    </SafeAreaView>
+      {!data ? (
+        <ActivityIndicator size={'large'} color={'gray'} />
+      ) : (
+        <FlatList
+          data={data}
+          keyExtractor={item => item?._id}
+          renderItem={renderItem}
+        />
+      )}
+    </View>
   );
 };
 
