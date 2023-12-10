@@ -49,11 +49,6 @@ const Checkouts = ({ navigation }) => {
     const totalPrice = (price, quantity) => {
         return formatPrice(price * quantity)
     }
-  };
-  const totalPrice = (price, quantity) => {
-    return formatPrice(price * quantity);
-  };
-
   const getCartID = async () => {
     try {
       const res = await apiGet(ADD_CART_API);
@@ -398,6 +393,8 @@ const Checkouts = ({ navigation }) => {
       </View>
     </View>
   );
+        }
+  
 
 
 const styles = StyleSheet.create({
