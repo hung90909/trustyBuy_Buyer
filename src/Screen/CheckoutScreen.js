@@ -7,7 +7,6 @@ import {formatPrice} from './Format';
 import {useNavigation} from '@react-navigation/native';
 import {ScrollView} from 'react-native';
 import {Pressable} from 'react-native';
-import {saveAddressData} from '../redux/actions/address';
 import {useSelector} from 'react-redux';
 import {Dropdown} from 'react-native-element-dropdown';
 const CheckoutScreen = ({route}) => {
