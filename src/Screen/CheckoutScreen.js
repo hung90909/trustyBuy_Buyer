@@ -26,7 +26,7 @@ const CheckoutScreen = ({route}) => {
     setData(address);
     console.log(address);
   }, [address]);
-  const CheckData = data === null || value === null;
+  const isDataOrValueNull = data === null || value === '';
 
   return (
     <View style={styles.container}>
@@ -42,12 +42,10 @@ const CheckoutScreen = ({route}) => {
         </View>
       </View>
 
-      <View style={{}}>
+      <View style={{paddingHorizontal: 20}}>
         <Pressable
           style={{
             justifyContent: 'center',
-
-            paddingHorizontal: 20,
             paddingVertical: 10,
           }}
           onPress={() => navigation.navigate('OptionAddress')}>
@@ -83,7 +81,7 @@ const CheckoutScreen = ({route}) => {
       </View>
       {product && (
         <View style={{flex: 1}}>
-          <ScrollView>
+          <ScrollView style={{paddingHorizontal: 20}}>
             <View style={styles.content}>
               <View style={styles.productContainer}>
                 <View style={{borderWidth: 1}}></View>
@@ -137,8 +135,6 @@ const CheckoutScreen = ({route}) => {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 flex: 1,
-                padding: 10,
-                marginHorizontal: 10,
                 borderRadius: 10,
               }}>
               <Text style={{color: 'black', fontSize: 15}}>
@@ -160,7 +156,7 @@ const CheckoutScreen = ({route}) => {
               />
             </View>
 
-            <View style={{padding: 20}}>
+            <View style={{}}>
               <Text style={{fontSize: 16, fontWeight: 'bold', color: 'black'}}>
                 Chi tiết thanh toán
               </Text>
@@ -211,7 +207,7 @@ const CheckoutScreen = ({route}) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <View style={{marginLeft: 140, paddingHorizontal: 20}}>
+            <View style={{flex: 1, paddingLeft: 100}}>
               <Text style={{fontWeight: 'bold', color: 'black', fontSize: 16}}>
                 Tổng thanh toán:
               </Text>
@@ -231,17 +227,17 @@ const CheckoutScreen = ({route}) => {
               style={{
                 height: 60,
                 justifyContent: 'center',
-                backgroundColor: CheckData ? '#EEEEEE' : 'black', // Sử dụng điều kiện để xác định màu sắc của nút
+                backgroundColor: isDataOrValueNull ? '#EEEEEE' : 'black',
                 flex: 1,
               }}
-              disabled={CheckData} // Sử dụng giá trị của CheckData để disable nút
+              disabled={isDataOrValueNull}
               onPress={() => {
-                !CheckData && console.log('hihi'); // Log khi nút được nhấn (nếu không bị disable)
+                !isDataOrValueNull && console.log('hihi');
               }}>
               <Text
                 style={{
                   textAlign: 'center',
-                  color: CheckData ? '#CCCCCC' : 'white',
+                  color: isDataOrValueNull ? '#CCCCCC' : 'white',
                   fontSize: 16,
                 }}>
                 Đặt hàng
@@ -270,17 +266,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: 'black',
-    // textAlign: 'center',
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 20,
   },
   content: {
-    padding: 15,
-    borderWidth: 0.5,
     borderColor: 'gray',
-    marginHorizontal: 5,
-    borderRadius: 5,
   },
   productContainer: {
     flexDirection: 'row',
