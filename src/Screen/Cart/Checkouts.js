@@ -1,5 +1,15 @@
-import React, { useCallback, useEffect, useState, useRef } from 'react';
+import React, {useCallback, useEffect, useState, useRef} from 'react';
 import {
+  Text,
+  View,
+  ScrollView,
+  Pressable,
+  TextInput,
+  StyleSheet,
+  SafeAreaView,
+  FlatList,
+  Image,
+  TouchableOpacity,
     Text,
     View,
     Pressable,
@@ -10,10 +20,15 @@ import {
     Image,
     TouchableOpacity,
 } from 'react-native';
-import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {Alert} from 'react-native';
+import {formatPrice, formatSoldSP} from '../Format';
+import {API_BASE_URL, PRODUCT_API} from '../../config/urls';
+import {apiGet, apiPost} from '../../utils/utils';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Alert } from 'react-native';
 import { formatPrice, formatSoldSP } from '../Format';
@@ -324,21 +339,16 @@ const Checkouts = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    header: {
-        flexDirection: "row",
-        alignItems: "center",
-        height: 60,
-        backgroundColor: "white",
-        elevation: 2,
-        paddingHorizontal: 15
-    }
-}
-
-)
-export default Checkouts
-
-
-
+  container: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 60,
+    backgroundColor: 'white',
+    elevation: 2,
+    paddingHorizontal: 15,
+  },
+});
+export default Checkouts;

@@ -15,6 +15,8 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {useNavigation} from '@react-navigation/native';
 import {SIGNUP_API} from '../../config/urls';
 import Feather from 'react-native-vector-icons/Feather';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {apiPost} from '../../utils/utils';
 
 const {width, height} = Dimensions.get('window');
 
@@ -26,53 +28,48 @@ export default Register = () => {
   const nav = useNavigation();
   const [showPassword, setShowPassword] = useState(false);
 
-  const checkValidateLogin = () => {
-    if (email.length === 0 && password.length === 0) {
-      setErrorEmail('Vui lòng nhập đầy đủ thông tin');
-      setErrorPassword('Vui lòng nhập đầy đủ thông tin');
-      return;
-    }
-    if (email.length === 0) {
-      setErrorEmail('Vui lòng nhập đầy đủ thông tin');
-      return;
-    }
-    if (password.length === 0) {
-      setErrorPassword('Vui lòng nhập đầy đủ thông tin');
-      return;
-    }
-    if (errorEmail.length !== 0 || errorPassword.length !== 0) {
-      return;
-    }
+  const checkValidateLogin = async () => {
+    const role = 'User';
 
-    const data = {
-      email,
-      password,
-      role: 'User',
-    };
-    fetch(SIGNUP_API, {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(response => response.json())
-      .then(response => {
-        console.log(response);
-        if (response.status === 200) {
-          AsyncStorage.setItem('access_token', JSON.stringify(response.newUser))
-            .then(() => {
-              console.log('Token đã được lưu vào AsyncStorage.');
-            })
-            .catch(err =>
-              console.log('Lỗi khi lưu token vào AsyncStorage:', err),
-            );
-        } else {
-          console.log(response.message);
-        }
-      })
-      .catch(err => console.log(err));
-    nav.navigate('RegisterInformation');
+    try {
+      if (email.length === 0 && password.length === 0) {
+        setErrorEmail('Vui lòng nhập đầy đủ thông tin');
+        setErrorPassword('Vui lòng nhập đầy đủ thông tin');
+        return;
+      }
+      if (email.length === 0) {
+        setErrorEmail('Vui lòng nhập đầy đủ thông tin');
+        return;
+      }
+      if (password.length === 0) {
+        setErrorPassword('Vui lòng nhập đầy đủ thông tin');
+        return;
+      }
+      if (errorEmail.length !== 0 || errorPassword.length !== 0) {
+        return;
+      } else {
+        // try {
+        const res = await apiPost(SIGNUP_API, {
+          email: email,
+          password: password,
+          role: role,
+        })
+          .then(res => {
+            nav.navigate('OtpScreen', {
+              email: email,
+              password: password,
+              role: role,
+            });
+          })
+          .catch(e => {
+            if (e.code === 403) {
+              setErrorEmail('Email đã được đăng kí');
+            }
+          });
+      }
+    } catch (error) {
+      console.error('Error in checkValidateLogin:', error);
+    }
   };
 
   return (
@@ -84,6 +81,9 @@ export default Register = () => {
         />
         <Text style={styles.heading}>Tạo tài khoản</Text>
       </View>
+      <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
+        Email
+      </Text>
       <View style={styles.textInput}>
         <Fontisto name="email" size={25} color={'black'} />
         <TextInput
@@ -96,6 +96,9 @@ export default Register = () => {
         />
       </View>
       {errorEmail !== '' && <Text style={styles.errorText}>{errorEmail}</Text>}
+      <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
+        Password
+      </Text>
       <View style={styles.textInput}>
         <SimpleLineIcons name="lock" size={25} />
         <TextInput
@@ -132,18 +135,8 @@ export default Register = () => {
         <Text style={styles.orText}>Hoặc</Text>
         <View style={styles.divider} />
       </View>
-      <TouchableOpacity
-        style={styles.socialButton}
-        onPress={() => Alert.alert('Thông báo', 'Chức năng đang phát triển')}>
-        <Image
-          style={styles.socialIcon}
-          source={require('../../Resource/icon/facebook.png')}
-          resizeMode="cover"
-        />
-        <Text style={styles.socialButtonText}>Đăng nhập với Facebook</Text>
-      </TouchableOpacity>
       <View style={styles.notAcount}>
-        <Text>Chưa có tài khoản? </Text>
+        <Text>Bạn đã có tài khoản? </Text>
         <TouchableOpacity
           onPress={() => {
             nav.navigate('Login2');
@@ -186,7 +179,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20,
+    marginVertical: 15,
     paddingHorizontal: 15,
   },
   input: {
@@ -240,8 +233,8 @@ const styles = StyleSheet.create({
   },
   socialButton: {
     width: '100%',
-    height: 50,
-    borderRadius: 10,
+    height: 45,
+    borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#3b5998',
@@ -261,7 +254,7 @@ const styles = StyleSheet.create({
   notAcount: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 20,
+    marginTop: 100,
   },
   loginLink: {
     fontWeight: 'bold',

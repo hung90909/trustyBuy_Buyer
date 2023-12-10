@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -7,11 +7,27 @@ import {formatPrice} from './Format';
 import {useNavigation} from '@react-navigation/native';
 import {ScrollView} from 'react-native';
 import {Pressable} from 'react-native';
-
+import {saveAddressData} from '../redux/actions/address';
+import {useSelector} from 'react-redux';
+import {Dropdown} from 'react-native-element-dropdown';
 const CheckoutScreen = ({route}) => {
   const {orderDetails} = route.params;
   const product = orderDetails.product;
   const navigation = useNavigation();
+  const address = useSelector(state => state?.address?.addressData);
+  const [data, setData] = useState(address);
+  const [value, setValue] = useState('');
+  const [open, setOpen] = useState(false); // Assuming you have 'open' state
+  const pay = [
+    {label: 'Thanh toán khi nhận hàng', value: 'Cash'},
+    {label: 'Thanh toán bằng PayPal', value: 'PayPal'},
+  ];
+  useEffect(() => {
+    setData(address);
+    console.log(address);
+  }, [address]);
+  const isDataOrValueNull = data === null || value === '';
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -25,9 +41,47 @@ const CheckoutScreen = ({route}) => {
           <Text style={styles.titleHeader}>Thanh toán</Text>
         </View>
       </View>
+
+      <View style={{paddingHorizontal: 20}}>
+        <Pressable
+          style={{
+            justifyContent: 'center',
+            paddingVertical: 10,
+          }}
+          onPress={() => navigation.navigate('OptionAddress')}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <View style={{flexDirection: 'row'}}>
+              <Image
+                source={require('../Resource/Image/placeholder.png')}
+                style={{height: 24, width: 24, marginRight: 10}}
+              />
+
+              <View style={{width: '90%'}}>
+                <Text style={{color: 'black', fontSize: 16, fontWeight: '500'}}>
+                  Địa chỉ nhận hàng
+                </Text>
+                {data ? (
+                  <View>
+                    <Text>{data?.nameAddress}</Text>
+                    <Text>{data?.customAddress}</Text>
+                  </View>
+                ) : (
+                  <View>
+                    <Text>Vui lòng chọn địa chỉ</Text>
+                  </View>
+                )}
+              </View>
+            </View>
+          </View>
+        </Pressable>
+      </View>
       {product && (
         <View style={{flex: 1}}>
-          <ScrollView>
+          <ScrollView style={{paddingHorizontal: 20}}>
             <View style={styles.content}>
               <View style={styles.productContainer}>
                 <View style={{borderWidth: 1}}></View>
@@ -74,49 +128,35 @@ const CheckoutScreen = ({route}) => {
                 </Text>
               </View>
             </View>
-            <Pressable
+
+            <View
               style={{
-                padding: 10,
-                marginHorizontal: 10,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flex: 1,
                 borderRadius: 10,
               }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}>
-                <Text style={{color: 'black', fontSize: 15}}>
-                  Voucher khuyến mãi
-                </Text>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text>Chọn hoặc nhập mã</Text>
-                  <MaterialIcons name="navigate-next" size={30} color="black" />
-                </View>
-              </View>
-            </Pressable>
-            <Pressable
-              style={{
-                padding: 10,
-                marginHorizontal: 10,
-                borderRadius: 10,
-              }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}>
-                <Text style={{color: 'black', fontSize: 15}}>
-                  Phương thức thanh toán
-                </Text>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text>Thanh toán khi nhận hàng</Text>
-                  <MaterialIcons name="navigate-next" size={30} color="black" />
-                </View>
-              </View>
-            </Pressable>
-            <View style={{padding: 20}}>
+              <Text style={{color: 'black', fontSize: 15}}>
+                Phương thức thanh toán
+              </Text>
+              <Dropdown
+                style={styles.dropdown}
+                data={pay}
+                maxHeight={150}
+                labelField="label"
+                valueField="value"
+                placeholder=""
+                value={value}
+                onChange={item => {
+                  setValue(item.value);
+                }}
+                itemTextStyle={{fontSize: 14}}
+                selectedTextStyle={{fontSize: 14}}
+              />
+            </View>
+
+            <View style={{}}>
               <Text style={{fontSize: 16, fontWeight: 'bold', color: 'black'}}>
                 Chi tiết thanh toán
               </Text>
@@ -163,17 +203,20 @@ const CheckoutScreen = ({route}) => {
             style={{
               height: 60,
               backgroundColor: 'white',
-              borderWidth: 1,
               alignItems: 'center',
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <View style={{marginLeft: 140, paddingHorizontal: 20}}>
+            <View style={{flex: 1, paddingLeft: 100}}>
               <Text style={{fontWeight: 'bold', color: 'black', fontSize: 16}}>
                 Tổng thanh toán:
               </Text>
               <Text
-                style={{color: '#FC6D26', fontSize: 16, fontWeight: 'bold'}}>
+                style={{
+                  color: '#FC6D26',
+                  fontSize: 16,
+                  fontWeight: 'bold',
+                }}>
                 {product
                   ? formatPrice(product.price * product.quantity - 100000)
                   : '0 VND'}
@@ -182,13 +225,21 @@ const CheckoutScreen = ({route}) => {
 
             <Pressable
               style={{
-                borderWidth: 1,
                 height: 60,
                 justifyContent: 'center',
-                backgroundColor: 'black',
+                backgroundColor: isDataOrValueNull ? '#EEEEEE' : 'black',
                 flex: 1,
+              }}
+              disabled={isDataOrValueNull}
+              onPress={() => {
+                !isDataOrValueNull && console.log('hihi');
               }}>
-              <Text style={{textAlign: 'center', color: 'white', fontSize: 16}}>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: isDataOrValueNull ? '#CCCCCC' : 'white',
+                  fontSize: 16,
+                }}>
                 Đặt hàng
               </Text>
             </Pressable>
@@ -215,17 +266,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: 'black',
-    // textAlign: 'center',
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 20,
   },
   content: {
-    padding: 15,
-    borderWidth: 0.5,
     borderColor: 'gray',
-    marginHorizontal: 5,
-    borderRadius: 5,
   },
   productContainer: {
     flexDirection: 'row',
@@ -297,5 +343,16 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     color: '#FC6D26',
+  },
+  dropdown: {
+    marginVertical: 10,
+    height: 50,
+    borderBottomColor: 'gray',
+    backgroundColor: 'white',
+    borderColor: 'black', // Add this line for border color
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    flex: 1,
+    marginLeft: 8,
   },
 });

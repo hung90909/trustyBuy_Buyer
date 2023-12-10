@@ -40,8 +40,6 @@ const CartScreen = () => {
     }
   };
 
-
-
   useEffect(() => {
     getCart();
   }, []);
@@ -67,9 +65,7 @@ const CartScreen = () => {
     const ids = selectedItems.map(item => item.itemId);
     if (ids.includes(item.itemId)) {
       // Nếu sản phẩm đã được chọn, loại bỏ khỏi danh sách
-      setSelectedItems(
-        selectedItems.filter(i => i.itemId !== item.itemId),
-      );
+      setSelectedItems(selectedItems.filter(i => i.itemId !== item.itemId));
     } else {
       // Nếu sản phẩm chưa được chọn, thêm vào danh sách
       setSelectedItems([...selectedItems, item]);
@@ -185,9 +181,7 @@ const CartScreen = () => {
                         borderRadius: 25,
                       }}
                       source={{
-                        uri:
-                          'https://b0aa-116-96-44-199.ngrok-free.app/' +
-                          item.avatar_shop,
+                        uri: `${API_BASE_URL}` + item.avatar_shop,
                       }}
                     />
                     <Text
@@ -211,8 +205,7 @@ const CartScreen = () => {
                         onValueChange={() => handleCheckboxChange(item)}
                         checked={
                           selectedItems.filter(
-                            selectedItem =>
-                              selectedItem.itemId === item.itemId,
+                            selectedItem => selectedItem.itemId === item.itemId,
                           ).length > 0
                         }
                         onPress={() => handleCheckboxChange(item)}
@@ -223,12 +216,11 @@ const CartScreen = () => {
                       resizeMode="stretch"
                       style={{
                         width: 90,
-                        height: 90, borderRadius: 5
+                        height: 90,
+                        borderRadius: 5,
                       }}
                       source={{
-                        uri:
-                          'https://b0aa-116-96-44-199.ngrok-free.app/uploads/' +
-                          item.product_thumb,
+                        uri: `${API_BASE_URL}uploads/` + item.product_thumb,
                       }}
                     />
                     <View style={{ marginStart: 15, width: 100 }}>
@@ -355,8 +347,7 @@ const CartScreen = () => {
         </View>
         <TouchableOpacity
           onPress={() => {
-            nav.navigate("Checkout", { item: selectedItems})
-
+            nav.navigate('Checkouts', {item: selectedItems});
           }}
           style={{
             flex: 1,

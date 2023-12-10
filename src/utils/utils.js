@@ -59,7 +59,7 @@ const apiReq = async (endPoint, data, method, headers, requestOptions = {}) => {
 
     return responseData;
   } catch (error) {
-    console.error('Error during API request:', error);
+    // console.error('Error during API request:', error);
 
     if (error.response && error.response.status === 401) {
       throw {...error.response.data, msg: 'Unauthorized'};

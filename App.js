@@ -35,6 +35,9 @@ import ListProductInCategory from './src/Screen/home/ListProductInCategory';
 import Checkouts from './src/Screen/Cart/Checkouts';
 import ListAddress from './src/Screen/Cart/ListAddress';
 import ListDiscount from './src/Screen/Cart/ListDiscount';
+import OtpScreen from './src/Screen/Login/OtpScreen';
+import OptionAddress from './src/Screen/OptionAddress';
+
 
 const TabTop = createMaterialTopTabNavigator();
 
@@ -166,6 +169,9 @@ const App = () => {
             name="ListProductInCategory"
             component={ListProductInCategory}
           />
+          <Stack.Screen name="OtpScreen" component={OtpScreen} />
+          <Stack.Screen name="OptionAddress" component={OptionAddress} />
+          <Stack.Screen name="Checkouts" component={Checkouts} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

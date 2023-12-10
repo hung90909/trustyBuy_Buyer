@@ -17,6 +17,7 @@ import {checkEmail, checkPassword} from '../../compoment/checkValidate';
 import {Login_API} from '../../config/urls';
 import {setItem} from '../../utils/utils';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width, height} = Dimensions.get('window');
 
@@ -61,6 +62,8 @@ const Login2 = () => {
       if (accessToken) {
         // Save the token before navigating
         await setItem('token', accessToken);
+        await AsyncStorage.setItem('email', email);
+        await AsyncStorage.setItem('password', password);
         nav.replace('Main');
       } else {
         // Handle the case where the token is not available
@@ -71,6 +74,7 @@ const Login2 = () => {
       if (error.response) {
         if (error.response.status === 403) {
           setErrorPassword(error.response.data.message);
+          console.log(error.response.data.message);
         } else {
           console.error('Server error:', error.response.data);
         }
@@ -93,7 +97,9 @@ const Login2 = () => {
         />
         <Text style={styles.heading}>Đăng nhập</Text>
       </View>
-
+      <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
+        Email
+      </Text>
       <View style={styles.textInput}>
         <Fontisto name="email" size={25} color={'black'} />
         <TextInput
@@ -106,7 +112,9 @@ const Login2 = () => {
         />
       </View>
       {errorEmail !== '' && <Text style={styles.errorText}>{errorEmail}</Text>}
-
+      <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
+        Password
+      </Text>
       <View style={styles.textInput}>
         <SimpleLineIcons name="lock" size={25} />
         <TextInput
@@ -193,8 +201,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20,
     paddingHorizontal: 15,
+    marginVertical: 10,
   },
   input: {
     marginStart: 10,

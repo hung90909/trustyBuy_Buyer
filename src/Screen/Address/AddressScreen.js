@@ -6,7 +6,7 @@ import {TouchableOpacity, ScrollView} from 'react-native';
 import AddAdress from './Components/AddAdress';
 import UpdateAdress from './Components/UpdateAdress';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {apiDelete, apiGet} from '../../utils/utils';
+import {apiDelete, apiGet, apiPut} from '../../utils/utils';
 import {USER_API} from '../../config/urls';
 import axios from 'axios';
 // import {ScrollView} from 'react-native-gesture-handler';
@@ -29,7 +29,7 @@ const AdressScreen = () => {
     }
   };
   const handleDelete = async addressId => {
-    await apiDelete(`${USER_API}/deleteAddress`, {
+    await apiPut(`${USER_API}/deleteAddress`, {
       addressId: addressId,
     })
       .then(res => {

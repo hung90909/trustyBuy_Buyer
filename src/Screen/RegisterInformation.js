@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -6,63 +6,50 @@ import {
   TextInput,
   Pressable,
   ScrollView,
-  KeyboardAvoidingView,
+  Alert,
+  PermissionsAndroid,
+  StyleSheet,
+  SafeAreaView,
 } from 'react-native';
+import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Dropdown} from 'react-native-element-dropdown';
-import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import axios from 'axios';
+import {USER_API} from '../config/urls';
 
 const genders = [
   {label: 'Nam', value: 'Nam'},
   {label: 'Nữ', value: 'Nữ'},
 ];
 
-const RegisterInformation = () => {
-  const [date, setDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
+const RegisterInformation = ({navigation}) => {
   const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
   const [phone, setPhone] = useState('');
   const [value, setValue] = useState(null);
   const [nameError, setNameError] = useState('');
-  const [usernameError, setUsernameError] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [genderError, setGenderError] = useState('');
-  const [tuoiError, setTuoiError] = useState('');
   const [userID, setUserID] = useState('');
-  const navigation = useNavigation();
+  const [selectedImages, setSelectedImages] = useState('');
 
   useEffect(() => {
     const getToken = async () => {
-      const token = await AsyncStorage.getItem('access_token');
-      const tokenUser = token ? JSON.parse(token) : null;
-      console.log('Token save:', tokenUser._id);
-      setUserID(tokenUser?._id || '');
+      const token = await AsyncStorage.getItem('_id');
+      setUserID(token);
     };
-
     getToken();
   }, []);
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShowDatePicker(false);
-    setDate(currentDate);
-  };
-
   const handleSubmit = () => {
     setNameError('');
-    setUsernameError('');
     setPhoneError('');
     setGenderError('');
-    setTuoiError('');
 
     if (!name) {
       setNameError('Vui lòng nhập họ và tên');
-    }
-    if (!username) {
-      setUsernameError('Vui lòng nhập tên tài khoản');
     }
     if (!phone) {
       setPhoneError('Vui lòng nhập số điện thoại');
@@ -71,112 +58,122 @@ const RegisterInformation = () => {
     }
     if (!value) {
       setGenderError('Vui lòng chọn giới tính');
-    } else if (!tuoiError) {
+    } else {
       onRegisterInformations();
     }
   };
 
-  const onRegisterInformations = () => {
-    const data = {
-      fullName: name,
-      phoneNumber: phone,
-      gender: value,
-    };
+  const openCamera = async isFrontCamera => {
+    try {
+      await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
 
-    fetch(
-      `https://fbf9-123-24-162-159.ngrok-free.app/v1/api/user/setUpAcc/${userID}`,
-      {
-        method: 'POST',
+      const result = isFrontCamera
+        ? await launchCamera({mediaType: 'photo'})
+        : await launchImageLibrary({mediaType: 'photo'});
+
+      setSelectedImages(result.assets[0]?.uri);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const selectImageOption = () => {
+    Alert.alert(
+      'Thông báo',
+      'Bạn muốn lấy ảnh từ?',
+      [
+        {text: 'Chụp ảnh ', onPress: () => openCamera(true)},
+        {text: 'Thư viện ', onPress: () => openCamera(false)},
+      ],
+      {cancelable: true},
+    );
+  };
+
+  const onRegisterInformations = async () => {
+    const formData = new FormData();
+    formData.append('fullName', name);
+    formData.append('phoneNumber', phone.toString());
+    formData.append('gender', value);
+
+    if (selectedImages) {
+      formData.append('avatar', {
+        uri: selectedImages,
+        type: 'image/jpeg',
+        name: 'image.jpg',
+      });
+    }
+
+    try {
+      await axios.post(`${USER_API}/setUpAcc/${userID}`, formData, {
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
         },
-        body: JSON.stringify(data),
-      },
-    )
-      .then(() => navigation.navigate('Login2'))
-      .catch(err => console.log(err));
+      });
+
+      // If the request is successful, navigate to 'Login2'
+      navigation.navigate('Login2');
+    } catch (error) {
+      console.error('Error during fetch:', error);
+    }
   };
 
   return (
-    <ScrollView>
-      <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
-        <View style={{flex: 1}}>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 20,
-              marginLeft: 20,
-              alignItems: 'center',
-            }}>
-            <Ionicons
-              name="arrow-back"
-              size={28}
-              color="#000000"
-              onPress={() => navigation.navigate('Register')}
-            />
-            <View style={{flex: 1, alignItems: 'center', marginRight: 20}}>
-              <Text style={{color: '#000000', fontWeight: '600', fontSize: 18}}>
-                Thông tin cá nhân
-              </Text>
-            </View>
-          </View>
-        </View>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: 20,
-          }}>
-          <Pressable>
-            <Image
-              style={styles.profileImage}
-              source={require('../Resource/Image/imgpro.png')}
-            />
-          </Pressable>
-        </View>
-        <View style={{marginTop: 20}}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Ionicons
+          name="arrow-back"
+          size={28}
+          color="#000000"
+          onPress={() => navigation.navigate('Register')}
+        />
+        <Text style={styles.headerText}>Thông tin cá nhân</Text>
+      </View>
+
+      <View style={styles.formContainer}>
+        <Pressable style={styles.imagePicker} onPress={selectImageOption}>
+          <Image
+            style={styles.profileImage}
+            source={
+              selectedImages
+                ? {uri: selectedImages}
+                : require('../Resource/Image/camera.png')
+            }
+            resizeMode="cover"
+          />
+        </Pressable>
+        <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
+          Họ và tên
+        </Text>
+
+        <View style={styles.inputContainer}>
+          <Feather name="user" size={22} style={styles.inputIcon} />
           <TextInput
-            style={styles.textinput}
-            placeholder="Họ và tên"
+            style={styles.textInput}
+            placeholder="Nhập họ và tên"
             value={name}
             onChangeText={text => {
               setName(text);
               setNameError('');
             }}
           />
-          {nameError && <Text style={styles.errorText}>{nameError}</Text>}
+        </View>
+        {nameError && <Text style={styles.errorText}>{nameError}</Text>}
 
-          <TextInput
-            style={styles.textinput}
-            placeholder="Tên tài khoản"
-            value={username}
-            onChangeText={text => {
-              setUsername(text);
-              setUsernameError('');
-            }}
-          />
-          {usernameError && (
-            <Text style={styles.errorText}>{usernameError}</Text>
-          )}
-          <TextInput
-            style={styles.textinput}
-            placeholder="Ngày sinh"
-            value={date.toLocaleDateString()}
-            onFocus={() => setShowDatePicker(true)}
-          />
-          {tuoiError && <Text style={styles.errorText}>{tuoiError}</Text>}
-          {showDatePicker && (
-            <DateTimePicker
-              value={date}
-              mode="date"
-              display="calendar"
-              onChange={onChange}
-            />
-          )}
+        <Text
+          style={{
+            color: 'black',
+            fontSize: 16,
+            fontWeight: 'bold',
+            marginTop: 20,
+          }}>
+          Số điện thoại
+        </Text>
 
+        <View style={styles.inputContainer}>
+          <Feather name="phone" size={22} style={styles.inputIcon} />
           <TextInput
-            style={styles.textinput}
-            placeholder="Số điện thoại"
+            style={styles.textInput}
+            placeholder="Nhập số điện thoại"
             value={phone}
             keyboardType="numeric"
             onChangeText={text => {
@@ -184,82 +181,98 @@ const RegisterInformation = () => {
               setPhoneError('');
             }}
           />
-          {phoneError && <Text style={styles.errorText}>{phoneError}</Text>}
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Dropdown
-              style={styles.dropdown}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              data={genders}
-              maxHeight={150}
-              labelField="label"
-              valueField="value"
-              placeholder="Giới tính"
-              value={value}
-              onChange={item => {
-                setValue(item.value);
-                setGenderError('');
-              }}
-            />
-          </View>
-          {genderError && <Text style={styles.errorText}>{genderError}</Text>}
         </View>
+        {phoneError && <Text style={styles.errorText}>{phoneError}</Text>}
+        <Text
+          style={{
+            color: 'black',
+            fontSize: 16,
+            fontWeight: 'bold',
+            marginTop: 20,
+          }}>
+          Giới tính
+        </Text>
+
+        <View style={styles.inputContainer}>
+          <FontAwesome name="transgender" size={22} style={styles.inputIcon} />
+          <Dropdown
+            style={styles.dropdown}
+            data={genders}
+            maxHeight={150}
+            labelField="label"
+            valueField="value"
+            placeholder="Chọn giới tính"
+            value={value}
+            onChange={item => {
+              setValue(item.value);
+              setGenderError('');
+            }}
+          />
+        </View>
+        {genderError && <Text style={styles.errorText}>{genderError}</Text>}
 
         <Pressable style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Tiếp Tục</Text>
         </Pressable>
-      </KeyboardAvoidingView>
-    </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 };
 
-const styles = {
-  profileImage: {
-    height: 100,
-    width: 100,
-    resizeMode: 'contain',
-    borderRadius: 130,
-    borderWidth: 2,
-    borderColor: '#33CCFF',
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
   },
-  textinput: {
+  header: {
+    flexDirection: 'row',
+    marginTop: 20,
     marginHorizontal: 20,
-    marginVertical: 5,
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    fontSize: 16,
+    alignItems: 'center',
+  },
+  headerText: {
+    flex: 1,
+    textAlign: 'center',
+    color: '#000000',
+    fontWeight: '600',
+    fontSize: 18,
+  },
+  formContainer: {
+    marginVertical: 20,
+    backgroundColor: '#FFFFFF',
+    width: '90%', // Adjust the width as needed
+    alignSelf: 'center',
+    flex: 1,
+  },
+  imagePicker: {
+    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileImage: {
+    height: 80,
+    width: 80,
+    borderRadius: 40,
+    margin: 10,
   },
   dropdown: {
-    margin: 16,
+    marginVertical: 10,
     height: 50,
     borderBottomColor: 'gray',
-    width: '90%',
-    paddingHorizontal: 15,
+    backgroundColor: 'rgba(232, 232, 232, 1)',
+    borderColor: 'black', // Add this line for border color
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    flex: 1,
   },
-  placeholderStyle: {
-    fontSize: 16,
-  },
-  selectedTextStyle: {
-    fontSize: 16,
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-  },
+
   button: {
     alignItems: 'center',
-    marginHorizontal: 20,
     justifyContent: 'center',
-    height: 50,
-    marginTop: 20,
-    borderRadius: 20,
-    backgroundColor: '#0A0303',
+    height: 45,
+    borderRadius: 5,
+    backgroundColor: 'black',
+    marginTop: 50,
   },
   buttonText: {
     color: '#FFFFFF',
@@ -267,16 +280,23 @@ const styles = {
   },
   errorText: {
     color: 'red',
-    marginHorizontal: 20,
+    marginVertical: 5,
     paddingHorizontal: 15,
   },
-  label: {
-    marginHorizontal: 20,
-    marginVertical: 5,
-    fontSize: 20,
-    fontWeight: 'bold',
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    height: 50,
+    backgroundColor: 'rgba(232, 232, 232, 1)',
+    borderRadius: 5,
+    marginTop: 20,
+    paddingHorizontal: 10,
+  },
+  inputIcon: {
+    marginRight: 10,
     color: 'black',
   },
-};
+});
 
 export default RegisterInformation;

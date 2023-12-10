@@ -4,6 +4,7 @@ import {Modal, View, TouchableOpacity, StyleSheet, Text} from 'react-native';
 import {LOGOUT_API} from '../../config/urls';
 import {apiDelete} from '../../utils/utils';
 import socketServices from '../../utils/socketService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Logout = ({visible, onClose}) => {
   const navigation = useNavigation();
@@ -12,6 +13,7 @@ const Logout = ({visible, onClose}) => {
     try {
       await apiDelete(`${LOGOUT_API}`);
       socketServices.emit('logout');
+      AsyncStorage.clear();
       navigation.replace('Login2');
     } catch (error) {
       console.log(error);
