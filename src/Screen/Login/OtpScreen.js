@@ -46,6 +46,10 @@ const OtpScreen = () => {
       }
     }, 1000);
 
+    // Initial state setup
+    setShowResendButton(false); // Initially hide the resend button
+    setIsResendDisabled(true); // Initially disable the resend button
+
     return () => clearInterval(intervalId);
   }, [minutes, seconds]);
 
@@ -112,7 +116,6 @@ const OtpScreen = () => {
         console.log(res.newUser._id);
         navigation.navigate('RegisterInformation');
       } else {
-        // setError('Mã OTP không hợp lệ. Vui lòng kiểm tra lại.');
         console.log('===============');
       }
     } catch (error) {
@@ -120,7 +123,6 @@ const OtpScreen = () => {
       if (error.code === 403) {
         setError('Mã không chính xác');
       }
-      // Alert.alert('Thông báo', error.message);
     }
   };
 

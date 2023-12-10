@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'https://serverapiecommercefashion.onrender.com/';
+export const API_BASE_URL = 'https://dai.tongdaihoidap.com/';
 
 export const getApiUrl = endpoint => API_BASE_URL + endpoint;
 

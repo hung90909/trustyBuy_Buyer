@@ -11,7 +11,7 @@ import React, {useEffect, useState} from 'react';
 import {CheckBox} from '@rneui/themed';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
-import {ADD_CART_API} from '../../config/urls';
+import {ADD_CART_API, API_BASE_URL} from '../../config/urls';
 import {apiGet} from '../../utils/utils';
 
 const CartScreen = () => {
@@ -27,8 +27,6 @@ const CartScreen = () => {
       console.log(error);
     }
   };
-
-   
 
   useEffect(() => {
     getCart();
@@ -53,16 +51,12 @@ const CartScreen = () => {
     const ids = selectedItems.map(item => item.itemId);
     if (ids.includes(item.itemId)) {
       // Nếu sản phẩm đã được chọn, loại bỏ khỏi danh sách
-      setSelectedItems(
-        selectedItems.filter(i => i.itemId !== item.itemId),
-      );
+      setSelectedItems(selectedItems.filter(i => i.itemId !== item.itemId));
     } else {
       // Nếu sản phẩm chưa được chọn, thêm vào danh sách
       setSelectedItems([...selectedItems, item]);
     }
   };
-
-
 
   useEffect(() => {
     setTotalPrice(
@@ -152,9 +146,7 @@ const CartScreen = () => {
                         borderRadius: 25,
                       }}
                       source={{
-                        uri:
-                          'https://b0aa-116-96-44-199.ngrok-free.app/' +
-                          item.avatar_shop,
+                        uri: `${API_BASE_URL}` + item.avatar_shop,
                       }}
                     />
                     <Text
@@ -178,8 +170,7 @@ const CartScreen = () => {
                         onValueChange={() => handleCheckboxChange(item)}
                         checked={
                           selectedItems.filter(
-                            selectedItem =>
-                              selectedItem.itemId === item.itemId,
+                            selectedItem => selectedItem.itemId === item.itemId,
                           ).length > 0
                         }
                         onPress={() => handleCheckboxChange(item)}
@@ -190,12 +181,11 @@ const CartScreen = () => {
                       resizeMode="stretch"
                       style={{
                         width: 90,
-                        height: 90, borderRadius:5
+                        height: 90,
+                        borderRadius: 5,
                       }}
                       source={{
-                        uri:
-                          'https://b0aa-116-96-44-199.ngrok-free.app/uploads/' +
-                          item.product_thumb,
+                        uri: `${API_BASE_URL}uploads/` + item.product_thumb,
                       }}
                     />
                     <View style={{marginStart: 15, width: 140}}>
@@ -300,10 +290,9 @@ const CartScreen = () => {
           </Text>
         </View>
         <TouchableOpacity
-        onPress={() =>{
-          nav.navigate("Checkouts",{item: selectedItems})
-    
-        }}
+          onPress={() => {
+            nav.navigate('Checkouts', {item: selectedItems});
+          }}
           style={{
             flex: 1,
             height: 60,
