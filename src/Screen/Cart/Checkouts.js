@@ -1,22 +1,14 @@
-import React, {useCallback, useEffect, useState, useRef} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Text,
   View,
-  Pressable,
-  TextInput,
-  StyleSheet,
-  SafeAreaView,
-  FlatList,
-  Image,
   TouchableOpacity,
+  StyleSheet,
+  Image,
+  FlatList,
 } from 'react-native';
-import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {Alert} from 'react-native';
-import {formatPrice, formatSoldSP} from '../Format';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {apiGet, apiPost} from '../../utils/utils';
 import {
   ADD_CART_API,
   API_BASE_URL,
@@ -26,40 +18,41 @@ import {
   ORDERS_API,
   PRODUCT_API,
 } from '../../config/urls';
-import {apiGet, apiPost} from '../../utils/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {ScrollView} from 'react-native-virtualized-view';
 
+const Checkouts = ({navigation}) => {
+  const nav = useNavigation();
+  const route = useRoute();
+  const {item, itemAddress, itemDiscount} = route.params;
+  const [address, setAddress] = useState({});
+  const [user, setUser] = useState({});
+  const [cartId, setCartId] = useState('');
 
-const Checkouts = ({ navigation }) => {
-    const nav = useNavigation()
-    const route = useRoute()
-    const { item, itemAddress, itemDiscount } = route.params
-    const [address, setAddress] = useState({})
-    const [user, setUser] = useState({})
-    const [cartid, setCartid] = useState('')
-    const formatPrice = priceSP => {
-        if (typeof priceSP === 'number') {
-            return `₫${priceSP.toLocaleString('vi-VN')}`;
-        } else {
-            return 'Giá không hợp lệ';
-        }
-    };
-    const totalPrice = (price, quantity) => {
-        return formatPrice(price * quantity)
+  console.log(item);
+  const formatPrice = priceSP => {
+    if (typeof priceSP === 'number') {
+      return `₫${priceSP.toLocaleString('vi-VN')}`;
+    } else {
+      return 'Giá không hợp lệ';
     }
+  };
+
+  const totalPrice = (price, quantity) => {
+    return formatPrice(price * quantity);
+  };
+
   const getCartID = async () => {
     try {
       const res = await apiGet(ADD_CART_API);
-      setCartid(res.message.cart._id);
+      setCartId(res.message.cart._id);
     } catch (error) {
       console.log(error);
     }
   };
 
   const totalPriceBill = () => {
-    // Tính tổng giá trị các sản phẩm trong đơn hàng
     const total = item?.reduce(
       (total, item) => item.price * item.quantity + total,
       0,
@@ -72,7 +65,8 @@ const Checkouts = ({ navigation }) => {
     }
     return formatPrice(total);
   };
-  const totalDisCount = () => {
+
+  const totalDiscount = () => {
     const total = item?.reduce(
       (total, item) => item.price * item.quantity + total,
       0,
@@ -89,6 +83,7 @@ const Checkouts = ({ navigation }) => {
       throw error;
     }
   };
+
   const getUser = async () => {
     try {
       const res = await apiGet(GET_ADDRESS_API);
@@ -100,7 +95,7 @@ const Checkouts = ({ navigation }) => {
 
   const onOrders = async () => {
     const data = {
-      cartId: cartid,
+      cartId: cartId,
       shop_order_ids: item.map(item => ({
         shopId: item.shopId,
         shop_discounts: [
@@ -123,10 +118,10 @@ const Checkouts = ({ navigation }) => {
     };
 
     try {
-      // console.log(data)
       const res = await apiPost(ORDERS_API, data);
       if (res.message) {
         console.log(res.message);
+        nav.navigate('XuLy');
       }
     } catch (error) {
       console.error(error);
@@ -159,115 +154,62 @@ const Checkouts = ({ navigation }) => {
               itemDiscount: itemDiscount,
             });
           }}
-          style={{
-            backgroundColor: 'white',
-            marginTop: 20,
-            padding: 10,
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <View>
-            <View style={{flexDirection: 'row'}}>
-              <Ionicons name="location-outline" size={20} />
-              <Text style={{marginLeft: 10}}>Địa chỉ nhận hàng</Text>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-              <Text style={{marginLeft: 30, width: '80%'}}>
-                {user.fullName} | 0{user.phoneNumber}
-              </Text>
-            </View>
-            <View style={{marginLeft: 30, width: '80%'}}>
-              <Text>
-                {itemAddress
-                  ? itemAddress.customAddress
-                  : address.customAddress}
-              </Text>
-            </View>
+          style={styles.addressSection}>
+          <View style={styles.addressDetails}>
+            <Ionicons name="location-outline" size={20} />
+            <Text style={{marginLeft: 10}}>Địa chỉ nhận hàng</Text>
           </View>
-
+          <View style={styles.addressInfo}>
+            <Text>
+              {user.fullName} | 0{user.phoneNumber}
+            </Text>
+            <Text>
+              {itemAddress ? itemAddress.customAddress : address.customAddress}
+            </Text>
+          </View>
           <Ionicons name="chevron-forward-outline" size={30} />
         </TouchableOpacity>
-        <View style={{marginTop: 10, paddingHorizontal: 10}}>
+
+        <View style={styles.productListSection}>
           <FlatList
             data={item}
             keyExtractor={item => item.itemId}
-            renderItem={({item}) => {
-              return (
-                <View
-                  style={{
-                    backgroundColor: 'white',
-                    marginTop: 8,
-                    padding: 10,
-                    borderWidth: 0.5,
-                    borderRadius: 10,
-                  }}>
-                  <View style={{flexDirection: 'row', marginTop: 10}}>
-                    <Image
-                      style={{
-                        width: 90,
-                        height: 80,
-                      }}
-                      source={{
-                        uri:
-                          'https://b0aa-116-96-44-199.ngrok-free.app/uploads/' +
-                          item.product_thumb,
-                      }}
-                    />
-                    <View style={{marginStart: 10}}>
-                      <Text
-                        style={{fontSize: 15, color: 'black', width: '70%'}}
-                        numberOfLines={1}>
-                        {item.name}
-                      </Text>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          width: '65%',
-                          marginTop: 40,
-                        }}>
-                        <Text>{formatPrice(item.price)}</Text>
-                        <Text>x{item.quantity}</Text>
-                      </View>
-                    </View>
-                  </View>
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      marginTop: 20,
-                      alignItems: 'center',
-                    }}>
-                    <Text style={{color: 'black'}}>Voucher khuyển mãi : </Text>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <Text style={{}}>Chọn hoặc nhập mã </Text>
-                      <Ionicons name="chevron-forward-outline" size={25} />
-                    </View>
-                  </TouchableOpacity>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      marginTop: 15,
-                    }}>
-                    <Text style={{fontWeight: 'bold', color: 'black'}}>
-                      Tổng số tiền:{' '}
-                    </Text>
-                    <Text style={{color: 'red', fontWeight: 'bold'}}>
-                      {totalPrice(item.price, item.quantity)}
-                    </Text>
+            renderItem={({item}) => (
+              <View style={styles.productItem}>
+                <Image
+                  style={styles.productImage}
+                  source={{
+                    uri: `${API_BASE_URL}uploads/` + item.product_thumb,
+                  }}
+                />
+                <View style={styles.productDetails}>
+                  <Text style={styles.productName} numberOfLines={1}>
+                    {item.name}
+                  </Text>
+                  <View style={styles.priceAndQuantity}>
+                    <Text>{formatPrice(item.price)}</Text>
+                    <Text>x{item.quantity}</Text>
                   </View>
                 </View>
-              );
-            }}
+                <TouchableOpacity style={styles.voucherContainer}>
+                  <Text style={styles.voucherText}>Voucher khuyến mãi : </Text>
+                  <View style={styles.voucherDetails}>
+                    <Text>Chọn hoặc nhập mã </Text>
+                    <Ionicons name="chevron-forward-outline" size={25} />
+                  </View>
+                </TouchableOpacity>
+                <View style={styles.totalPriceContainer}>
+                  <Text style={styles.totalPriceLabel}>Tổng số tiền: </Text>
+                  <Text style={styles.totalPrice}>
+                    {totalPrice(item.price, item.quantity)}
+                  </Text>
+                </View>
+              </View>
+            )}
           />
         </View>
-        <View
-          style={{
-            paddingHorizontal: 15,
-            marginTop: 20,
-          }}>
+
+        <View style={styles.paymentSection}>
           <TouchableOpacity
             onPress={() => {
               nav.navigate('ListDiscount', {
@@ -275,15 +217,9 @@ const Checkouts = ({ navigation }) => {
                 itemAddress: itemAddress,
               });
             }}
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            <Text style={{fontSize: 16, color: 'black'}}>
-              Voucher khuyến mãi
-            </Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            style={styles.discountContainer}>
+            <Text style={styles.discountText}>Voucher khuyến mãi</Text>
+            <View style={styles.discountDetails}>
               {itemDiscount ? (
                 <Text>Giảm {itemDiscount.discount_value}%</Text>
               ) : (
@@ -292,110 +228,54 @@ const Checkouts = ({ navigation }) => {
               <Ionicons name="chevron-forward-outline" size={25} />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              marginTop: 10,
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            <Text style={{fontSize: 16, color: 'black'}}>
-              Phương thức thanh toán
-            </Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text numberOfLines={1} style={{width: '60%'}}>
-                Thanh toán khi nhận hàng{' '}
+          <TouchableOpacity style={styles.paymentMethodContainer}>
+            <Text style={styles.paymentMethodText}>Phương thức thanh toán</Text>
+            <View style={styles.paymentMethodDetails}>
+              <Text numberOfLines={1} style={styles.paymentMethod}>
+                Thanh toán khi nhận hàng
               </Text>
               <Ionicons name="chevron-forward-outline" size={25} />
             </View>
           </TouchableOpacity>
         </View>
-        <View style={{paddingHorizontal: 15, marginTop: 20, marginBottom: 10}}>
-          <Text style={{fontSize: 18, fontWeight: 'bold', color: 'black'}}>
-            Chi tiết thanh toán
-          </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 10,
-              justifyContent: 'space-between',
-            }}>
-            <Text style={{fontSize: 16}}>Tổng tiền hàng: </Text>
-            <Text style={{fontSize: 16}}>{totalPriceBill()}</Text>
+
+        <View style={styles.paymentDetailsSection}>
+          <Text style={styles.paymentDetailsLabel}>Chi tiết thanh toán</Text>
+          <View style={styles.paymentDetail}>
+            <Text style={styles.paymentDetailLabel}>Tổng tiền hàng: </Text>
+            <Text style={styles.paymentDetailValue}>{totalPriceBill()}</Text>
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 10,
-              justifyContent: 'space-between',
-            }}>
-            <Text style={{fontSize: 16}}>Tổng khuyến mãi: </Text>
+          <View style={styles.paymentDetail}>
+            <Text style={styles.paymentDetailLabel}>Tổng khuyến mãi: </Text>
             {itemDiscount ? (
-              <Text style={{fontSize: 16}}>{totalDisCount()}</Text>
+              <Text style={styles.paymentDetailValue}>{totalDiscount()}</Text>
             ) : (
-              <Text style={{fontSize: 16}}>0</Text>
+              <Text style={styles.paymentDetailValue}>0</Text>
             )}
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 10,
-              justifyContent: 'space-between',
-            }}>
-            <Text style={{fontSize: 16}}>Tổng tiền hàng: </Text>
-            <Text style={{fontSize: 16, color: 'black', fontWeight: 'bold'}}>
-              {totalPriceBill()}
-            </Text>
+          <View style={styles.paymentDetail}>
+            <Text style={styles.paymentDetailLabel}>Tổng tiền hàng: </Text>
+            <Text style={styles.paymentDetailValue}>{totalPriceBill()}</Text>
           </View>
         </View>
       </ScrollView>
-      <View
-        style={{
-          height: 60,
-          backgroundColor: 'white',
-          borderTopWidth: 1,
-          alignItems: 'center',
-          flexDirection: 'row',
-        }}>
-        <View style={{flexDirection: 'row', marginHorizontal: 10}}>
-          <Text
-            style={{
-              fontSize: 13,
-              color: 'black',
-              fontSize: 16,
-              fontWeight: 'bold',
-            }}>
-            Tổng thanh toán:{' '}
-          </Text>
-          <Text
-            style={{
-              marginLeft: 5,
-              color: 'red',
-              fontSize: 16,
-              fontWeight: 'bold',
-            }}>
-            {totalPriceBill()}
-          </Text>
+
+      <View style={styles.footer}>
+        <View style={styles.totalPayment}>
+          <Text style={styles.totalPaymentLabel}>Tổng thanh toán: </Text>
+          <Text style={styles.totalPaymentValue}>{totalPriceBill()}</Text>
         </View>
         <TouchableOpacity
           onPress={() => {
             onOrders();
           }}
-          style={{
-            flex: 1,
-            height: 60,
-            backgroundColor: 'black',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text style={{color: 'white', fontWeight: 'bold'}}>Đặt hàng</Text>
+          style={styles.orderButton}>
+          <Text style={styles.orderButtonText}>Đặt hàng</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
-        }
-  
-
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -409,5 +289,156 @@ const styles = StyleSheet.create({
     elevation: 2,
     paddingHorizontal: 15,
   },
+  addressSection: {
+    backgroundColor: 'white',
+    marginTop: 20,
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addressDetails: {
+    flexDirection: 'row',
+  },
+  addressInfo: {
+    marginLeft: 30,
+    width: '80%',
+  },
+  productItem: {
+    backgroundColor: 'white',
+    marginTop: 8,
+    padding: 10,
+    borderWidth: 0.5,
+    borderRadius: 10,
+  },
+  productImage: {
+    width: 90,
+    height: 80,
+  },
+  productDetails: {
+    marginStart: 10,
+  },
+  productName: {
+    fontSize: 15,
+    color: 'black',
+    width: '70%',
+  },
+  priceAndQuantity: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '65%',
+    marginTop: 40,
+  },
+  voucherContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  voucherDetails: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  totalPriceContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 15,
+  },
+  totalPriceLabel: {
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  totalPrice: {
+    color: 'red',
+    fontWeight: 'bold',
+  },
+  discountContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  discountText: {
+    fontSize: 16,
+    color: 'black',
+  },
+  discountDetails: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  paymentMethodContainer: {
+    flexDirection: 'row',
+    marginTop: 10,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  paymentMethodText: {
+    fontSize: 16,
+    color: 'black',
+  },
+  paymentMethodDetails: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  paymentMethod: {
+    width: '60%',
+  },
+  paymentDetailsSection: {
+    paddingHorizontal: 15,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  paymentDetailsLabel: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  paymentDetail: {
+    flexDirection: 'row',
+    marginTop: 10,
+    justifyContent: 'space-between',
+  },
+  paymentDetailLabel: {
+    fontSize: 16,
+  },
+  paymentDetailValue: {
+    fontSize: 16,
+    color: 'black',
+    fontWeight: 'bold',
+  },
+  footer: {
+    height: 60,
+    backgroundColor: 'white',
+    borderTopWidth: 1,
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  totalPayment: {
+    flexDirection: 'row',
+    marginHorizontal: 10,
+  },
+  totalPaymentLabel: {
+    fontSize: 13,
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  totalPaymentValue: {
+    marginLeft: 5,
+    color: 'red',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  orderButton: {
+    flex: 1,
+    height: 60,
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  orderButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 });
+
 export default Checkouts;

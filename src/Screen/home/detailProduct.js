@@ -103,8 +103,10 @@ const DetailProducts = ({route, navigation}) => {
           selectedColor,
           selectedSize,
         );
-
+        const data = await AsyncStorage.getItem('token');
+        const userID = JSON.parse(data).userId;
         const orderItem = {
+          userId: userID,
           product: {
             productId: productId,
             shopId: productDetail.shop_id,
@@ -114,6 +116,7 @@ const DetailProducts = ({route, navigation}) => {
             color: selectedColor,
             size: selectedSize,
             thumb: productDetail.product_thumb,
+            avatarShop: productDetail.shop_avatar,
           },
         };
         console.log(quantity);
