@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   FlatList,
+  Alert,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {apiGet, apiPost} from '../../utils/utils';
@@ -21,6 +22,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {ScrollView} from 'react-native-virtualized-view';
+import {formatPrice} from '../Format';
 
 const Checkouts = ({navigation}) => {
   const nav = useNavigation();
@@ -30,37 +32,37 @@ const Checkouts = ({navigation}) => {
   const [user, setUser] = useState({});
   const [cartId, setCartId] = useState('');
 
-const Checkouts = ({ navigation }) => {
-    const nav = useNavigation()
-    const route = useRoute()
-    const { item, itemAddress, itemDiscount } = route.params
-    const [address, setAddress] = useState({})
-    const [user, setUser] = useState({})
-    const [cartid, setCartid] = useState('')
-    const [userId , setUserId] = useState('')
-    const [totalProduct , setTotalProduct] = useState('')
+  const Checkouts = ({navigation}) => {
+    const nav = useNavigation();
+    const route = useRoute();
+    const {item, itemAddress, itemDiscount} = route.params;
+    const [address, setAddress] = useState({});
+    const [user, setUser] = useState({});
+    const [cartid, setCartid] = useState('');
+    const [userId, setUserId] = useState('');
+    const [totalProduct, setTotalProduct] = useState('');
 
     async function getToken() {
-        const token = await AsyncStorage.getItem('token');
-        const tokenUser = token ? JSON.parse(token) : null;
-        setUserId(tokenUser.userId)
-      }
-    
-      useEffect(() => {
-        getToken();
-      }, []);
+      const token = await AsyncStorage.getItem('token');
+      const tokenUser = token ? JSON.parse(token) : null;
+      setUserId(tokenUser.userId);
+    }
+
+    useEffect(() => {
+      getToken();
+    }, []);
 
     const formatPrice = priceSP => {
-        if (typeof priceSP === 'number') {
-            return `₫${priceSP.toLocaleString('vi-VN')}`;
-        } else {
-            return 'Giá không hợp lệ';
-        }
+      if (typeof priceSP === 'number') {
+        return `₫${priceSP.toLocaleString('vi-VN')}`;
+      } else {
+        return 'Giá không hợp lệ';
+      }
     };
     const totalPrice = (price, quantity) => {
-        setTotalProduct(price * quantity)
-        return formatPrice(price * quantity)
-    }
+      setTotalProduct(price * quantity);
+      return formatPrice(price * quantity);
+    };
   };
 
   const totalPrice = (price, quantity) => {
@@ -119,46 +121,45 @@ const Checkouts = ({ navigation }) => {
 
   const onOrders = async () => {
     const data = {
-    //    userId:"654c8a081f10540692bdc998",
-        cartId: cartid,
-        shop_order_ids: item.map(item => ({
-            shopId: item.shopId,
-            shop_discounts: [
-                {
-                    shop_id: itemDiscount?.discount_shopId,
-                    discountId: itemDiscount?._id,
-                    codeId: itemDiscount?.discount_code,
-                },
-            ],
-            item_products: [
-                {
-                    price: item.price,
-                    quantity: item.quantity,
-                    productId: item.productId,
-                    color: item.color,
-                    size: item.size,
-                },
-            ],
-        })),
+      //    userId:"654c8a081f10540692bdc998",
+      cartId: cartId,
+      shop_order_ids: item.map(item => ({
+        shopId: item.shopId,
+        shop_discounts: [
+          {
+            shop_id: itemDiscount?.discount_shopId,
+            discountId: itemDiscount?._id,
+            codeId: itemDiscount?.discount_code,
+          },
+        ],
+        item_products: [
+          {
+            price: item.price,
+            quantity: item.quantity,
+            productId: item.productId,
+            color: item.color,
+            size: item.size,
+          },
+        ],
+      })),
     };
-
     try {
-        const res = await apiPost(ORDERS_API, data);
-        // Kiểm tra xem có thông báo từ server hay không
-        if (res.message) {
-          //  console.log(res.message);
-            // Hiển thị thông báo cho người dùng, ví dụ sử dụng alert
-            Alert.alert("Thông báo",res.message);
-        }
+      const res = await apiPost(ORDERS_API, data);
+      // Kiểm tra xem có thông báo từ server hay không
+      if (res.message) {
+        //  console.log(res.message);
+        // Hiển thị thông báo cho người dùng, ví dụ sử dụng alert
+        Alert.alert('Thông báo', res.message);
+      }
     } catch (error) {
-        // Nếu có lỗi, lấy thông báo từ đối tượng lỗi và hiển thị cho người dùng
-        const errorMessage = error.message || 'Có lỗi xảy ra khi xử lý đơn hàng.';
-       // console.error(errorMessage);
-        // Hiển thị thông báo lỗi cho người dùng, ví dụ sử dụng alert
-        Alert.alert("Thông báo loi",errorMessage);
+      // Nếu có lỗi, lấy thông báo từ đối tượng lỗi và hiển thị cho người dùng
+      const errorMessage = error.message || 'Có lỗi xảy ra khi xử lý đơn hàng.';
+      // console.error(errorMessage);
+      // Hiển thị thông báo lỗi cho người dùng, ví dụ sử dụng alert
+      Alert.alert('Thông báo loi', errorMessage);
+      throw error;
     }
-};
-
+  };
 
   useEffect(() => {
     getCartID();
@@ -247,7 +248,7 @@ const Checkouts = ({ navigation }) => {
               nav.navigate('ListDiscount', {
                 itemProduct: item,
                 itemAddress: itemAddress,
-                totalProduct:totalProduct
+                totalProduct: totalProduct,
               });
             }}
             style={styles.discountContainer}>
