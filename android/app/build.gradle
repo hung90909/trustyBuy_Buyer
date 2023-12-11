@@ -1,5 +1,8 @@
 apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
+// Firebase
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -120,8 +123,14 @@ dependencies {
     }
     // Khai báo hiện icon tại đây
     implementation project(':react-native-vector-icons')
+    // Khai báo notifi
+    implementation project(':react-native-notifications')
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
 // Khai báo hiện icon tại đây
 apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
+
+project.ext.react = [
+    enableHermes: true,  // true là sử dụng Hermes, false là không sử dụng
+]

@@ -1,24 +1,30 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useState} from 'react';
 import {Modal, View, TouchableOpacity, StyleSheet, Text} from 'react-native';
 import {LOGOUT_API} from '../../config/urls';
 import {apiDelete} from '../../utils/utils';
 import socketServices from '../../utils/socketService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const Logout = ({visible, onClose}) => {
   const navigation = useNavigation();
+  const [isButtonDisabled, setButtonDisabled] = useState(false);
 
   const handlerLogout = async () => {
+    setButtonDisabled(true);
     try {
       await apiDelete(`${LOGOUT_API}`);
       socketServices.emit('logout');
       AsyncStorage.clear();
+      setButtonDisabled(false);
       navigation.replace('Login2');
     } catch (error) {
+      setButtonDisabled(false);
       console.log(error);
     }
   };
+
   return (
     <Modal
       visible={visible}
@@ -63,6 +69,11 @@ const Logout = ({visible, onClose}) => {
           </View>
         </View>
       </View>
+      <Spinner
+        visible={isButtonDisabled}
+        textContent={'Đang đăng xuất...'}
+        textStyle={{color: '#FFF'}}
+      />
     </Modal>
   );
 };
