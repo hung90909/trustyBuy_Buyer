@@ -165,7 +165,7 @@ const Login2 = ({navigation}) => {
         <Text>Chưa có tài khoản? </Text>
         <TouchableOpacity
           onPress={() => {
-            nav.navigate('Register');
+            navigation.navigate('Register');
           }}>
           <Text style={styles.registerLink}>Đăng ký</Text>
         </TouchableOpacity>
