@@ -13,7 +13,7 @@ import { CheckBox } from '@rneui/themed';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { ADD_CART_API, API_BASE_URL } from '../../config/urls';
-import { apiGet, getItem } from '../../utils/utils';
+import { apiDelete, apiGet, getItem } from '../../utils/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CartScreen = () => {
@@ -72,8 +72,15 @@ const CartScreen = () => {
     }
   };
 
-  const onDeleteItemCart = (productID) =>{
-     
+  const onDeleteItemCart = async (productID) =>{
+      try{
+         await apiDelete(ADD_CART_API,{
+          productID
+        });
+       getCart()
+      }catch(err){
+        console.log(err);
+      }
   }
 
 

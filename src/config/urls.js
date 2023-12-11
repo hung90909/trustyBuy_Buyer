@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'https://dai.tongdaihoidap.com/';
+export const API_BASE_URL = 'https://a9cb-123-24-162-159.ngrok-free.app/';
 
 export const getApiUrl = endpoint => API_BASE_URL + endpoint;
 
