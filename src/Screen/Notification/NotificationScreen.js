@@ -8,37 +8,32 @@ import {
   Image,
   FlatList,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
-import { useNavigation } from '@react-navigation/native';
-import { thongbao } from '../data';
-import { apiGet } from '../../utils/utils';
-import { NOTIFICATION_API } from '../../config/urls';
+import {useNavigation} from '@react-navigation/native';
+import {apiGet} from '../../utils/utils';
+import {NOTIFICATION_API} from '../../config/urls';
 
 const NotificationScreen = () => {
   const navigation = useNavigation();
-  const [listNotification , setListNotification] = useState()
+  const [listNotification, setListNotification] = useState();
 
   const getNotification = async () => {
     try {
-       const res = await apiGet(NOTIFICATION_API)
-       setListNotification(res.message)
+      const res = await apiGet(NOTIFICATION_API);
+      console.log(res);
+      setListNotification(res?.message.reverse());
     } catch (err) {
       console.log(err);
     }
-  }
-  useEffect(()=>{
-    getNotification()
-  },[])
+  };
+  useEffect(() => {
+    getNotification();
+  }, []);
 
-  const renderItem = ({ item }) => {
-    const { day, month, year, hour, minute, image, title, content } = item;
-
-    const notificationDate = moment(
-      `${day}/${month}/${year} ${hour}:${minute}`,
-      'DD/MM/YYYY HH:mm',
-    );
+  const renderItem = ({item}) => {
+    const notificationDate = moment(item?.createdAt);
 
     const now = moment();
 
@@ -76,12 +71,14 @@ const NotificationScreen = () => {
       <TouchableOpacity style={styles.notificationItem}>
         <Image
           resizeMode="cover"
-          source={require("../../Resource/icon/notification-bell.png")}
+          source={require('../../Resource/icon/notification-bell.png')}
           style={styles.notificationImage}
         />
         <View style={styles.notificationTextContainer}>
           <Text style={styles.notificationTitle}>{item.noti_content}</Text>
-          <Text style={styles.notificationContent}>{item.noti_options.product_name}</Text>
+          <Text style={styles.notificationContent}>
+            {item.noti_options.product_name}
+          </Text>
           <Text style={styles.notificationTime}>{timeAgo}</Text>
         </View>
       </TouchableOpacity>

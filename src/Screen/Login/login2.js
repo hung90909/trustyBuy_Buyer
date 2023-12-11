@@ -12,22 +12,22 @@ import {
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Feather from 'react-native-vector-icons/Feather';
-import {useNavigation} from '@react-navigation/native';
 import {checkEmail, checkPassword} from '../../compoment/checkValidate';
 import {Login_API} from '../../config/urls';
 import {setItem} from '../../utils/utils';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const {width, height} = Dimensions.get('window');
 
-const Login2 = () => {
+const Login2 = ({navigation}) => {
   const [errorEmail, setErrorEmail] = useState('');
   const [errorPassword, setErrorPassword] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const nav = useNavigation();
+  const [isButtonDisabled, setButtonDisabled] = useState(false);
 
   const checkValidateLogin = async () => {
     try {
@@ -52,6 +52,7 @@ const Login2 = () => {
         return;
       }
 
+      setButtonDisabled(true);
       const response = await axios.post(Login_API, {
         email,
         password,
@@ -64,12 +65,15 @@ const Login2 = () => {
         await setItem('token', accessToken);
         await AsyncStorage.setItem('email', email);
         await AsyncStorage.setItem('password', password);
-        nav.replace('Main');
+        setButtonDisabled(false);
+        navigation.replace('Main');
       } else {
+        setButtonDisabled(false);
         // Handle the case where the token is not available
         console.error('Access token not received from the server');
       }
     } catch (error) {
+      setButtonDisabled(false);
       // Handle errors
       if (error.response) {
         if (error.response.status === 403) {
@@ -161,11 +165,16 @@ const Login2 = () => {
         <Text>Chưa có tài khoản? </Text>
         <TouchableOpacity
           onPress={() => {
-            nav.navigate('Register');
+            navigation.navigate('Register');
           }}>
           <Text style={styles.registerLink}>Đăng ký</Text>
         </TouchableOpacity>
       </View>
+      <Spinner
+        visible={isButtonDisabled}
+        textContent={'Loading...'}
+        textStyle={{color: '#FFF'}}
+      />
     </View>
   );
 };

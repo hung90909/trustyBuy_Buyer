@@ -22,9 +22,8 @@ import Listproducts from './Listproducts';
 import {API_BASE_URL, PRODUCT_API} from '../../config/urls';
 import {apiGet, apiPost} from '../../utils/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {changeChat} from '../../redux/actions/chat';
-import {chatApi} from '../InfoShop/ShopInformation';
 import {useSelector} from 'react-redux';
+import {chatApi} from '../../redux/actions/chat';
 const {width} = Dimensions.get('window');
 const {height} = Dimensions.get('window');
 
@@ -103,8 +102,10 @@ const DetailProducts = ({route, navigation}) => {
           selectedColor,
           selectedSize,
         );
-
+        const data = await AsyncStorage.getItem('token');
+        const userID = JSON.parse(data).userId;
         const orderItem = {
+          userId: userID,
           product: {
             productId: productId,
             shopId: productDetail.shop_id,
@@ -114,6 +115,7 @@ const DetailProducts = ({route, navigation}) => {
             color: selectedColor,
             size: selectedSize,
             thumb: productDetail.product_thumb,
+            avatarShop: productDetail.shop_avatar,
           },
         };
         console.log(quantity);
