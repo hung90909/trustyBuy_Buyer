@@ -74,10 +74,10 @@ const Tab = createBottomTabNavigator();
 
 const BotBottomTabNavigator = () => {
   const data = useSelector(state => state?.chat?.chatData);
-  const notificationCount = data.reduce(
-    (count, item) => count + item.chat?.isRead?.user?.countNew,
-    0,
-  );
+  const notificationCount = data
+    ? data.reduce((count, item) => count + item.chat?.isRead?.user?.countNew, 0)
+    : 0;
+
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({

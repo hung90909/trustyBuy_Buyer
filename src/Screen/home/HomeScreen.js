@@ -21,7 +21,7 @@ import {useSelector} from 'react-redux';
 const HomeScreen = ({navigation}) => {
   const userAccount = useSelector(state => state?.user?.userData);
   const notifiCount = useSelector(state => state?.chat?.notifi);
-
+  const account = useSelector(state => state?.user?.userData);
   useEffect(() => {
     fetchData();
   }, []);
@@ -48,7 +48,7 @@ const HomeScreen = ({navigation}) => {
               <Image
                 style={styles.profileImage}
                 source={{
-                  uri: `${API_BASE_URL}${userAccount?.information?.avatar}`,
+                  uri: `${API_BASE_URL}${userAccount?.avatar}`,
                 }}
                 resizeMode="contain"
               />
