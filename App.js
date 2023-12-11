@@ -74,13 +74,10 @@ const Tab = createBottomTabNavigator();
 
 const BotBottomTabNavigator = () => {
   const data = useSelector(state => state?.chat?.chatData);
-  const notificationCount =
-    data > 0
-      ? data.reduce(
-          (count, item) => count + item.chat?.isRead?.user?.countNew,
-          0,
-        )
-      : null;
+  const notificationCount = data.reduce(
+    (count, item) => count + item.chat?.isRead?.user?.countNew,
+    0,
+  );
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -108,7 +105,7 @@ const BotBottomTabNavigator = () => {
         name="ChatScreen"
         component={ChatScreen}
         options={{
-          tabBarBadge: notificationCount,
+          tabBarBadge: notificationCount > 0 ? notificationCount : null,
           title: 'Chat',
         }}
       />

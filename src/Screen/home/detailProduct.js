@@ -22,9 +22,8 @@ import Listproducts from './Listproducts';
 import {API_BASE_URL, PRODUCT_API} from '../../config/urls';
 import {apiGet, apiPost} from '../../utils/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {changeChat} from '../../redux/actions/chat';
-import {chatApi} from '../InfoShop/ShopInformation';
 import {useSelector} from 'react-redux';
+import {chatApi} from '../../redux/actions/chat';
 const {width} = Dimensions.get('window');
 const {height} = Dimensions.get('window');
 

@@ -21,6 +21,7 @@ import {Alert} from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {apiGet} from '../../utils/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {saveUserData} from '../../redux/actions/user';
 
 const data = [
   {label: 'Nam', value: '1'},
@@ -127,6 +128,7 @@ const EditProfile = () => {
       })
       .then(e => {
         console.log(e);
+        saveUserData();
         navigation.goBack();
       });
   };

@@ -1,29 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import Logout from './Logout';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { API_BASE_URL, USER_API } from '../../config/urls';
-import { apiGet } from '../../utils/utils';
+import {API_BASE_URL} from '../../config/urls';
+import {useSelector} from 'react-redux';
 
-const ProfileScreen = () => {
-  const [user, setUser] = useState({});
-
-  const fetchData = async () => {
-    try {
-      const res = await apiGet(`${USER_API}/getProfile`);
-      setUser(res.message.checkUser.information);
-      console.log(res.message.checkUser.information);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const nav = useNavigation();
+const ProfileScreen = ({navigation}) => {
+  const account = useSelector(state => state?.user?.userData);
+  console.log(account);
   const [showLogout, setShowLogout] = useState(false);
+
   const features = [
     {
       name: 'Edit profile',
@@ -38,8 +23,8 @@ const ProfileScreen = () => {
       image: require('../../Resource/icon/notification.png'),
     },
     {
-      name: "Mã giảm giá",
-      image: require("../../Resource/icon/discount.png"),
+      name: 'Mã giảm giá',
+      image: require('../../Resource/icon/discount.png'),
     },
     {
       name: 'Message',
@@ -57,22 +42,22 @@ const ProfileScreen = () => {
   const handleFeatureClick = featureName => {
     switch (featureName) {
       case 'Edit profile':
-        nav.navigate('EditProfile');
+        navigation.navigate('EditProfile');
         break;
       case 'Address':
-        nav.navigate('AdressScreen');
+        navigation.navigate('AdressScreen');
         break;
       case 'Change password':
-        nav.navigate('ChangePassword');
+        navigation.navigate('ChangePassword');
         break;
       case 'Mã giảm giá':
-         nav.navigate("listDiscount")
+        navigation.navigate('listDiscount');
         break;
       case 'Notification':
-        nav.navigate('NotificationScreen');
+        navigation.navigate('NotificationScreen');
         break;
       case 'Message':
-        nav.navigate('ChatScreen');
+        navigation.navigate('ChatScreen');
         break;
       case 'Setting':
         console.log('Setting');
@@ -86,12 +71,12 @@ const ProfileScreen = () => {
   return (
     <View style={styles.container_profile}>
       <View style={styles.header_profile}>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{flexDirection: 'row'}}>
           <Image
             source={require('../../Resource/Image/shopping-bag.png')}
-            style={[styles.icon_profile, { marginRight: 10 }]}
+            style={[styles.icon_profile, {marginRight: 10}]}
           />
-          <Text style={{ color: 'black', fontWeight: '500', fontSize: 18 }}>
+          <Text style={{color: 'black', fontWeight: '500', fontSize: 18}}>
             Profile
           </Text>
         </View>
@@ -105,13 +90,13 @@ const ProfileScreen = () => {
           <Image
             style={styles.avatar}
             source={{
-              uri: `${API_BASE_URL}${user?.avatar}`,
+              uri: `${API_BASE_URL}${account?.avatar}`,
             }}
             resizeMode="contain"
           />
           <TouchableOpacity
             style={styles.edit_icon_container}
-            onPress={() => { }}>
+            onPress={() => {}}>
             <Image
               source={require('../../Resource/icon/edit-text.png')}
               style={styles.edit_icon}
@@ -127,39 +112,41 @@ const ProfileScreen = () => {
             marginTop: 10,
             marginBottom: 5,
           }}>
-          {user?.fullName}
+          {account?.fullName}
         </Text>
-        <Text style={{ fontSize: 13, color: 'black' }}>0{user.phoneNumber}</Text>
+        <Text style={{fontSize: 13, color: 'black'}}>
+          0{account.phoneNumber}
+        </Text>
       </View>
       {features.map((item, index) => (
         <TouchableOpacity
           key={index}
           onPress={() => handleFeatureClick(item.name)}>
           <View key={index} style={styles.feature_item}>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{flexDirection: 'row'}}>
               <Image
                 source={item.image}
-                style={[styles.icon_profile, { marginRight: 15 }]}
+                style={[styles.icon_profile, {marginRight: 15}]}
               />
-              <Text style={{ color: 'black', fontWeight: '500', fontSize: 15 }}>
+              <Text style={{color: 'black', fontWeight: '500', fontSize: 15}}>
                 {item.name}
               </Text>
             </View>
             <Image
               source={require('../../Resource/icon/next.png')}
-              style={{ width: 15, height: 15 }}
+              style={{width: 15, height: 15}}
             />
           </View>
         </TouchableOpacity>
       ))}
       <TouchableOpacity onPress={() => setShowLogout(!showLogout)}>
         <View style={styles.feature_item}>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{flexDirection: 'row'}}>
             <Image
               source={require('../../Resource/icon/logout.png')}
-              style={[styles.icon_profile, { marginRight: 15 }]}
+              style={[styles.icon_profile, {marginRight: 15}]}
             />
-            <Text style={{ color: 'red', fontWeight: '500', fontSize: 16 }}>
+            <Text style={{color: 'red', fontWeight: '500', fontSize: 16}}>
               Logout
             </Text>
           </View>

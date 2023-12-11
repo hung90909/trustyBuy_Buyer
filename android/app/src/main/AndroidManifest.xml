@@ -1,6 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Cấp quyền camera -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Cấp quyền notifi -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
       android:name=".MainApplication"

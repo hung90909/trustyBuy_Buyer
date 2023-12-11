@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -14,32 +14,17 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Slideshow from './Slideshow';
 import Listproducts from './Listproducts';
 import Listcategorys from './Listcategorys';
-import {saveChatData} from '../../redux/actions/chat';
-import {API_BASE_URL, USER_API} from '../../config/urls';
-import {apiGet} from '../../utils/utils';
-import socketServices from '../../utils/socketService';
-import {useIsFocused} from '@react-navigation/native';
-const HomeScreen = ({navigation}) => {
-  const [account, setAccount] = useState();
+import {API_BASE_URL} from '../../config/urls';
+import {fetchData} from '../../redux/actions/socket';
+import {useSelector} from 'react-redux';
 
-  const getApi = async () => {
-    try {
-      const res = await apiGet(`${USER_API}/getProfile`);
-      const data = res?.message?.checkUser;
-      setAccount(data);
-      socketServices.emit('new-user-add', data?._id);
-      await saveChatData();
-      socketServices.on('newMessage', async () => {
-        await saveChatData();
-      });
-    } catch (error) {
-      console.log('Post api: ', error.message);
-    }
-  };
+const HomeScreen = ({navigation}) => {
+  const userAccount = useSelector(state => state?.user?.userData);
+  const notifiCount = useSelector(state => state?.chat?.notifi);
 
   useEffect(() => {
-    getApi();
-  }, [useIsFocused()]);
+    fetchData();
+  }, []);
 
   const navigateToProfile = () => {
     navigation.navigate('Profile');
@@ -62,25 +47,47 @@ const HomeScreen = ({navigation}) => {
             <Pressable style={styles.profileButton} onPress={navigateToProfile}>
               <Image
                 style={styles.profileImage}
-                source={{uri: `${API_BASE_URL}${account?.information?.avatar}`}}
+                source={{
+                  uri: `${API_BASE_URL}${userAccount?.information?.avatar}`,
+                }}
                 resizeMode="contain"
               />
             </Pressable>
             <View style={styles.profileInfo}>
               <Text style={styles.profileText}>Xin chào 👋</Text>
               <Text style={styles.profileTextBold}>
-                {account?.information?.fullName}
+                {userAccount?.information?.fullName}
               </Text>
             </View>
           </View>
           <View style={styles.headerIcons}>
-            <Ionicons
-              style={styles.headerIcon}
-              name="notifications-outline"
-              size={26}
-              color="#1B2028"
-              onPress={navigateToNotification}
-            />
+            <Pressable>
+              <Ionicons
+                style={styles.headerIcon}
+                name="notifications-outline"
+                size={26}
+                color="#1B2028"
+                onPress={navigateToNotification}
+              />
+              {notifiCount > 0 && (
+                <View
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    backgroundColor: 'red',
+                    borderRadius: 10,
+                    width: 20,
+                    height: 20,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text style={{color: 'white', fontSize: 12}}>
+                    {notifiCount > 9 ? '9+' : notifiCount}
+                  </Text>
+                </View>
+              )}
+            </Pressable>
             <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
               <Ionicons name="cart-outline" size={26} color="#1B2028" />
             </TouchableOpacity>
