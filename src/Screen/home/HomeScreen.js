@@ -50,13 +50,13 @@ const HomeScreen = ({navigation}) => {
                 source={{
                   uri: `${API_BASE_URL}${userAccount?.avatar}`,
                 }}
-                resizeMode="contain"
+                resizeMode="cover"
               />
             </Pressable>
             <View style={styles.profileInfo}>
               <Text style={styles.profileText}>Xin chào 👋</Text>
               <Text style={styles.profileTextBold}>
-                {userAccount?.information?.fullName}
+                {userAccount?.fullName}
               </Text>
             </View>
           </View>
