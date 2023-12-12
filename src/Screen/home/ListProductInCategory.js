@@ -15,16 +15,22 @@ import {useNavigation} from '@react-navigation/native';
 
 const ListProductInCategory = ({route}) => {
   const navigation = useNavigation();
-  const {categoryId} = route.params;
+  const {categoryId, data} = route.params;
   const [productList, setProductList] = useState([]);
-
+  console.log(data);
   useEffect(() => {
     const getProduct = async () => {
       try {
         const response = await apiGet(
           `${PRODUCT_API}/ofCategory/${categoryId}`,
         );
-        setProductList(response?.message.allProduct || []);
+        const sortedProducts = response?.message.allProduct.sort((a, b) => {
+          const dateA = new Date(a.updatedAt);
+          const dateB = new Date(b.updatedAt);
+          return dateB - dateA;
+        });
+
+        setProductList(sortedProducts);
       } catch (error) {
         console.error(error.response?.data);
       }

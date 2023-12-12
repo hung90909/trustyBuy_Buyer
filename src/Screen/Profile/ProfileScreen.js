@@ -88,9 +88,6 @@ const ProfileScreen = ({navigation}) => {
           }}>
           {account?.fullName}
         </Text>
-        <Text style={{fontSize: 13, color: 'black'}}>
-          0{account.phoneNumber}
-        </Text>
       </View>
       {features.map((item, index) => (
         <TouchableOpacity
