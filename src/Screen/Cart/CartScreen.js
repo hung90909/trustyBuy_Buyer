@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -63,15 +64,24 @@ const CartScreen = () => {
 
   const onDeleteItemCart = async productId => {
     try {
-      console.log(productId);
-      await apiPost(`${ADD_CART_API}/delete`, {
+      const res = await apiPost(ADD_CART_API + '/delete', {
         productId,
       });
+
       getCart();
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
     }
   };
+
+  useEffect(() => {
+    setTotalPrice(
+      selectedItems.reduce(
+        (total, item) => item.price * item.quantity + total,
+        0,
+      ),
+    );
+  }, [isUpdatePrice]);
 
   const handleDecreaseQuantity = itemId => {
     console.log(itemId);
@@ -197,7 +207,6 @@ const CartScreen = () => {
                     uri: `${API_BASE_URL}uploads/` + item.product_thumb,
                   }}
                 />
-                <Text></Text>
                 <View style={{marginStart: 15, width: 100}}>
                   <Text numberOfLines={2}>{item.name}</Text>
                   <View style={{flexDirection: 'row', marginTop: 5}}>
@@ -310,7 +319,11 @@ const CartScreen = () => {
         </View>
         <TouchableOpacity
           onPress={() => {
-            nav.navigate('Checkouts', {item: selectedItems});
+            if (selectedItems.length > 0) {
+              nav.navigate('Checkout', {orderDetails: selectedItems});
+            } else {
+              ToastAndroid.show('Vui lòng chọn sản phẩm', ToastAndroid.LONG);
+            }
           }}
           style={{
             flex: 1,
