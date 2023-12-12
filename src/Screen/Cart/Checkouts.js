@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -31,39 +31,17 @@ const Checkouts = ({navigation}) => {
   const [address, setAddress] = useState({});
   const [user, setUser] = useState({});
   const [cartId, setCartId] = useState('');
+  const [userId, setUserId] = useState('');
 
-  const Checkouts = ({navigation}) => {
-    const nav = useNavigation();
-    const route = useRoute();
-    const {item, itemAddress, itemDiscount} = route.params;
-    const [address, setAddress] = useState({});
-    const [user, setUser] = useState({});
-    const [cartid, setCartid] = useState('');
-    const [userId, setUserId] = useState('');
-    const [totalProduct, setTotalProduct] = useState('');
+  async function getToken() {
+    const token = await AsyncStorage.getItem('token');
+    const tokenUser = token ? JSON.parse(token) : null;
+    setUserId(tokenUser.userId);
+  }
 
-    async function getToken() {
-      const token = await AsyncStorage.getItem('token');
-      const tokenUser = token ? JSON.parse(token) : null;
-      setUserId(tokenUser.userId);
-    }
-
-    useEffect(() => {
-      getToken();
-    }, []);
-
-    const formatPrice = priceSP => {
-      if (typeof priceSP === 'number') {
-        return `₫${priceSP.toLocaleString('vi-VN')}`;
-      } else {
-        return 'Giá không hợp lệ';
-      }
-    };
-    const totalPrice = (price, quantity) => {
-      setTotalProduct(price * quantity);
-      return formatPrice(price * quantity);
-    };
-  };
+  useEffect(() => {
+    getToken();
+  }, []);
 
   const totalPrice = (price, quantity) => {
     return formatPrice(price * quantity);
@@ -121,7 +99,6 @@ const Checkouts = ({navigation}) => {
 
   const onOrders = async () => {
     const data = {
-      //    userId:"654c8a081f10540692bdc998",
       cartId: cartId,
       shop_order_ids: item.map(item => ({
         shopId: item.shopId,
@@ -145,17 +122,11 @@ const Checkouts = ({navigation}) => {
     };
     try {
       const res = await apiPost(ORDERS_API, data);
-      // Kiểm tra xem có thông báo từ server hay không
       if (res.message) {
-        //  console.log(res.message);
-        // Hiển thị thông báo cho người dùng, ví dụ sử dụng alert
         Alert.alert('Thông báo', res.message);
       }
     } catch (error) {
-      // Nếu có lỗi, lấy thông báo từ đối tượng lỗi và hiển thị cho người dùng
       const errorMessage = error.message || 'Có lỗi xảy ra khi xử lý đơn hàng.';
-      // console.error(errorMessage);
-      // Hiển thị thông báo lỗi cho người dùng, ví dụ sử dụng alert
       Alert.alert('Thông báo loi', errorMessage);
       throw error;
     }
@@ -188,17 +159,19 @@ const Checkouts = ({navigation}) => {
             });
           }}
           style={styles.addressSection}>
-          <View style={styles.addressDetails}>
+          <View style={{flexDirection: 'row'}}>
             <Ionicons name="location-outline" size={20} />
-            <Text style={{marginLeft: 10}}>Địa chỉ nhận hàng</Text>
-          </View>
-          <View style={styles.addressInfo}>
-            <Text>
-              {user.fullName} | 0{user.phoneNumber}
-            </Text>
-            <Text>
-              {itemAddress ? itemAddress.customAddress : address.customAddress}
-            </Text>
+            <View>
+              <Text>Địa chỉ nhận hàng</Text>
+              <Text>
+                {user.fullName} | 0{user.phoneNumber}
+              </Text>
+              <Text>
+                {itemAddress
+                  ? itemAddress.customAddress
+                  : address.customAddress}
+              </Text>
+            </View>
           </View>
           <Ionicons name="chevron-forward-outline" size={30} />
         </TouchableOpacity>
@@ -328,7 +301,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     padding: 10,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   addressDetails: {
