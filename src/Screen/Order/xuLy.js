@@ -19,7 +19,7 @@ export default function XuLy() {
     try {
       const res = await apiGet(`${ORDER_API}/getAllOrderForUser/pending`);
       setListProduct(res.message.orderRes.user);
-      console.log(res.message.orderRes.user)
+      console.log(res.message.orderRes.user);
     } catch (error) {
       console.log(error);
     }
@@ -34,7 +34,7 @@ export default function XuLy() {
   );
 
   const onClickCancel = async id => {
-       await apiPatch(`${ORDER_API}/cancelByUser/${id}`)
+    await apiPatch(`${ORDER_API}/cancelByUser/${id}`)
       .then(() => nav.navigate('DaHuy'))
       .catch(err => console.log(err));
   };
@@ -138,7 +138,10 @@ export default function XuLy() {
                           flexDirection: 'row',
                           alignItems: 'center',
                         }}>
-                        <Text>{item.color}{item.product_attributes.color}</Text>
+                        <Text>
+                          {item.color}
+                          {item.product_attributes.color}
+                        </Text>
                         <View
                           style={{
                             backgroundColor: 'black',
@@ -146,7 +149,10 @@ export default function XuLy() {
                             height: 10,
                             marginHorizontal: 5,
                           }}></View>
-                        <Text>{item.size}{item.product_attributes.size}</Text>
+                        <Text>
+                          {item.size}
+                          {item.product_attributes.size}
+                        </Text>
                       </View>
                       <Text>{item.product_attributes.quantity} sản phẩm</Text>
                     </View>

@@ -1,5 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, FlatList, Pressable, Image} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Pressable,
+  Image,
+  ScrollView,
+} from 'react-native';
 import {apiGet} from '../../utils/utils';
 import {API_BASE_URL, PRODUCT_API} from '../../config/urls';
 import {formatPrice, formatSoldSP} from '../Format';
@@ -55,15 +63,19 @@ const ListProductInCategory = ({route}) => {
   };
 
   return (
-    <View>
-      <FlatList
-        data={productList}
-        scrollEnabled={false}
-        keyExtractor={item => item?._id}
-        renderItem={renderSanpham}
-        numColumns={2}
-      />
-    </View>
+    <ScrollView>
+      {productList.length === 0 ? (
+        <Text>No products found.</Text>
+      ) : (
+        <FlatList
+          data={productList}
+          scrollEnabled={false}
+          keyExtractor={item => item?._id}
+          renderItem={renderSanpham}
+          numColumns={2}
+        />
+      )}
+    </ScrollView>
   );
 };
 

@@ -11,9 +11,9 @@ import {
 import React, {useEffect, useState} from 'react';
 import {CheckBox} from '@rneui/themed';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
-import { ADD_CART_API, API_BASE_URL } from '../../config/urls';
-import { apiDelete, apiGet, getItem } from '../../utils/utils';
+import {useNavigation} from '@react-navigation/native';
+import {ADD_CART_API, API_BASE_URL} from '../../config/urls';
+import {apiDelete, apiGet, getItem} from '../../utils/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CartScreen = () => {
@@ -61,18 +61,16 @@ const CartScreen = () => {
     }
   };
 
-  const onDeleteItemCart = async (productID) =>{
-      try{
-         await apiDelete(ADD_CART_API,{
-          productID
-        });
-       getCart()
-      }catch(err){
-        console.log(err);
-      }
-  }
-
-
+  const onDeleteItemCart = async productID => {
+    try {
+      await apiDelete(ADD_CART_API, {
+        productID,
+      });
+      getCart();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     setTotalPrice(
@@ -204,7 +202,7 @@ const CartScreen = () => {
                     borderRadius: 5,
                   }}
                   source={{
-                    uri: `${API_BASE_URL}uploads/` + item.product_thumb,
+                    uri: `${API_BASE_URL}uploads/` + item.product_thumb[0],
                   }}
                 />
                 <View style={{marginStart: 15, width: 100}}>

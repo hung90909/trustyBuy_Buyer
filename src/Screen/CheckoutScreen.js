@@ -148,7 +148,8 @@ const CheckoutScreen = ({route}) => {
                 placeholder=""
                 value={value}
                 onChange={item => {
-                  setValue(item.value);
+                  setValue(item.value[0]);
+                  console.log(value);
                 }}
                 itemTextStyle={{fontSize: 14}}
                 selectedTextStyle={{fontSize: 14}}

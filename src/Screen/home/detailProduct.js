@@ -193,7 +193,8 @@ const DetailProducts = ({route, navigation}) => {
           selectedSize,
         );
 
-        Alert.alert('Thông báo', `Thêm giỏ hàng thành công`);
+        // Alert.alert('Thông báo', `Thêm giỏ hàng thành công`);
+        navigation.navigate('Cart');
       } else {
         if (!selectedColor) {
           Alert.alert('Vui lòng chọn màu sắc của sản phẩm');
@@ -212,7 +213,7 @@ const DetailProducts = ({route, navigation}) => {
     setSelectedSize(size);
     resetQuantity(); // Reset quantity when size is selected
   };
-  const snapPoints = ['100%'];
+  const snapPoints = ['80%'];
   const handlePresentModal = action => {
     setBottomSheetAction(action);
     bottomSheetModalRef.current?.present();
