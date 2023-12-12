@@ -12,19 +12,19 @@ import {Dropdown} from 'react-native-element-dropdown';
 import {apiPost} from '../utils/utils';
 const CheckoutScreen = ({route}) => {
   const {orderDetails, itemDiscount} = route.params;
-  const product = orderDetails.product;
+  const product = orderDetails;
   const navigation = useNavigation();
   const address = useSelector(state => state?.address?.addressData);
   const [data, setData] = useState(address);
   const [value, setValue] = useState('');
   const [open, setOpen] = useState(false); // Assuming you have 'open' state
+  console.log(route.params.orderDetails);
   const pay = [
     {label: 'Thanh toán khi nhận hàng', value: 'Thanh toán khi nhận hàng'},
     {label: 'Thanh toán bằng PayPal', value: 'Thanh toán bằng PayPal'},
   ];
   useEffect(() => {
     setData(address);
-    console.log(address);
   }, [address]);
   const isDataOrValueNull = data === null || value === '';
   const totalPrice = (price, quantity) => {
@@ -42,45 +42,45 @@ const CheckoutScreen = ({route}) => {
     return formatPrice(total);
   };
 
-  const totalDiscount = item => {
-    const total = item.price * item.quantity;
+  const totalDiscount = arr => {
+    const total = 0;
+    arr.forEach(item => {
+      total += item.product.price * item.product.quantity;
+    });
+
     const discountAmount = total * (itemDiscount.discount_value / 100);
     return formatPrice(discountAmount);
   };
 
   const onOrders = async () => {
-    const orderData = {
-      shop_order_ids: [
+    const shopOrderData = route.params.orderDetails.map(item => ({
+      shopId: item.product.shopId,
+      shop_discounts: [
         {
-          shopId: product.shopId,
-          shop_discounts: itemDiscount
-            ? [
-                {
-                  shop_id: itemDiscount?.discount_shopId,
-                  discountId: itemDiscount?._id,
-                  codeId: itemDiscount?.discount_code,
-                },
-              ]
-            : [],
-          item_products: [
-            {
-              price: product.price,
-              quantity: product.quantity,
-              productId: product.productId,
-              color: product.color,
-              size: product.size,
-            },
-          ],
+          shop_id: itemDiscount?.discount_shopId,
+          discountId: itemDiscount?._id,
+          codeId: itemDiscount?.discount_code,
         },
       ],
+      item_products: [
+        {
+          price: item.product.price,
+          quantity: item.product.quantity,
+          productId: item.product.productId,
+          color: item.product.color,
+          size: item.product.size,
+        },
+      ],
+    }));
+
+    const orderData = {
+      shop_order_ids: shopOrderData,
       user_address: {
         City: data.customAddress,
       },
       user_payment: value,
     };
 
-    // console.log(orderData.user_address);
-    // console.log(orderData.user_payment);
     try {
       const res = await apiPost(ORDERS_API, orderData);
       navigation.navigate('TabOrder');
@@ -140,201 +140,203 @@ const CheckoutScreen = ({route}) => {
           </View>
         </Pressable>
       </View>
-      {product && (
-        <View style={{flex: 1}}>
-          <ScrollView style={{paddingHorizontal: 20}}>
-            <View style={styles.content}>
+      {product &&
+        product.map((value, index) => {
+          const item = value.product;
+          return (
+            <View style={{flex: 1}} key={index}>
+              <ScrollView style={{paddingHorizontal: 20}}>
+                <View style={styles.content}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      paddingVertical: 10,
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        color: 'black',
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                        textTransform: 'uppercase', // Thêm dòng này để viết in hoa
+                      }}>
+                      {item.nameShop}
+                    </Text>
+                  </View>
+
+                  <View style={styles.productContainer}>
+                    <Image
+                      source={{
+                        uri: `${API_BASE_URL}uploads/${item.thumb[0]}`,
+                      }}
+                      style={styles.productImage}
+                    />
+                    <View style={styles.productDetails}>
+                      <Text style={styles.productName}>{item.name}</Text>
+                      <View style={styles.productOptions}>
+                        <Text style={styles.productOption}>{item.color}</Text>
+                        <Text style={styles.separator}>|</Text>
+                        <Text style={styles.productOption}>{item.size}</Text>
+                      </View>
+                      <View style={styles.priceQuantityContainer}>
+                        <Text style={styles.productPrice}>
+                          {formatPrice(item.price)}
+                        </Text>
+                        <Text style={styles.productQuantity}>
+                          x {item.quantity}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+
+                  <Pressable>
+                    <View style={styles.voucherContainer}>
+                      <Text style={styles.voucherText}>Voucher của shop</Text>
+                      <View style={styles.voucherInputContainer}>
+                        {itemDiscount ? (
+                          <Text>Giảm {itemDiscount.discount_value}%</Text>
+                        ) : (
+                          <Text style={{}}>Chọn hoặc nhập mã </Text>
+                        )}
+                        <MaterialIcons
+                          name="navigate-next"
+                          size={30}
+                          color="black"
+                        />
+                      </View>
+                    </View>
+                  </Pressable>
+
+                  <View style={styles.totalPriceContainer}>
+                    <Text style={styles.totalPriceText}>
+                      Tổng tiền ({item ? item.quantity : 0} sản phẩm) :
+                    </Text>
+                    <Text style={styles.totalPriceAmount}>
+                      {totalPrice(item.price, item.quantity)}
+                    </Text>
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    flex: 1,
+                    borderRadius: 10,
+                  }}>
+                  <Text style={{color: 'black', fontSize: 15}}>
+                    Phương thức thanh toán
+                  </Text>
+                  <Dropdown
+                    style={styles.dropdown}
+                    data={pay}
+                    maxHeight={150}
+                    labelField="label"
+                    valueField="value"
+                    placeholder=""
+                    value={value}
+                    onChange={item => {
+                      setValue(item.value);
+                    }}
+                    itemTextStyle={{fontSize: 14}}
+                    selectedTextStyle={{fontSize: 14}}
+                  />
+                </View>
+
+                <View style={{}}>
+                  <Text
+                    style={{fontSize: 16, fontWeight: 'bold', color: 'black'}}>
+                    Chi tiết thanh toán
+                  </Text>
+                  <View style={{marginVertical: 10}}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                      }}>
+                      <Text style={styles.chitietThanhtoan}>
+                        Tổng tiền hàng:
+                      </Text>
+                      <Text style={styles.chitietThanhtoan}>
+                        {totalPrice(item.price, item.quantity)}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginVertical: 5,
+                      }}>
+                      <Text style={styles.chitietThanhtoan}>
+                        Tiền khuyến mãi:
+                      </Text>
+                      <Text style={styles.chitietThanhtoan}>
+                        <Text>0</Text>
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                      }}>
+                      <Text style={styles.chitietThanhtoan}>
+                        Tổng tiền hàng:
+                      </Text>
+                      <Text style={{fontWeight: 'bold', color: 'black'}}>
+                        {totalPriceBill(item)}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </ScrollView>
               <View
                 style={{
-                  flexDirection: 'row',
-                  paddingVertical: 10,
+                  height: 60,
+                  backgroundColor: 'white',
                   alignItems: 'center',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
                 }}>
-                <Text
-                  style={{
-                    color: 'black',
-                    fontSize: 18,
-                    fontWeight: 'bold',
-                    textTransform: 'uppercase', // Thêm dòng này để viết in hoa
-                  }}>
-                  {product.nameShop.toUpperCase()}
-                </Text>
-              </View>
+                <View style={{flex: 1, paddingLeft: 100}}>
+                  <Text
+                    style={{fontWeight: 'bold', color: 'black', fontSize: 16}}>
+                    Tổng thanh toán:
+                  </Text>
+                  <Text
+                    style={{
+                      color: '#FC6D26',
+                      fontSize: 16,
+                      fontWeight: 'bold',
+                    }}>
+                    {totalPriceBill(item)}
+                  </Text>
+                </View>
 
-              <View style={styles.productContainer}>
-                <Image
-                  source={{
-                    uri: `${API_BASE_URL}uploads/${product.thumb[0]}`,
+                <Pressable
+                  style={{
+                    height: 60,
+                    justifyContent: 'center',
+                    backgroundColor: isDataOrValueNull ? '#EEEEEE' : 'black',
+                    flex: 1,
                   }}
-                  style={styles.productImage}
-                />
-                <View style={styles.productDetails}>
-                  <Text style={styles.productName}>{product.name}</Text>
-                  <View style={styles.productOptions}>
-                    <Text style={styles.productOption}>{product.color}</Text>
-                    <Text style={styles.separator}>|</Text>
-                    <Text style={styles.productOption}>{product.size}</Text>
-                  </View>
-                  <View style={styles.priceQuantityContainer}>
-                    <Text style={styles.productPrice}>
-                      {formatPrice(product.price)}
-                    </Text>
-                    <Text style={styles.productQuantity}>
-                      x {product.quantity}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-
-              <Pressable
-                onPress={() =>
-                  navigation.navigate('ListDiscount', {item: product})
-                }>
-                <View style={styles.voucherContainer}>
-                  <Text style={styles.voucherText}>Voucher của shop</Text>
-                  <View style={styles.voucherInputContainer}>
-                    {itemDiscount ? (
-                      <Text>Giảm {itemDiscount.discount_value}%</Text>
-                    ) : (
-                      <Text style={{}}>Chọn hoặc nhập mã </Text>
-                    )}
-                    <MaterialIcons
-                      name="navigate-next"
-                      size={30}
-                      color="black"
-                    />
-                  </View>
-                </View>
-              </Pressable>
-
-              <View style={styles.totalPriceContainer}>
-                <Text style={styles.totalPriceText}>
-                  Tổng tiền ({product ? product.quantity : 0} sản phẩm) :
-                </Text>
-                <Text style={styles.totalPriceAmount}>
-                  {totalPrice(product.price, product.quantity)}
-                </Text>
+                  disabled={isDataOrValueNull}
+                  onPress={() => {
+                    !isDataOrValueNull && onOrders();
+                  }}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: isDataOrValueNull ? '#CCCCCC' : 'white',
+                      fontSize: 16,
+                    }}>
+                    Đặt hàng
+                  </Text>
+                </Pressable>
               </View>
             </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flex: 1,
-                borderRadius: 10,
-              }}>
-              <Text style={{color: 'black', fontSize: 15}}>
-                Phương thức thanh toán
-              </Text>
-              <Dropdown
-                style={styles.dropdown}
-                data={pay}
-                maxHeight={150}
-                labelField="label"
-                valueField="value"
-                placeholder=""
-                value={value}
-                onChange={item => {
-                  setValue(item.value);
-                  console.log(value);
-                }}
-                itemTextStyle={{fontSize: 14}}
-                selectedTextStyle={{fontSize: 14}}
-              />
-            </View>
-
-            <View style={{}}>
-              <Text style={{fontSize: 16, fontWeight: 'bold', color: 'black'}}>
-                Chi tiết thanh toán
-              </Text>
-              <View style={{marginVertical: 10}}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Text style={styles.chitietThanhtoan}>Tổng tiền hàng:</Text>
-                  <Text style={styles.chitietThanhtoan}>
-                    {totalPrice(product.price, product.quantity)}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginVertical: 5,
-                  }}>
-                  <Text style={styles.chitietThanhtoan}>Tiền khuyến mãi:</Text>
-                  <Text style={styles.chitietThanhtoan}>
-                    {itemDiscount ? (
-                      <Text style={styles.chitietThanhtoan}>
-                        {totalDiscount(product)}
-                      </Text>
-                    ) : (
-                      <Text style={styles.chitietThanhtoan}>0</Text>
-                    )}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Text style={styles.chitietThanhtoan}>Tổng tiền hàng:</Text>
-                  <Text style={{fontWeight: 'bold', color: 'black'}}>
-                    {totalPriceBill(product)}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </ScrollView>
-          <View
-            style={{
-              height: 60,
-              backgroundColor: 'white',
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <View style={{flex: 1, paddingLeft: 100}}>
-              <Text style={{fontWeight: 'bold', color: 'black', fontSize: 16}}>
-                Tổng thanh toán:
-              </Text>
-              <Text
-                style={{
-                  color: '#FC6D26',
-                  fontSize: 16,
-                  fontWeight: 'bold',
-                }}>
-                {totalPriceBill(product)}
-              </Text>
-            </View>
-
-            <Pressable
-              style={{
-                height: 60,
-                justifyContent: 'center',
-                backgroundColor: isDataOrValueNull ? '#EEEEEE' : 'black',
-                flex: 1,
-              }}
-              disabled={isDataOrValueNull}
-              onPress={() => {
-                !isDataOrValueNull && onOrders();
-              }}>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: isDataOrValueNull ? '#CCCCCC' : 'white',
-                  fontSize: 16,
-                }}>
-                Đặt hàng
-              </Text>
-            </Pressable>
-          </View>
-        </View>
-      )}
+          );
+        })}
     </View>
   );
 };

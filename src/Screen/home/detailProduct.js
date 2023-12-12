@@ -104,22 +104,24 @@ const DetailProducts = ({route, navigation}) => {
         );
         const data = await AsyncStorage.getItem('token');
         const userID = JSON.parse(data).userId;
-        const orderItem = {
-          userId: userID,
-          product: {
-            productId: productId,
-            shopId: productDetail.shop_id,
-            quantity: quantity,
-            name: productDetail.product_name,
-            price: productDetail.product_price,
-            color: selectedColor,
-            size: selectedSize,
-            thumb: productDetail.product_thumb,
-            avatarShop: productDetail.shop_avatar,
-            nameShop: productDetail.shop_name,
+        const orderItem = [
+          {
+            userId: userID,
+            product: {
+              productId: productId,
+              shopId: productDetail.shop_id,
+              quantity: quantity,
+              name: productDetail.product_name,
+              price: productDetail.product_price,
+              color: selectedColor,
+              size: selectedSize,
+              thumb: productDetail.product_thumb,
+              avatarShop: productDetail.shop_avatar,
+              nameShop: productDetail.shop_name,
+            },
           },
-        };
-        console.log(quantity);
+        ];
+        console.log('ơ day', orderItem);
         const updatedTotalQuantity = getTotalQuantityForColorAndSize(
           selectedColor,
           selectedSize,
@@ -150,7 +152,7 @@ const DetailProducts = ({route, navigation}) => {
         );
         const data = await AsyncStorage.getItem('token');
         const userID = JSON.parse(data).userId;
-        console.log(userID);
+        // console.log(userID);
         const cartItem = {
           userId: userID,
           product: {
@@ -169,7 +171,7 @@ const DetailProducts = ({route, navigation}) => {
           cartItem,
         );
 
-        console.log('Added to cart:', response?.message);
+        // console.log('Added to cart:', response?.message);
 
         // Reset selected options after adding to the cart
         setSelectedColor(null);
@@ -215,7 +217,6 @@ const DetailProducts = ({route, navigation}) => {
       try {
         const response = await apiGet(`${PRODUCT_API}/getProduct/${productId}`);
         setProductDetail(response?.message);
-        console.log(response?.message);
         setSelectedProductId(productId);
       } catch (error) {
         console.error(error.response.data);
