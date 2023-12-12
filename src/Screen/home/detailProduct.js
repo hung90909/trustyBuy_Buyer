@@ -116,26 +116,14 @@ const DetailProducts = ({route, navigation}) => {
             size: selectedSize,
             thumb: productDetail.product_thumb,
             avatarShop: productDetail.shop_avatar,
+            nameShop: productDetail.shop_name,
           },
         };
         console.log(quantity);
-
-        // Navigate to the CheckoutScreen and pass the order details as params
-        navigation.navigate('Checkout', {orderDetails: orderItem});
-
-        // You can customize this part based on your business logic
-        // Here, it just shows an alert with the total quantity
         const updatedTotalQuantity = getTotalQuantityForColorAndSize(
           selectedColor,
           selectedSize,
         );
-
-        // Alert.alert(
-        //   'Mua ngay thành công',
-        //   `Tổng số lượng sản phẩm: ${updatedTotalQuantity}`,
-        // );
-
-        // Reset selected options after buying
         navigation.navigate('Checkout', {orderDetails: orderItem});
         setSelectedColor(null);
         setSelectedSize(null);

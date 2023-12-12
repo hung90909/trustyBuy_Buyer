@@ -17,7 +17,7 @@ const ListProductInCategory = ({route}) => {
   const navigation = useNavigation();
   const {categoryId} = route.params;
   const [productList, setProductList] = useState([]);
-  const [selectedProductId, setSelectedProductId] = useState(null);
+
   useEffect(() => {
     const getProduct = async () => {
       try {
@@ -64,6 +64,9 @@ const ListProductInCategory = ({route}) => {
 
   return (
     <ScrollView>
+      <View>
+        <Text>{}</Text>
+      </View>
       {productList.length === 0 ? (
         <Text>No products found.</Text>
       ) : (
@@ -81,10 +84,10 @@ const ListProductInCategory = ({route}) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 16,
     backgroundColor: '#F5F5F5',
     width: '50%',
+    justifyContent: 'center',
   },
   imageSP: {
     width: '100%',

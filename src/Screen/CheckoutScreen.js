@@ -1,16 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet, Alert} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {API_BASE_URL} from '../config/urls';
+import {API_BASE_URL, ORDERS_API} from '../config/urls';
 import {formatPrice} from './Format';
 import {useNavigation} from '@react-navigation/native';
 import {ScrollView} from 'react-native';
 import {Pressable} from 'react-native';
 import {useSelector} from 'react-redux';
 import {Dropdown} from 'react-native-element-dropdown';
+import {apiPost} from '../utils/utils';
 const CheckoutScreen = ({route}) => {
-  const {orderDetails} = route.params;
+  const {orderDetails, itemDiscount} = route.params;
   const product = orderDetails.product;
   const navigation = useNavigation();
   const address = useSelector(state => state?.address?.addressData);
@@ -18,14 +19,75 @@ const CheckoutScreen = ({route}) => {
   const [value, setValue] = useState('');
   const [open, setOpen] = useState(false); // Assuming you have 'open' state
   const pay = [
-    {label: 'Thanh toán khi nhận hàng', value: 'Cash'},
-    {label: 'Thanh toán bằng PayPal', value: 'PayPal'},
+    {label: 'Thanh toán khi nhận hàng', value: 'Thanh toán khi nhận hàng'},
+    {label: 'Thanh toán bằng PayPal', value: 'Thanh toán bằng PayPal'},
   ];
   useEffect(() => {
     setData(address);
     console.log(address);
   }, [address]);
   const isDataOrValueNull = data === null || value === '';
+  const totalPrice = (price, quantity) => {
+    return formatPrice(price * quantity);
+  };
+
+  const totalPriceBill = item => {
+    const total = item.price * item.quantity;
+
+    if (itemDiscount) {
+      const discountAmount = total * (itemDiscount.discount_value / 100);
+      const totalBill = total - discountAmount;
+      return formatPrice(totalBill);
+    }
+    return formatPrice(total);
+  };
+
+  const totalDiscount = item => {
+    const total = item.price * item.quantity;
+    const discountAmount = total * (itemDiscount.discount_value / 100);
+    return formatPrice(discountAmount);
+  };
+
+  const onOrders = async () => {
+    const orderData = {
+      shop_order_ids: [
+        {
+          shopId: product.shopId,
+          shop_discounts: itemDiscount
+            ? [
+                {
+                  shop_id: itemDiscount?.discount_shopId,
+                  discountId: itemDiscount?._id,
+                  codeId: itemDiscount?.discount_code,
+                },
+              ]
+            : [],
+          item_products: [
+            {
+              price: product.price,
+              quantity: product.quantity,
+              productId: product.productId,
+              color: product.color,
+              size: product.size,
+            },
+          ],
+        },
+      ],
+      user_address: {
+        City: data.customAddress,
+      },
+      user_payment: value,
+    };
+
+    // console.log(orderData.user_address);
+    // console.log(orderData.user_payment);
+    try {
+      const res = await apiPost(ORDERS_API, orderData);
+      navigation.navigate('TabOrder');
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -82,9 +144,24 @@ const CheckoutScreen = ({route}) => {
         <View style={{flex: 1}}>
           <ScrollView style={{paddingHorizontal: 20}}>
             <View style={styles.content}>
-              <View style={styles.productContainer}>
-                <View style={{borderWidth: 1}}></View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  paddingVertical: 10,
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    color: 'black',
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    textTransform: 'uppercase', // Thêm dòng này để viết in hoa
+                  }}>
+                  {product.nameShop.toUpperCase()}
+                </Text>
+              </View>
 
+              <View style={styles.productContainer}>
                 <Image
                   source={{
                     uri: `${API_BASE_URL}uploads/${product.thumb[0]}`,
@@ -109,21 +186,33 @@ const CheckoutScreen = ({route}) => {
                 </View>
               </View>
 
-              <View style={styles.voucherContainer}>
-                <Text style={styles.voucherText}>Voucher của shop</Text>
-                <View style={styles.voucherInputContainer}>
-                  <Text>Chọn hoặc nhập mã</Text>
-                  <MaterialIcons name="navigate-next" size={30} color="black" />
+              <Pressable
+                onPress={() =>
+                  navigation.navigate('ListDiscount', {item: product})
+                }>
+                <View style={styles.voucherContainer}>
+                  <Text style={styles.voucherText}>Voucher của shop</Text>
+                  <View style={styles.voucherInputContainer}>
+                    {itemDiscount ? (
+                      <Text>Giảm {itemDiscount.discount_value}%</Text>
+                    ) : (
+                      <Text style={{}}>Chọn hoặc nhập mã </Text>
+                    )}
+                    <MaterialIcons
+                      name="navigate-next"
+                      size={30}
+                      color="black"
+                    />
+                  </View>
                 </View>
-              </View>
+              </Pressable>
+
               <View style={styles.totalPriceContainer}>
                 <Text style={styles.totalPriceText}>
                   Tổng tiền ({product ? product.quantity : 0} sản phẩm) :
                 </Text>
                 <Text style={styles.totalPriceAmount}>
-                  {product
-                    ? formatPrice(product.price * product.quantity)
-                    : '0 VND'}
+                  {totalPrice(product.price, product.quantity)}
                 </Text>
               </View>
             </View>
@@ -148,7 +237,7 @@ const CheckoutScreen = ({route}) => {
                 placeholder=""
                 value={value}
                 onChange={item => {
-                  setValue(item.value[0]);
+                  setValue(item.value);
                   console.log(value);
                 }}
                 itemTextStyle={{fontSize: 14}}
@@ -168,9 +257,7 @@ const CheckoutScreen = ({route}) => {
                   }}>
                   <Text style={styles.chitietThanhtoan}>Tổng tiền hàng:</Text>
                   <Text style={styles.chitietThanhtoan}>
-                    {product
-                      ? formatPrice(product.price * product.quantity)
-                      : '0 VND'}
+                    {totalPrice(product.price, product.quantity)}
                   </Text>
                 </View>
                 <View
@@ -181,7 +268,13 @@ const CheckoutScreen = ({route}) => {
                   }}>
                   <Text style={styles.chitietThanhtoan}>Tiền khuyến mãi:</Text>
                   <Text style={styles.chitietThanhtoan}>
-                    {formatPrice(100000)}
+                    {itemDiscount ? (
+                      <Text style={styles.chitietThanhtoan}>
+                        {totalDiscount(product)}
+                      </Text>
+                    ) : (
+                      <Text style={styles.chitietThanhtoan}>0</Text>
+                    )}
                   </Text>
                 </View>
                 <View
@@ -191,9 +284,7 @@ const CheckoutScreen = ({route}) => {
                   }}>
                   <Text style={styles.chitietThanhtoan}>Tổng tiền hàng:</Text>
                   <Text style={{fontWeight: 'bold', color: 'black'}}>
-                    {product
-                      ? formatPrice(product.price * product.quantity - 100000)
-                      : '0 VND'}
+                    {totalPriceBill(product)}
                   </Text>
                 </View>
               </View>
@@ -217,9 +308,7 @@ const CheckoutScreen = ({route}) => {
                   fontSize: 16,
                   fontWeight: 'bold',
                 }}>
-                {product
-                  ? formatPrice(product.price * product.quantity - 100000)
-                  : '0 VND'}
+                {totalPriceBill(product)}
               </Text>
             </View>
 
@@ -232,7 +321,7 @@ const CheckoutScreen = ({route}) => {
               }}
               disabled={isDataOrValueNull}
               onPress={() => {
-                !isDataOrValueNull && console.log('hihi');
+                !isDataOrValueNull && onOrders();
               }}>
               <Text
                 style={{

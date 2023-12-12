@@ -13,7 +13,7 @@ import {CheckBox} from '@rneui/themed';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import {ADD_CART_API, API_BASE_URL} from '../../config/urls';
-import {apiDelete, apiGet, getItem} from '../../utils/utils';
+import {apiDelete, apiGet, apiPost, getItem} from '../../utils/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CartScreen = () => {
@@ -61,25 +61,17 @@ const CartScreen = () => {
     }
   };
 
-  const onDeleteItemCart = async productID => {
+  const onDeleteItemCart = async productId => {
     try {
-      await apiDelete(ADD_CART_API, {
-        productID,
+      console.log(productId);
+      await apiPost(`${ADD_CART_API}/delete`, {
+        productId,
       });
       getCart();
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
     }
   };
-
-  useEffect(() => {
-    setTotalPrice(
-      selectedItems.reduce(
-        (total, item) => item.price * item.quantity + total,
-        0,
-      ),
-    );
-  }, [isUpdatePrice]);
 
   const handleDecreaseQuantity = itemId => {
     console.log(itemId);
@@ -195,16 +187,17 @@ const CartScreen = () => {
                 </View>
 
                 <Image
-                  resizeMode="stretch"
+                  resizeMode="contain"
                   style={{
                     width: 90,
                     height: 90,
                     borderRadius: 5,
                   }}
                   source={{
-                    uri: `${API_BASE_URL}uploads/` + item.product_thumb[0],
+                    uri: `${API_BASE_URL}uploads/` + item.product_thumb,
                   }}
                 />
+                <Text></Text>
                 <View style={{marginStart: 15, width: 100}}>
                   <Text numberOfLines={2}>{item.name}</Text>
                   <View style={{flexDirection: 'row', marginTop: 5}}>
