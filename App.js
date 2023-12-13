@@ -38,6 +38,7 @@ import ListDiscount from './src/Screen/Cart/ListDiscount';
 import OtpScreen from './src/Screen/Login/OtpScreen';
 import OptionAddress from './src/Screen/OptionAddress';
 import listDiscount from './src/Screen/Discount/listDiscount';
+import success from './src/Screen/success';
 
 const TabTop = createMaterialTopTabNavigator();
 
@@ -134,7 +135,7 @@ const App = () => {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="Welcome"
+          initialRouteName="Login2"
           screenOptions={{headerShown: false}}>
           <Stack.Screen name="Welcome" component={Welcome} />
           <Stack.Screen name="Welcome1" component={Welcome1} />
@@ -170,6 +171,7 @@ const App = () => {
           <Stack.Screen name="OptionAddress" component={OptionAddress} />
           <Stack.Screen name="Checkouts" component={Checkouts} />
           <Stack.Screen name="listDiscount" component={listDiscount} />
+          <Stack.Screen name="success" component={success} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -6,9 +6,11 @@ import {
   StyleSheet,
   Image,
   FlatList,
+  Alert,
+  ToastAndroid,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {apiGet, apiPost} from '../../utils/utils';
+import { apiGet, apiPost } from '../../utils/utils';
 import {
   ADD_CART_API,
   API_BASE_URL,
@@ -23,13 +25,15 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {ScrollView} from 'react-native-virtualized-view';
 import {formatPrice} from '../Format';
 
-const Checkouts = ({navigation}) => {
+const Checkouts = ({ navigation }) => {
   const nav = useNavigation();
   const route = useRoute();
-  const {item, itemAddress, itemDiscount} = route.params;
+  const { item, itemAddress, itemDiscount } = route.params;
+  const [userId, setUserId] = useState('')
   const [address, setAddress] = useState({});
   const [user, setUser] = useState({});
   const [cartId, setCartId] = useState('');
+  const [totalProduct, setTotalProduct] = useState('')
 
   const Checkouts = ({navigation}) => {
     const nav = useNavigation();
@@ -63,10 +67,10 @@ const Checkouts = ({navigation}) => {
       return formatPrice(price * quantity);
     };
   };
-
   const totalPrice = (price, quantity) => {
-    return formatPrice(price * quantity);
-  };
+    setTotalProduct(price * quantity)
+    return formatPrice(price * quantity)
+  }
 
   const getCartID = async () => {
     try {
@@ -176,10 +180,10 @@ const Checkouts = ({navigation}) => {
             }}>
             <Ionicons name="arrow-back-outline" size={30} />
           </TouchableOpacity>
-          <Text style={{fontSize: 20, marginLeft: 20}}>Thanh toán</Text>
+          <Text style={{ fontSize: 20, marginLeft: 20 }}>Thanh toán</Text>
         </View>
 
-        <TouchableOpacity
+        {itemAddress ? <TouchableOpacity
           onPress={() => {
             nav.navigate('ListAddress', {
               itemProduct: item,
@@ -189,7 +193,7 @@ const Checkouts = ({navigation}) => {
           style={styles.addressSection}>
           <View style={styles.addressDetails}>
             <Ionicons name="location-outline" size={20} />
-            <Text style={{marginLeft: 10}}>Địa chỉ nhận hàng</Text>
+            <Text style={{ marginLeft: 10 }}>Địa chỉ nhận hàng</Text>
           </View>
           <View style={styles.addressInfo}>
             <Text>
@@ -200,13 +204,21 @@ const Checkouts = ({navigation}) => {
             </Text>
           </View>
           <Ionicons name="chevron-forward-outline" size={30} />
-        </TouchableOpacity>
+        </TouchableOpacity> :
+          <TouchableOpacity
+            onPress={() => {
+              nav.navigate("AdressScreen")
+            }}
+            style={styles.addressSection}>
+            <Text>Thêm địa chỉ</Text>
+            <Ionicons style={{ marginLeft: 5 }} name='add-outline' size={20} />
+          </TouchableOpacity>}
 
         <View style={styles.productListSection}>
           <FlatList
             data={item}
             keyExtractor={item => item.itemId}
-            renderItem={({item}) => (
+            renderItem={({ item }) => (
               <View style={styles.productItem}>
                 <Image
                   style={styles.productImage}
@@ -308,7 +320,7 @@ const Checkouts = ({navigation}) => {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
