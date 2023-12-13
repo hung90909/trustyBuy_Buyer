@@ -39,6 +39,8 @@ import OtpScreen from './src/Screen/Login/OtpScreen';
 import OptionAddress from './src/Screen/OptionAddress';
 import listDiscount from './src/Screen/Discount/listDiscount';
 import success from './src/Screen/success';
+import detailXuLy from './src/Screen/Order/detailOrder';
+import detailOrder from './src/Screen/Order/detailOrder';
 
 const TabTop = createMaterialTopTabNavigator();
 
@@ -172,6 +174,7 @@ const App = () => {
           <Stack.Screen name="Checkouts" component={Checkouts} />
           <Stack.Screen name="listDiscount" component={listDiscount} />
           <Stack.Screen name="success" component={success} />
+          <Stack.Screen name="DetailOrder" component={detailOrder} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

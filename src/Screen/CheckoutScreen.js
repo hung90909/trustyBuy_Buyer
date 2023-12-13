@@ -29,7 +29,6 @@ const CheckoutScreen = ({route}) => {
   const [data, setData] = useState(address);
   const [value, setValue] = useState('');
   const [open, setOpen] = useState(false); // Assuming you have 'open' state
-  console.log(route.params.orderDetails);
   const [paypalUrl, setPaypalUrl] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
   const [paymentProcessed, setPaymentProcessed] = useState(false);
