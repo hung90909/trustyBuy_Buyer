@@ -22,16 +22,17 @@ const Listcategorys = () => {
     fetchData();
   }, []);
 
-  const handleCategoryPress = categoryId => {
-    navigation.navigate('ListProductInCategory', {categoryId});
+  const handleCategoryPress = (categoryId, categoryName) => {
+    navigation.navigate('ListProductInCategory', {categoryId, categoryName});
     console.log(categoryId);
     setSelectedCategoryId(categoryId);
   };
+
   const renderItem = ({item}) => {
     return (
       <Pressable
         style={styles.categoryItem}
-        onPress={() => handleCategoryPress(item._id)}>
+        onPress={() => handleCategoryPress(item._id, item.category_name)}>
         <Image
           source={{
             uri: `${API_BASE_URL}${item?.category_thumb}`,
