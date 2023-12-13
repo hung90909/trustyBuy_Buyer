@@ -146,6 +146,7 @@ const Checkouts = ({navigation}) => {
         ],
       })),
     };
+
     try {
       const res = await apiPost(ORDERS_API, data);
       // Kiểm tra xem có thông báo từ server hay không
