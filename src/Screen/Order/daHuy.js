@@ -8,11 +8,12 @@ import {
   View,
 } from 'react-native';
 import React, {useCallback, useState} from 'react';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {apiGet} from '../../utils/utils';
 import {API_BASE_URL, ORDER_API} from '../../config/urls';
 
 export default function DaHuy() {
+  const nav = useNavigation()
   const getAllOrderForUser = async () => {
     try {
       const res = await apiGet(`${ORDER_API}/getAllOrderForUser/cancelled`);
@@ -49,7 +50,11 @@ export default function DaHuy() {
           keyExtractor={item => item.oderId}
           renderItem={({item}) => {
             return (
-              <Pressable style={styles.itemOrder}>
+              <Pressable
+              onPress={() =>{
+                nav.navigate("DetailOrder",{item})
+              }} 
+              style={styles.itemOrder}>
                 <View
                   style={{
                     flexDirection: 'row',
