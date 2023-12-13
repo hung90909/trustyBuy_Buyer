@@ -35,7 +35,16 @@ const Listproducts = ({count}) => {
   const getAllProduct = async () => {
     try {
       const response = await apiGet(`${PRODUCT_API}/getAllProductByUser`);
-      setProduct(response.message.allProduct);
+
+      // Sort products by the creation date in descending order (newest first)
+      const sortedProducts = response.message.allProduct.sort((a, b) => {
+        const dateA = new Date(a.updatedAt);
+        const dateB = new Date(b.updatedAt);
+        return dateB - dateA;
+      });
+
+      setProduct(sortedProducts);
+      console.log(sortedProducts);
     } catch (error) {
       console.error(error.response.data);
     } finally {

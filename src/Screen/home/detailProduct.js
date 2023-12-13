@@ -10,6 +10,7 @@ import {
   FlatList,
   Image,
   Dimensions,
+  ToastAndroid,
 } from 'react-native';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -104,38 +105,28 @@ const DetailProducts = ({route, navigation}) => {
         );
         const data = await AsyncStorage.getItem('token');
         const userID = JSON.parse(data).userId;
-        const orderItem = {
-          userId: userID,
-          product: {
-            productId: productId,
-            shopId: productDetail.shop_id,
-            quantity: quantity,
-            name: productDetail.product_name,
-            price: productDetail.product_price,
-            color: selectedColor,
-            size: selectedSize,
-            thumb: productDetail.product_thumb,
-            avatarShop: productDetail.shop_avatar,
+        const orderItem = [
+          {
+            userId: userID,
+            product: {
+              productId: productId,
+              shopId: productDetail.shop_id,
+              quantity: quantity,
+              name: productDetail.product_name,
+              price: productDetail.product_price,
+              color: selectedColor,
+              size: selectedSize,
+              thumb: productDetail.product_thumb[0],
+              avatarShop: productDetail.shop_avatar,
+              nameShop: productDetail.shop_name,
+            },
           },
-        };
-        console.log(quantity);
-
-        // Navigate to the CheckoutScreen and pass the order details as params
-        navigation.navigate('Checkout', {orderDetails: orderItem});
-
-        // You can customize this part based on your business logic
-        // Here, it just shows an alert with the total quantity
+        ];
+        // console.log('ơ day', orderItem);
         const updatedTotalQuantity = getTotalQuantityForColorAndSize(
           selectedColor,
           selectedSize,
         );
-
-        // Alert.alert(
-        //   'Mua ngay thành công',
-        //   `Tổng số lượng sản phẩm: ${updatedTotalQuantity}`,
-        // );
-
-        // Reset selected options after buying
         navigation.navigate('Checkout', {orderDetails: orderItem});
         setSelectedColor(null);
         setSelectedSize(null);
@@ -162,7 +153,7 @@ const DetailProducts = ({route, navigation}) => {
         );
         const data = await AsyncStorage.getItem('token');
         const userID = JSON.parse(data).userId;
-        console.log(userID);
+        // console.log(userID);
         const cartItem = {
           userId: userID,
           product: {
@@ -181,7 +172,7 @@ const DetailProducts = ({route, navigation}) => {
           cartItem,
         );
 
-        console.log('Added to cart:', response?.message);
+        // console.log('Added to cart:', response?.message);
 
         // Reset selected options after adding to the cart
         setSelectedColor(null);
@@ -193,7 +184,8 @@ const DetailProducts = ({route, navigation}) => {
           selectedSize,
         );
 
-        Alert.alert('Thông báo', `Thêm giỏ hàng thành công`);
+        // Alert.alert('Thông báo', `Thêm giỏ hàng thành công`);
+        navigation.navigate('Cart');
       } else {
         if (!selectedColor) {
           Alert.alert('Vui lòng chọn màu sắc của sản phẩm');
@@ -212,7 +204,7 @@ const DetailProducts = ({route, navigation}) => {
     setSelectedSize(size);
     resetQuantity(); // Reset quantity when size is selected
   };
-  const snapPoints = ['100%'];
+  const snapPoints = ['80%'];
   const handlePresentModal = action => {
     setBottomSheetAction(action);
     bottomSheetModalRef.current?.present();
@@ -226,7 +218,6 @@ const DetailProducts = ({route, navigation}) => {
       try {
         const response = await apiGet(`${PRODUCT_API}/getProduct/${productId}`);
         setProductDetail(response?.message);
-        console.log(response?.message);
         setSelectedProductId(productId);
       } catch (error) {
         console.error(error.response.data);

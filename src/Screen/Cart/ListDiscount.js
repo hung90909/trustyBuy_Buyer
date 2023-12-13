@@ -31,11 +31,11 @@ import {ScrollView} from 'react-native-virtualized-view';
 import {RadioButton} from 'react-native-paper';
 
 const ListDiscount = () => {
-    const nav = useNavigation()
-    const route = useRoute()
-    const {itemProduct, itemAddress , totalProduct} = route.params
-    const [listVoucher, setListVoucher] = useState([])
-    const [checked, setChecked] = useState(null)
+  const nav = useNavigation();
+  const route = useRoute();
+  const {itemProduct, itemAddress, totalProduct, product} = route.params;
+  const [listVoucher, setListVoucher] = useState([]);
+  const [checked, setChecked] = useState(null);
 
   const getDisCount = async () => {
     try {

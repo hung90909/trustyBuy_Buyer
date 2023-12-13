@@ -2,19 +2,23 @@ import {
   Alert,
   FlatList,
   Image,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {CheckBox} from '@rneui/themed';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
-import { ADD_CART_API, API_BASE_URL } from '../../config/urls';
-import { apiDelete, apiGet, getItem } from '../../utils/utils';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {useNavigation} from '@react-navigation/native';
+import {ADD_CART_API, API_BASE_URL} from '../../config/urls';
+import {apiDelete, apiGet, apiPost, getItem} from '../../utils/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Swipeable} from 'react-native-gesture-handler';
 
 const CartScreen = () => {
   const [listCart, setListCart] = useState([]);
@@ -49,7 +53,7 @@ const CartScreen = () => {
   const [userID, setUserID] = useState('');
 
   const handleCheckboxChange = item => {
-    console.log('new cart: ' + item);
+    // console.log('new cart: ' + item);
     setUpdatePrice(!isUpdatePrice);
     const ids = selectedItems.map(item => item.itemId);
     if (ids.includes(item.itemId)) {
@@ -61,18 +65,17 @@ const CartScreen = () => {
     }
   };
 
-  const onDeleteItemCart = async (productID) =>{
-      try{
-         await apiDelete(ADD_CART_API,{
-          productID
-        });
-       getCart()
-      }catch(err){
-        console.log(err);
-      }
-  }
+  const onDeleteItemCart = async productId => {
+    try {
+      const res = await apiPost(ADD_CART_API + '/delete', {
+        productId,
+      });
 
-
+      getCart();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     setTotalPrice(
@@ -84,7 +87,7 @@ const CartScreen = () => {
   }, [isUpdatePrice]);
 
   const handleDecreaseQuantity = itemId => {
-    console.log(itemId);
+    // console.log(itemId);
     setUpdatePrice(!isUpdatePrice);
     setSelectedItems(item =>
       item.map(product =>
@@ -119,159 +122,176 @@ const CartScreen = () => {
     );
   };
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+  const renderSanpham = ({item}) => {
+    return (
+      <View style={styles.product}>
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'flex-start',
+            paddingHorizontal: 10,
           }}>
-          <TouchableOpacity
-            onPress={() => {
-              nav.goBack();
+          {/* <Image
+            style={{
+              height: 30,
+              width: 30,
+              borderRadius: 5,
+            }}
+            source={{
+              uri: `${API_BASE_URL}` + item.avatar_shop,
+            }}
+          /> */}
+          <Text
+            style={{
+              fontWeight: 'bold',
+              color: 'black',
+              textTransform: 'uppercase',
+              fontSize: 15,
             }}>
-            <Ionicons name="chevron-back-outline" size={30} />
-          </TouchableOpacity>
-          <View style={{marginLeft: 85}}>
+            {item.name_shop}
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            // borderWidth: 1,
+            paddingVertical: 20,
+          }}>
+          <View style={{justifyContent: 'center'}}>
+            <CheckBox
+              checkedColor="black"
+              value={selectedItems.includes(item)}
+              onValueChange={() => handleCheckboxChange(item)}
+              checked={
+                selectedItems.filter(
+                  selectedItem => selectedItem.itemId === item.itemId,
+                ).length > 0
+              }
+              onPress={() => handleCheckboxChange(item)}
+            />
+          </View>
+
+          <Image
+            resizeMode="contain"
+            style={{
+              width: 100,
+              height: 100,
+            }}
+            source={{
+              uri: `${API_BASE_URL}uploads/` + item.product_thumb,
+            }}
+          />
+          <View style={{marginStart: 10, flex: 1}}>
+            <Text style={{fontSize: 16, color: 'black'}} numberOfLines={2}>
+              {item.name}
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                flex: 1,
+                alignItems: 'center',
+              }}>
+              <Text style={{textTransform: 'uppercase'}}>{item.color}</Text>
+              <AntDesign
+                name="minus"
+                size={8}
+                color={'black'}
+                style={{marginHorizontal: 5}}
+              />
+              <Text style={{textTransform: 'uppercase'}}>{item.size}</Text>
+            </View>
             <Text
               style={{
-                fontSize: 25,
+                fontSize: 16,
+                color: '#FC6D26',
                 fontWeight: 'bold',
-                alignSelf: 'center',
               }}>
-              Giỏ hàng
+              {formatPrice(item.price)}
             </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                height: 25,
+                alignItems: 'center',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  if (item.quantity > 1) {
+                    handleDecreaseQuantity(item.itemId);
+                  }
+                }}
+                style={{
+                  padding: 5,
+                  marginRight: 8,
+                }}>
+                <Ionicons name="remove-outline" color="black" size={18} />
+              </TouchableOpacity>
+              <Text>{item.quantity}</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  handleIncreaseQuantity(item.itemId);
+                }}
+                style={{
+                  padding: 5,
+                  marginLeft: 8,
+                }}>
+                <Ionicons name="add-outline" color="black" size={18} />
+              </TouchableOpacity>
+            </View>
           </View>
+          <TouchableOpacity
+            onPress={() => {
+              Alert.alert('Thông báo', 'Bạn có chắc chẵn muốn xóa không ? ', [
+                {
+                  text: 'Cancel',
+                  onPress: () => console.log('Cancel Pressed'),
+                  style: 'cancel',
+                },
+                {
+                  text: 'Ok',
+                  onPress: () => {
+                    onDeleteItemCart(item.productId);
+                  },
+                },
+              ]);
+            }}
+            style={{
+              marginTop: 20,
+              justifyContent: 'center',
+              paddingHorizontal: 10,
+            }}>
+            <AntDesign name="delete" size={24} color={'black'} />
+          </TouchableOpacity>
         </View>
+      </View>
+    );
+  };
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity
+          onPress={() => {
+            nav.goBack();
+          }}>
+          <Ionicons name="chevron-back-outline" size={26} color={'black'} />
+        </TouchableOpacity>
+        <Text
+          style={{
+            fontSize: 24,
+            textAlign: 'center',
+            color: 'black',
+            textAlign: 'center',
+          }}>
+          Giỏ hàng
+        </Text>
+        <Pressable onPress={() => nav.navigate('ChatScreen')}>
+          <Ionicons name="chatbubbles-outline" size={26} color={'black'} />
+        </Pressable>
       </View>
       <FlatList
         data={listCart}
         keyExtractor={item => item.itemId}
-        renderItem={({item, index}) => {
-          return (
-            <View style={styles.product}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingHorizontal: 10,
-                }}>
-                <Image
-                  style={{
-                    height: 30,
-                    width: 30,
-                    borderRadius: 25,
-                  }}
-                  source={{
-                    uri: `${API_BASE_URL}` + item.avatar_shop,
-                  }}
-                />
-                <Text
-                  style={{
-                    marginLeft: 6,
-                    fontWeight: 'bold',
-                    color: 'black',
-                  }}>
-                  {item.name_shop}
-                </Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginTop: 15,
-                }}>
-                <View style={{justifyContent: 'center'}}>
-                  <CheckBox
-                    checkedColor="black"
-                    value={selectedItems.includes(item)}
-                    onValueChange={() => handleCheckboxChange(item)}
-                    checked={
-                      selectedItems.filter(
-                        selectedItem => selectedItem.itemId === item.itemId,
-                      ).length > 0
-                    }
-                    onPress={() => handleCheckboxChange(item)}
-                  />
-                </View>
-
-                <Image
-                  resizeMode="stretch"
-                  style={{
-                    width: 90,
-                    height: 90,
-                    borderRadius: 5,
-                  }}
-                  source={{
-                    uri: `${API_BASE_URL}uploads/` + item.product_thumb,
-                  }}
-                />
-                <View style={{marginStart: 15, width: 100}}>
-                  <Text numberOfLines={2}>{item.name}</Text>
-                  <View style={{flexDirection: 'row', marginTop: 5}}>
-                    <Text>{item.color} | </Text>
-                    <Text>{item.size}</Text>
-                  </View>
-                  <Text style={{marginTop: 5, color: 'red'}}>
-                    {formatPrice(item.price)}
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: item.quantity > 9 ? 90 : 80,
-                      height: 25,
-                      borderRadius: 6,
-                      borderWidth: 1,
-                      marginTop: 5,
-                      alignItems: 'center',
-                    }}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        if (item.quantity > 1) {
-                          handleDecreaseQuantity(item.itemId);
-                        }
-                      }}
-                      style={{borderRightWidth: 1, paddingHorizontal: 5}}>
-                      <Ionicons name="remove-outline" color="black" size={15} />
-                    </TouchableOpacity>
-                    <Text style={{marginHorizontal: 8}}>{item.quantity}</Text>
-                    <TouchableOpacity
-                      onPress={() => {
-                        handleIncreaseQuantity(item.itemId);
-                      }}
-                      style={{borderLeftWidth: 1, paddingHorizontal: 5}}>
-                      <Ionicons name="add-outline" color="black" size={15} />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                <TouchableOpacity
-                  onPress={() => {
-                    Alert.alert(
-                      'Thông báo',
-                      'Bạn có chắc chẵn muốn xóa không ? ',
-                      [
-                        {
-                          text: 'Cancel',
-                          onPress: () => console.log('Cancel Pressed'),
-                          style: 'cancel',
-                        },
-                        {
-                          text: 'Ok',
-                          onPress: () => {
-                            onDeleteItemCart(item.productId);
-                          },
-                        },
-                      ],
-                    );
-                  }}
-                  style={{marginTop: 20}}>
-                  <Ionicons name="close-circle-outline" size={30} />
-                </TouchableOpacity>
-              </View>
-            </View>
-          );
-        }}
+        renderItem={renderSanpham}
       />
       <View
         style={{
@@ -280,33 +300,37 @@ const CartScreen = () => {
           borderTopWidth: 1,
           alignItems: 'center',
           flexDirection: 'row',
+          justifyContent: 'space-between',
         }}>
         <View
           style={{
             flexDirection: 'row',
-            justifyContent: 'center',
+            justifyContent: 'space-between',
             alignItems: 'center',
+            flex: 1,
           }}>
-          <CheckBox
-            checkedColor="black"
-            onValueChange={() => setSelection(!isSelected)}
-            checked={isSelected}
-            onPress={() => {
-              setSelection(!isSelected);
-              if (isSelected) {
-                setUpdatePrice(!isSelected);
-                setSelectedItems([]);
-              } else {
-                setUpdatePrice(!isSelected);
-                setSelectedItems(listCart);
-              }
-            }}
-          />
-          <Text style={{color: 'black', fontSize: 13, marginLeft: -15}}>
-            Tất cả
-          </Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <CheckBox
+              checkedColor="black"
+              onValueChange={() => setSelection(!isSelected)}
+              checked={isSelected}
+              onPress={() => {
+                setSelection(!isSelected);
+                if (isSelected) {
+                  setUpdatePrice(!isSelected);
+                  setSelectedItems([]);
+                } else {
+                  setUpdatePrice(!isSelected);
+                  setSelectedItems(listCart);
+                }
+              }}
+            />
+            <Text style={{color: 'black', fontSize: 13, marginLeft: -15}}>
+              Tất cả
+            </Text>
+          </View>
         </View>
-        <View style={{flexDirection: 'row', marginHorizontal: 10}}>
+        <View style={{marginHorizontal: 10}}>
           <Text style={{fontSize: 13, color: 'black'}}>Tổng thanh toán</Text>
           <Text
             style={{
@@ -319,7 +343,26 @@ const CartScreen = () => {
         </View>
         <TouchableOpacity
           onPress={() => {
-            nav.navigate('Checkouts', {item: selectedItems});
+            if (selectedItems.length > 0) {
+              const formattedData = selectedItems.map(item => ({
+                product: {
+                  avatarShop: `${API_BASE_URL}${item.avatar_shop}`,
+                  color: item.color,
+                  name: item.name,
+                  nameShop: item.name_shop,
+                  price: item.price,
+                  productId: item.productId,
+                  quantity: item.quantity,
+                  shopId: item.shopId,
+                  size: item.size,
+                  thumb: item.product_thumb,
+                },
+              }));
+
+              nav.navigate('Checkout', {orderDetails: formattedData});
+            } else {
+              ToastAndroid.show('Vui lòng chọn sản phẩm', ToastAndroid.LONG);
+            }
           }}
           style={{
             flex: 1,
@@ -339,7 +382,6 @@ export default CartScreen;
 
 const styles = StyleSheet.create({
   product: {
-    minHeight: 150,
     backgroundColor: 'white',
     marginTop: 10,
     paddingVertical: 10,
@@ -347,19 +389,13 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    marginTop: 20,
+    backgroundColor: 'white',
   },
   header: {
-    height: '10%',
-    paddingHorizontal: 20,
-  },
-  inputSearch: {
-    width: '100%',
-    height: 40,
-    borderRadius: 10,
-    borderWidth: 1,
-    marginTop: 20,
-    paddingStart: 40,
-    borderColor: 'gray',
+    paddingHorizontal: 10,
+    height: 60,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });

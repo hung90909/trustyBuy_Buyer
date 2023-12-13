@@ -123,13 +123,17 @@ const Login2 = ({navigation}) => {
         <SimpleLineIcons name="lock" size={25} />
         <TextInput
           onChangeText={text => {
-            setPassword(text);
+            // Truncate the password to a maximum length of 20 characters
+            const truncatedPassword = text.slice(0, 20);
+            setPassword(truncatedPassword);
             setErrorPassword('');
           }}
           style={styles.passwordInput}
           placeholder="Mật khẩu"
           secureTextEntry={!showPassword}
+          maxLength={20} // Add this line
         />
+
         <TouchableOpacity
           style={styles.passwordToggle}
           onPress={() => setShowPassword(!showPassword)}>

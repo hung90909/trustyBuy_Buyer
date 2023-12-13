@@ -14,6 +14,7 @@ export const DISCOUNT_API = getApiUrl(
   'v1/api/discount/ofShop/654c895786644a5c7ac507df',
 );
 export const ADD_CART_API = getApiUrl('v1/api/cartv2');
+export const DELETE_CART_API = getApiUrl('v1/api/cartv2/delete');
 export const GET_ADDRESS_API = getApiUrl('v1/api/user/getAddress');
 export const USER_API = getApiUrl('v1/api/user');
 export const DETAILSHOP_API = getApiUrl('v1/shop/getShop/');

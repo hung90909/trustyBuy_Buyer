@@ -10,7 +10,7 @@ import {
 import React, {useCallback, useState} from 'react';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {apiGet, apiPatch} from '../../utils/utils';
-import {ORDER_API} from '../../config/urls';
+import {API_BASE_URL, ORDER_API} from '../../config/urls';
 
 export default function DangGiao() {
   const nav = useNavigation();
@@ -18,7 +18,14 @@ export default function DangGiao() {
   const getAllOrderForUser = async () => {
     try {
       const res = await apiGet(`${ORDER_API}/getAllOrderForUser/shipped`);
-      setListProducts(res.message.orderRes.user);
+      const sortedList = res.message.orderRes.user.sort((a, b) => {
+        // Assuming 'purchaseDate' is the property representing the order purchase date
+        const dateA = new Date(a.crateDate);
+        const dateB = new Date(b.crateDate);
+        // Sort in descending order (newest first)
+        return dateB - dateA;
+      });
+      setListProducts(sortedList);
     } catch (error) {
       console.log(error);
     }
@@ -72,10 +79,7 @@ export default function DangGiao() {
                         borderRadius: 20,
                       }}
                       source={{
-                        // uri:
-                        //   'https://158f-2a09-bac1-7aa0-50-00-246-66.ngrok-free.app/' +
-                        //   item.avatar_shop,
-                        uri: 'https://images2.thanhnien.vn/528068263637045248/2023/12/2/messi-1701497642597535849236.png',
+                        uri: `${API_BASE_URL}` + item.avatar_shop,
                       }}
                     />
                     <Text
@@ -103,10 +107,7 @@ export default function DangGiao() {
                       borderRadius: 5,
                     }}
                     source={{
-                      // uri:
-                      //   'https://19a5-2a09-bac1-7a80-50-00-17-25e.ngrok-free.app/uploads/' +
-                      //   item.product_thumb[0],
-                      uri: 'https://images2.thanhnien.vn/528068263637045248/2023/12/2/messi-1701497642597535849236.png',
+                      uri: `${API_BASE_URL}uploads/` + item.product_thumb[0],
                     }}
                   />
                   <View
@@ -134,7 +135,10 @@ export default function DangGiao() {
                           flexDirection: 'row',
                           alignItems: 'center',
                         }}>
-                        <Text>{item.color}{item.product_attributes.color}</Text>
+                        <Text>
+                          {item.color}
+                          {item.product_attributes.color}
+                        </Text>
                         <View
                           style={{
                             backgroundColor: 'black',
@@ -142,7 +146,10 @@ export default function DangGiao() {
                             height: 10,
                             marginHorizontal: 5,
                           }}></View>
-                        <Text>{item.size}{item.product_attributes.size}</Text>
+                        <Text>
+                          {item.size}
+                          {item.product_attributes.size}
+                        </Text>
                       </View>
                       <Text>{item.product_attributes.quantity} sản phẩm</Text>
                     </View>

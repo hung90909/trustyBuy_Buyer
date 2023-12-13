@@ -23,20 +23,12 @@ const ProfileScreen = ({navigation}) => {
       image: require('../../Resource/icon/notification.png'),
     },
     {
-      name: 'Mã giảm giá',
-      image: require('../../Resource/icon/discount.png'),
-    },
-    {
       name: 'Message',
       image: require('../../Resource/icon/speech-bubble.png'),
     },
     {
       name: 'Change password',
       image: require('../../Resource/icon/padlock.png'),
-    },
-    {
-      name: 'Setting',
-      image: require('../../Resource/icon/settings.png'),
     },
   ];
   const handleFeatureClick = featureName => {
@@ -50,17 +42,11 @@ const ProfileScreen = ({navigation}) => {
       case 'Change password':
         navigation.navigate('ChangePassword');
         break;
-      case 'Mã giảm giá':
-        navigation.navigate('listDiscount');
-        break;
       case 'Notification':
         navigation.navigate('NotificationScreen');
         break;
       case 'Message':
         navigation.navigate('ChatScreen');
-        break;
-      case 'Setting':
-        console.log('Setting');
         break;
 
       default:
@@ -80,10 +66,6 @@ const ProfileScreen = ({navigation}) => {
             Profile
           </Text>
         </View>
-        <Image
-          source={require('../../Resource/icon/menu.png')}
-          style={styles.icon_profile}
-        />
       </View>
       <View style={styles.infor_profile}>
         <View style={styles.avatar_container}>
@@ -94,14 +76,6 @@ const ProfileScreen = ({navigation}) => {
             }}
             resizeMode="contain"
           />
-          <TouchableOpacity
-            style={styles.edit_icon_container}
-            onPress={() => {}}>
-            <Image
-              source={require('../../Resource/icon/edit-text.png')}
-              style={styles.edit_icon}
-            />
-          </TouchableOpacity>
         </View>
 
         <Text
@@ -113,9 +87,6 @@ const ProfileScreen = ({navigation}) => {
             marginBottom: 5,
           }}>
           {account?.fullName}
-        </Text>
-        <Text style={{fontSize: 13, color: 'black'}}>
-          0{account.phoneNumber}
         </Text>
       </View>
       {features.map((item, index) => (

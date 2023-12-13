@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
-import {ORDER_API} from '../../config/urls';
+import {API_BASE_URL, ORDER_API} from '../../config/urls';
 import {apiGet} from '../../utils/utils';
 
 export default function DaGiao() {
@@ -31,17 +31,13 @@ export default function DaGiao() {
   const [listProducts, setListProducts] = useState([]);
 
   const onBuyAgain = id => {
-    fetch(
-      'https://7324-116-96-44-199.ngrok-free.app/v1/api/checkout/cancelByUser/' +
-        id,
-      {
-        method: 'PATCH',
-        headers: {
-          'x-xclient-id': '654c8a081f10540692bdc998',
-          authorization: token,
-        },
+    fetch(`${API_BASE_URL}v1/api/checkout/cancelByUser/` + id, {
+      method: 'PATCH',
+      headers: {
+        'x-xclient-id': '654c8a081f10540692bdc998',
+        authorization: token,
       },
-    )
+    })
       .then(() => nav.navigate('XuLy'))
       .catch(err => console.log(err));
   };
@@ -73,10 +69,7 @@ export default function DaGiao() {
                         borderRadius: 20,
                       }}
                       source={{
-                        // uri:
-                        //   'https://158f-2a09-bac1-7aa0-50-00-246-66.ngrok-free.app/' +
-                        //   item.avatar_shop,
-                        uri: 'https://images2.thanhnien.vn/528068263637045248/2023/12/2/messi-1701497642597535849236.png',
+                        uri: `${API_BASE_URL}` + item.avatar_shop,
                       }}
                     />
                     <Text
@@ -104,10 +97,7 @@ export default function DaGiao() {
                       borderRadius: 5,
                     }}
                     source={{
-                      // uri:
-                      //   'https://19a5-2a09-bac1-7a80-50-00-17-25e.ngrok-free.app/uploads/' +
-                      //   item.product_thumb[0],
-                      uri: 'https://images2.thanhnien.vn/528068263637045248/2023/12/2/messi-1701497642597535849236.png',
+                      uri: `${API_BASE_URL}uploads/` + item.product_thumb[0],
                     }}
                   />
                   <View
@@ -135,7 +125,10 @@ export default function DaGiao() {
                           flexDirection: 'row',
                           alignItems: 'center',
                         }}>
-                         <Text>{item.color}{item.product_attributes.color}</Text>
+                        <Text>
+                          {item.color}
+                          {item.product_attributes.color}
+                        </Text>
                         <View
                           style={{
                             backgroundColor: 'black',
@@ -143,7 +136,7 @@ export default function DaGiao() {
                             height: 10,
                             marginHorizontal: 5,
                           }}></View>
-                        <Text>{item.product_attributes.size}XL</Text>
+                        <Text>{item.product_attributes.size}</Text>
                       </View>
                       <Text>{item.product_attributes.quantity} sản phẩm</Text>
                     </View>

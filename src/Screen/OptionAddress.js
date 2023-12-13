@@ -7,6 +7,7 @@ import {apiGet, apiPut} from '../utils/utils';
 import {USER_API} from '../config/urls';
 import {useDispatch} from 'react-redux';
 import {changeAddress} from '../redux/actions/address';
+import AddAdress from './Address/Components/AddAdress';
 // import {ScrollView} from 'react-native-gesture-handler';
 
 const OptionAddress = () => {
@@ -40,9 +41,22 @@ const OptionAddress = () => {
       console.error('Error changing address:', error);
     }
   };
+  const handleDelete = async addressId => {
+    await apiPut(`${USER_API}/deleteAddress`, {
+      addressId: addressId,
+    })
+      .then(res => {
+        console.log(res);
+        fetchData();
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+        <AddAdress isVisible={isAddModalVisible} onClose={toggleAddModal} />
         <TouchableOpacity
           onPress={() => {
             nav.goBack();
@@ -85,9 +99,34 @@ const OptionAddress = () => {
                 </View>
               </View>
             </Pressable>
+            <Image
+              onPress={() => handleDelete(address._id)}
+              style={{
+                width: 40,
+                height: 40,
+              }}
+              source={require('../Resource/icon/bin.png')}
+            />
           </View>
         ))}
       </ScrollView>
+      <TouchableOpacity
+        onPress={() => {
+          toggleAddModal();
+        }}
+        style={{
+          width: '100%',
+          backgroundColor: 'black',
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: 20,
+          elevation: 3,
+          paddingVertical: 15,
+          position: 'absolute',
+          bottom: 0,
+        }}>
+        <Text style={{color: 'white'}}>Thêm mới địa chỉ</Text>
+      </TouchableOpacity>
     </View>
   );
 };

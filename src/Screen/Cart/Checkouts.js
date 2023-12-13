@@ -7,6 +7,7 @@ import {
   Image,
   FlatList,
   Alert,
+  ToastAndroid,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {apiGet, apiPost} from '../../utils/utils';
@@ -28,9 +29,11 @@ const Checkouts = ({navigation}) => {
   const nav = useNavigation();
   const route = useRoute();
   const {item, itemAddress, itemDiscount} = route.params;
+  const [userId, setUserId] = useState('');
   const [address, setAddress] = useState({});
   const [user, setUser] = useState({});
   const [cartId, setCartId] = useState('');
+  const [totalProduct, setTotalProduct] = useState('');
 
   const Checkouts = ({navigation}) => {
     const nav = useNavigation();
@@ -64,8 +67,8 @@ const Checkouts = ({navigation}) => {
       return formatPrice(price * quantity);
     };
   };
-
   const totalPrice = (price, quantity) => {
+    setTotalProduct(price * quantity);
     return formatPrice(price * quantity);
   };
 
@@ -122,7 +125,7 @@ const Checkouts = ({navigation}) => {
   const onOrders = async () => {
     const data = {
       //    userId:"654c8a081f10540692bdc998",
-      cartId: cartId,
+      cartId: cartid,
       shop_order_ids: item.map(item => ({
         shopId: item.shopId,
         shop_discounts: [
@@ -157,7 +160,6 @@ const Checkouts = ({navigation}) => {
       // console.error(errorMessage);
       // Hiển thị thông báo lỗi cho người dùng, ví dụ sử dụng alert
       Alert.alert('Thông báo loi', errorMessage);
-      throw error;
     }
   };
 
@@ -180,28 +182,41 @@ const Checkouts = ({navigation}) => {
           <Text style={{fontSize: 20, marginLeft: 20}}>Thanh toán</Text>
         </View>
 
-        <TouchableOpacity
-          onPress={() => {
-            nav.navigate('ListAddress', {
-              itemProduct: item,
-              itemDiscount: itemDiscount,
-            });
-          }}
-          style={styles.addressSection}>
-          <View style={styles.addressDetails}>
-            <Ionicons name="location-outline" size={20} />
-            <Text style={{marginLeft: 10}}>Địa chỉ nhận hàng</Text>
-          </View>
-          <View style={styles.addressInfo}>
-            <Text>
-              {user.fullName} | 0{user.phoneNumber}
-            </Text>
-            <Text>
-              {itemAddress ? itemAddress.customAddress : address.customAddress}
-            </Text>
-          </View>
-          <Ionicons name="chevron-forward-outline" size={30} />
-        </TouchableOpacity>
+        {itemAddress ? (
+          <TouchableOpacity
+            onPress={() => {
+              nav.navigate('ListAddress', {
+                itemProduct: item,
+                itemDiscount: itemDiscount,
+              });
+            }}
+            style={styles.addressSection}>
+            <View style={styles.addressDetails}>
+              <Ionicons name="location-outline" size={20} />
+              <Text style={{marginLeft: 10}}>Địa chỉ nhận hàng</Text>
+            </View>
+            <View style={styles.addressInfo}>
+              <Text>
+                {user.fullName} | 0{user.phoneNumber}
+              </Text>
+              <Text>
+                {itemAddress
+                  ? itemAddress.customAddress
+                  : address.customAddress}
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward-outline" size={30} />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              nav.navigate('AdressScreen');
+            }}
+            style={styles.addressSection}>
+            <Text>Thêm địa chỉ</Text>
+            <Ionicons style={{marginLeft: 5}} name="add-outline" size={20} />
+          </TouchableOpacity>
+        )}
 
         <View style={styles.productListSection}>
           <FlatList

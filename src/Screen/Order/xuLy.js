@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {ORDER_API} from '../../config/urls';
+import {API_BASE_URL, ORDER_API} from '../../config/urls';
 import {apiGet, apiPatch} from '../../utils/utils';
 
 export default function XuLy() {
@@ -18,8 +18,15 @@ export default function XuLy() {
   const getAllOrderForUser = async () => {
     try {
       const res = await apiGet(`${ORDER_API}/getAllOrderForUser/pending`);
-      setListProduct(res.message.orderRes.user);
-      console.log(res.message.orderRes.user)
+      const sortedList = res.message.orderRes.user.sort((a, b) => {
+        // Assuming 'purchaseDate' is the property representing the order purchase date
+        const dateA = new Date(a.crateDate);
+        const dateB = new Date(b.crateDate);
+        // Sort in descending order (newest first)
+        return dateB - dateA;
+      });
+      setListProduct(sortedList);
+      console.log(sortedList);
     } catch (error) {
       console.log(error);
     }
@@ -34,7 +41,7 @@ export default function XuLy() {
   );
 
   const onClickCancel = async id => {
-       await apiPatch(`${ORDER_API}/cancelByUser/${id}`)
+    await apiPatch(`${ORDER_API}/cancelByUser/${id}`)
       .then(() => nav.navigate('DaHuy'))
       .catch(err => console.log(err));
   };
@@ -70,16 +77,8 @@ export default function XuLy() {
                         height: 30,
                         borderRadius: 20,
                       }}
-                      // source={{
-                      //   uri:
-                      //     'https://158f-2a09-bac1-7aa0-50-00-246-66.ngrok-free.app/' +
-                      //     item.avatar_shop,
-                      // }}
                       source={{
-                        // uri:
-                        //   'https://19a5-2a09-bac1-7a80-50-00-17-25e.ngrok-free.app/uploads/' +
-                        //   item.product_thumb[0],
-                        uri: 'https://images2.thanhnien.vn/528068263637045248/2023/12/2/messi-1701497642597535849236.png',
+                        uri: `${API_BASE_URL}` + item.avatar_shop,
                       }}
                     />
                     <Text
@@ -107,10 +106,7 @@ export default function XuLy() {
                       borderRadius: 5,
                     }}
                     source={{
-                      // uri:
-                      //   'https://19a5-2a09-bac1-7a80-50-00-17-25e.ngrok-free.app/uploads/' +
-                      //   item.product_thumb[0],
-                      uri: 'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfcatdbaq4qscd',
+                      uri: `${API_BASE_URL}uploads/` + item.product_thumb[0],
                     }}
                   />
                   <View
@@ -138,7 +134,10 @@ export default function XuLy() {
                           flexDirection: 'row',
                           alignItems: 'center',
                         }}>
-                        <Text>{item.color}{item.product_attributes.color}</Text>
+                        <Text>
+                          {item.color}
+                          {item.product_attributes.color}
+                        </Text>
                         <View
                           style={{
                             backgroundColor: 'black',
@@ -146,7 +145,10 @@ export default function XuLy() {
                             height: 10,
                             marginHorizontal: 5,
                           }}></View>
-                        <Text>{item.size}{item.product_attributes.size}</Text>
+                        <Text>
+                          {item.size}
+                          {item.product_attributes.size}
+                        </Text>
                       </View>
                       <Text>{item.product_attributes.quantity} sản phẩm</Text>
                     </View>
