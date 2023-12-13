@@ -115,13 +115,13 @@ const DetailProducts = ({route, navigation}) => {
               price: productDetail.product_price,
               color: selectedColor,
               size: selectedSize,
-              thumb: productDetail.product_thumb,
+              thumb: productDetail.product_thumb[0],
               avatarShop: productDetail.shop_avatar,
               nameShop: productDetail.shop_name,
             },
           },
         ];
-        console.log('ơ day', orderItem);
+        // console.log('ơ day', orderItem);
         const updatedTotalQuantity = getTotalQuantityForColorAndSize(
           selectedColor,
           selectedSize,

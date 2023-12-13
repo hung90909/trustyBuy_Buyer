@@ -38,11 +38,11 @@ export default Register = () => {
         return;
       }
       if (email.length === 0) {
-        setErrorEmail('Vui lòng nhập đầy đủ thông tin');
+        setErrorEmail('Vui lòng nhập email');
         return;
       }
       if (password.length === 0) {
-        setErrorPassword('Vui lòng nhập đầy đủ thông tin');
+        setErrorPassword('Vui lòng nhập mật khẩu');
         return;
       }
       if (errorEmail.length !== 0 || errorPassword.length !== 0) {
@@ -61,6 +61,7 @@ export default Register = () => {
               role: role,
             });
           })
+
           .catch(e => {
             if (e.code === 403) {
               setErrorEmail('Email đã được đăng kí');
@@ -103,13 +104,17 @@ export default Register = () => {
         <SimpleLineIcons name="lock" size={25} />
         <TextInput
           onChangeText={text => {
-            setPassword(text);
+            // Limit the password to a maximum of 20 characters
+            const truncatedPassword = text.slice(0, 20);
+            setPassword(truncatedPassword);
             setErrorPassword('');
           }}
           style={styles.passwordInput}
           placeholder="Mật khẩu"
           secureTextEntry={!showPassword}
+          maxLength={20} // Maximum length
         />
+
         <TouchableOpacity
           style={styles.passwordToggle}
           onPress={() => setShowPassword(!showPassword)}>

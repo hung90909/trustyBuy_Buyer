@@ -7,6 +7,7 @@ import {
   Pressable,
   Image,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import {apiGet} from '../../utils/utils';
 import {API_BASE_URL, PRODUCT_API} from '../../config/urls';
@@ -15,33 +16,46 @@ import {useNavigation} from '@react-navigation/native';
 
 const ListProductInCategory = ({route}) => {
   const navigation = useNavigation();
-  const {categoryId, data} = route.params;
+  const {categoryId} = route.params;
   const [productList, setProductList] = useState([]);
-  console.log(data);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const getProduct = async () => {
       try {
         const response = await apiGet(
           `${PRODUCT_API}/ofCategory/${categoryId}`,
         );
-        const sortedProducts = response?.message.allProduct.sort((a, b) => {
-          const dateA = new Date(a.updatedAt);
-          const dateB = new Date(b.updatedAt);
-          return dateB - dateA;
-        });
+        const allProduct = response?.message?.allProduct;
 
-        setProductList(sortedProducts);
+        if (allProduct && allProduct.length > 0) {
+          const sortedProducts = allProduct.sort((a, b) => {
+            const dateA = new Date(a.updatedAt);
+            const dateB = new Date(b.updatedAt);
+            return dateB - dateA;
+          });
+
+          setProductList(sortedProducts);
+        } else {
+          console.warn('No products found for the given category.');
+        }
       } catch (error) {
-        console.error(error.response?.data);
+        console.error(
+          'Error fetching products:',
+          error.response?.data || error.message,
+        );
+      } finally {
+        setLoading(false);
       }
     };
+
     getProduct();
   }, [categoryId]);
+
   const handleProductPress = productId => {
     navigation.navigate('DetailProducts', {productId});
-    // console.log(productId);
-    setSelectedProductId(productId);
   };
+
   const renderSanpham = ({item}) => {
     return (
       <Pressable
@@ -70,18 +84,17 @@ const ListProductInCategory = ({route}) => {
 
   return (
     <ScrollView>
-      <View>
-        <Text>{}</Text>
-      </View>
-      {productList.length === 0 ? (
+      {loading ? (
+        <ActivityIndicator size="large" color="#FC6D26" />
+      ) : productList.length === 0 ? (
         <Text>No products found.</Text>
       ) : (
         <FlatList
           data={productList}
-          scrollEnabled={false}
           keyExtractor={item => item?._id}
           renderItem={renderSanpham}
           numColumns={2}
+          scrollEnabled={false}
         />
       )}
     </ScrollView>

@@ -24,12 +24,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {saveUserData} from '../../redux/actions/user';
 
 const data = [
-  {label: 'Nam', value: '1'},
-  {label: 'Nữ', value: '2'},
+  {label: 'Nam', value: 'Nam'},
+  {label: 'Nữ', value: 'Nữ'},
 ];
 
 const EditProfile = () => {
-  const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [phone, setPhone] = useState('');
   const [avatar, setAvatar] = useState('');
@@ -39,16 +38,23 @@ const EditProfile = () => {
   const [genderError, setGenderError] = useState('');
   const navigation = useNavigation();
   const [selectedImages, setSelectedImages] = useState(null);
-
+  const getImageSource = () => {
+    if (selectedImages) {
+      return {uri: selectedImages};
+    } else if (avatar) {
+      return {uri: `${API_BASE_URL}${avatar}`};
+    } else {
+      return require('../../Resource/Image/camera.png');
+    }
+  };
   const fetchData = async () => {
     try {
       const res = await apiGet(`${USER_API}/getProfile`);
-      setUsername(res?.message.checkUser.information.fullName);
-      setName(res?.message.checkUser.user_name);
-      setPhone(res?.message.checkUser.information.phoneNumber.toString());
-      setAvatar(res?.message.checkUser.information.avatar);
-      setValue(res?.message.checkUser.information.gender);
-      console.log(res?.message.checkUser.information.gender);
+      setUsername(res?.message.checkUser.information?.fullName);
+      setPhone(res?.message.checkUser.information?.phoneNumber.toString());
+      setAvatar(res?.message.checkUser.information?.avatar);
+      setValue(res?.message.checkUser.information?.gender);
+      // console.log(res?.message.checkUser.information.gender);
     } catch (error) {
       console.log(error);
     }
@@ -162,11 +168,10 @@ const EditProfile = () => {
           <View style={styles.avatar_container}>
             <Image
               style={styles.avatar}
-              source={{
-                uri: selectedImages ?? `${API_BASE_URL}${avatar}`,
-              }}
+              source={getImageSource()}
               resizeMode="contain"
             />
+
             <TouchableOpacity
               style={styles.edit_icon_container}
               onPress={() => {
@@ -191,7 +196,7 @@ const EditProfile = () => {
               placeholder="Nhập họ và tên"
               value={username}
               onChangeText={text => {
-                setName(text);
+                setUsername(text);
                 setNameError('');
               }}
             />
@@ -248,7 +253,7 @@ const EditProfile = () => {
               maxHeight={150}
               labelField="label"
               valueField="value"
-              placeholder={value}
+              placeholder={'Chọn giới tính'}
               value={value}
               onChange={item => {
                 setValue(item.value);
