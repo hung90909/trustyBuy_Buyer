@@ -32,6 +32,7 @@ const MessageScreen = ({navigation}) => {
 
   const renderItem = ({item}) => {
     const count = item?.chat?.isRead?.user?.countNew || 0;
+
     return (
       <ListItem.Swipeable
         onPress={() => navigateToMessItem(item)}
@@ -69,7 +70,7 @@ const MessageScreen = ({navigation}) => {
               {item?.chat?.messagers[item?.chat?.messagers.length - 1]}
             </ListItem.Subtitle>
             <ListItem.Subtitle style={styles.timeText}>
-              {formatMessageTime(item?.user?.updatedAt)}
+              {formatMessageTime(item?.chat?.updatedAt)}
             </ListItem.Subtitle>
           </View>
         </ListItem.Content>
