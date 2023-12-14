@@ -107,9 +107,12 @@ export default Listproducts;
 
 const styles = StyleSheet.create({
   container: {
-    width: '50%',
+    width: '48%',
     justifyContent: 'center',
     padding: '3%',
+    backgroundColor: 'white',
+    marginRight: '1%',
+    marginLeft: '1%',
   },
   imageSP: {
     width: '100%',

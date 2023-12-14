@@ -7,6 +7,7 @@ import {
   Alert,
   Modal,
   TouchableOpacity,
+  ToastAndroid,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -32,6 +33,8 @@ const CheckoutScreen = ({route}) => {
   const [paypalUrl, setPaypalUrl] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
   const [paymentProcessed, setPaymentProcessed] = useState(false);
+  const [orderData, setOrderData] = useState(null);
+  console.log(orderDetails);
   const pay = [
     {label: 'Thanh toán khi nhận hàng', value: 'Thanh toán khi nhận hàng'},
     {label: 'Thanh toán bằng PayPal', value: 'Thanh toán bằng PayPal'},
@@ -51,6 +54,55 @@ const CheckoutScreen = ({route}) => {
     });
     return formatPrice(total);
   };
+  const convertToUSD = amountInVND => {
+    const exchangeRate = 24000;
+    return (amountInVND / exchangeRate).toFixed(2);
+  };
+  const orderDetail = {
+    intent: 'CAPTURE',
+    purchase_units: [
+      {
+        items: product.map(item => ({
+          name: item.product.name,
+          description: 'Trusty Buy',
+          quantity: item.product.quantity,
+          unit_amount: {
+            currency_code: 'USD',
+            value: convertToUSD(item.product.price),
+          },
+        })),
+        amount: {
+          currency_code: 'USD',
+          value: product
+            .reduce((total, currentItem) => {
+              const itemTotal =
+                convertToUSD(currentItem.product.price) *
+                currentItem.product.quantity;
+              return total + itemTotal;
+            }, 0)
+            .toFixed(2),
+          breakdown: {
+            item_total: {
+              currency_code: 'USD',
+              value: product
+                .reduce((total, currentItem) => {
+                  const itemTotal =
+                    convertToUSD(currentItem.product.price) *
+                    currentItem.product.quantity;
+                  return total + itemTotal;
+                }, 0)
+                .toFixed(2),
+            },
+          },
+        },
+      },
+    ],
+    application_context: {
+      return_url: 'https://example.com/return',
+      cancel_url: 'https://example.com/cancel',
+    },
+  };
+
   const groupProductsByShop = products => {
     const groupedProducts = {};
     products.forEach(product => {
@@ -71,16 +123,6 @@ const CheckoutScreen = ({route}) => {
     });
 
     return formatPrice(total);
-  };
-
-  const totalDiscount = arr => {
-    const total = 0;
-    arr.forEach(item => {
-      total += item.product.price * item.product.quantity;
-    });
-
-    const discountAmount = total * (itemDiscount.discount_value / 100);
-    return formatPrice(discountAmount);
   };
 
   const onOrders = async () => {
@@ -107,10 +149,16 @@ const CheckoutScreen = ({route}) => {
     const orderData = {
       shop_order_ids: shopOrderData,
       user_address: {
-        City: data.customAddress,
+        Home: data?.nameAddress,
+        Address: data?.customAddress,
+
+        Username: data?.userinfor?.userName,
+
+        Phonenumber: data?.userinfor?.phoneNumber,
       },
       user_payment: value,
     };
+    setOrderData(orderData);
 
     try {
       if (value === 'Thanh toán khi nhận hàng') {
@@ -137,7 +185,7 @@ const CheckoutScreen = ({route}) => {
       } else if (value === 'Thanh toán bằng PayPal') {
         try {
           const token = await paypalApi.generateToken();
-          const {links} = await paypalApi.createOrder(token);
+          const {links} = await paypalApi.createOrder(token, orderDetail);
 
           setAccessToken(token);
 
@@ -166,6 +214,7 @@ const CheckoutScreen = ({route}) => {
       const {token} = queryString.parseUrl(webviewState.url).query;
 
       if (token) {
+        setPaymentProcessed(true); // Set the flag to true to indicate payment has been processed
         paymentSuccess(token);
       }
     }
@@ -179,10 +228,11 @@ const CheckoutScreen = ({route}) => {
     try {
       const response = await paypalApi.capturePayment(id, accessToken);
       console.log('Capture Payment Response:', response);
-      // Replace the Alert with your custom or external notification component
-      Alert.alert('Payment successful...!!!');
+      ToastAndroid.show('Thanh toán thành công đơn hàng', ToastAndroid.SHORT);
       setPaymentProcessed(true);
       clearPaypalState();
+      const res = await apiPost(ORDERS_API, orderData);
+      navigation.navigate('TabOrder');
     } catch (error) {
       console.error('Error capturing payment:', error);
     }
@@ -229,6 +279,15 @@ const CheckoutScreen = ({route}) => {
                   {data ? (
                     <View>
                       <Text>{data?.nameAddress}</Text>
+                      <View style={{flexDirection: 'row'}}>
+                        <Text>{data?.userinfor?.userName} | </Text>
+                        <Text>
+                          {address?.userinfor?.phoneNumber
+                            ? `0${address.userinfor.phoneNumber}`
+                            : ''}
+                        </Text>
+                      </View>
+
                       <Text>{data?.customAddress}</Text>
                     </View>
                   ) : (
@@ -291,7 +350,12 @@ const CheckoutScreen = ({route}) => {
                   );
                 })}
 
-                <Pressable>
+                <Pressable
+                  onPress={() =>
+                    navigation.navigate('ListDiscount', {
+                      shopId: groupedProducts[shopId][0].product.shopId,
+                    })
+                  }>
                   <View style={styles.voucherContainer}>
                     <Text style={styles.voucherText}>Voucher của shop</Text>
                     <View style={styles.voucherInputContainer}>

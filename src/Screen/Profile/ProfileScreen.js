@@ -136,6 +136,8 @@ const styles = StyleSheet.create({
   container_profile: {
     paddingHorizontal: 20,
     paddingVertical: 30,
+    backgroundColor: 'white',
+    flex: 1,
   },
   header_profile: {
     display: 'flex',

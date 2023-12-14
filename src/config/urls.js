@@ -10,9 +10,7 @@ export const PRODUCT_API = getApiUrl('v1/api/product');
 export const CHAT_API = getApiUrl('v1/api/chat');
 export const ORDER_API = getApiUrl('v1/api/checkout');
 export const SHOP_API = getApiUrl('v1/api/shop');
-export const DISCOUNT_API = getApiUrl(
-  'v1/api/discount/ofShop/654c895786644a5c7ac507df',
-);
+export const DISCOUNT_API = getApiUrl('v1/api/discount/ofShop');
 export const ADD_CART_API = getApiUrl('v1/api/cartv2');
 export const DELETE_CART_API = getApiUrl('v1/api/cartv2/delete');
 export const GET_ADDRESS_API = getApiUrl('v1/api/user/getAddress');
