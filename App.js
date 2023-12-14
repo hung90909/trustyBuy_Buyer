@@ -137,7 +137,7 @@ const App = () => {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="Login2"
+          initialRouteName="Welcome"
           screenOptions={{headerShown: false}}>
           <Stack.Screen name="Welcome" component={Welcome} />
           <Stack.Screen name="Welcome1" component={Welcome1} />

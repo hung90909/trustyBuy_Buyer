@@ -42,6 +42,7 @@ const DetailProducts = ({route, navigation}) => {
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
+  console.log(productDetail?.shop_id);
   const chatData = useSelector(state => state?.chat?.chatData);
 
   const handleIncreaseQuantity = () => {
@@ -317,44 +318,75 @@ const DetailProducts = ({route, navigation}) => {
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <BottomSheetModalProvider>
-        <SafeAreaView style={{backgroundColor: 'white', flex: 1}}>
+        <SafeAreaView style={{flex: 1}}>
           <ScrollView>
             <View>
-              <FlatList
-                data={productDetail?.product_thumb || []}
-                renderItem={renderImage}
-                keyExtractor={(item, index) => index.toString()}
-                horizontal
-                pagingEnabled
-                showsHorizontalScrollIndicator={false}
-                initialNumToRender={3}
-                getItemLayout={(data, index) => ({
-                  length: 420, // Độ dài của mỗi mục
-                  offset: 420 * index,
-                  index,
-                })}
-              />
+              <View style={{flex: 1}}>
+                <FlatList
+                  data={productDetail?.product_thumb || []}
+                  renderItem={renderImage}
+                  keyExtractor={(item, index) => index.toString()}
+                  horizontal
+                  pagingEnabled
+                  showsHorizontalScrollIndicator={false}
+                  initialNumToRender={3}
+                  getItemLayout={(data, index) => ({
+                    length: 420, // Độ dài của mỗi mục
+                    offset: 420 * index,
+                    index,
+                  })}
+                  style={{backgroundColor: 'white', position: 'relative'}}
+                />
+                <Ionicons
+                  name="arrow-back"
+                  size={26}
+                  color="black"
+                  onPress={() => navigation.goBack()}
+                  style={{
+                    position: 'absolute',
+                    top: 16, // Adjust the top position as needed
+                    left: 16, // Adjust the left position as needed
+                    zIndex: 1, // Ensure the icon is above the FlatList
+                  }}
+                />
+              </View>
 
               <View style={styles.container}>
-                <Text style={styles.nameProduct}>
-                  {productDetail?.product_name}
-                </Text>
-                <Text style={styles.priceProduct}>
-                  {formatPrice(productDetail?.product_price)}
-                </Text>
-                <View style={styles.ratingSoldPr}>
-                  <View style={styles.ratingStar}>
-                    <AntDesign name="star" size={18} color={'#FFCC00'} />
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    paddingHorizontal: 15,
+                    marginVertical: 5,
+                    paddingVertical: 20,
+                  }}>
+                  <Text style={styles.nameProduct}>
+                    {productDetail?.product_name}
+                  </Text>
+                  <Text style={styles.priceProduct}>
+                    {formatPrice(productDetail?.product_price)}
+                  </Text>
+                  <View style={styles.ratingSoldPr}>
+                    <View style={styles.ratingStar}>
+                      <AntDesign name="star" size={18} color={'#FFCC00'} />
+                      <Text style={styles.titleSold}>
+                        {productDetail?.product_ratingAverage}
+                      </Text>
+                    </View>
+
                     <Text style={styles.titleSold}>
-                      {productDetail?.product_ratingAverage}
+                      Đã bán {formatSoldSP(productDetail?.product_sold)}
                     </Text>
                   </View>
-
-                  <Text style={styles.titleSold}>
-                    Đã bán {formatSoldSP(productDetail?.product_sold)}
-                  </Text>
                 </View>
-                <View style={styles.shopProduct}>
+
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    flex: 1,
+                    backgroundColor: 'white',
+                    padding: 15,
+                    alignItems: 'center',
+                  }}>
                   <Image
                     style={styles.imgShop}
                     source={{
@@ -362,9 +394,12 @@ const DetailProducts = ({route, navigation}) => {
                     }}
                   />
                   <View style={styles.nameShowShop}>
-                    <Text style={styles.nameShop}>
-                      {productDetail?.shop_name}
-                    </Text>
+                    <View style={{}}>
+                      <Text style={styles.nameShop}>
+                        {productDetail?.shop_name}
+                      </Text>
+                    </View>
+
                     <View>
                       <Pressable
                         onPress={() => handleShopPress(productDetail?.shop_id)}
@@ -375,7 +410,7 @@ const DetailProducts = ({route, navigation}) => {
                   </View>
                 </View>
                 <View style={styles.containerProductdetail}>
-                  <Text style={styles.titleDetail}>Chi tiết sản phẩm</Text>
+                  <Text style={styles.titleDetail}>Mô tả sản phẩm</Text>
                   <Text style={styles.titleContent}>
                     {productDetail?.product_description}
                   </Text>
@@ -687,7 +722,6 @@ const DetailProducts = ({route, navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
     flex: 1,
   },
   nameProduct: {
@@ -700,7 +734,7 @@ const styles = StyleSheet.create({
   },
   priceProduct: {
     fontSize: 18,
-    marginVertical: 10,
+    marginVertical: 5,
     color: '#FC6D26',
     fontWeight: 'bold',
   },
@@ -714,14 +748,19 @@ const styles = StyleSheet.create({
   shopProduct: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 20,
+    marginVertical: 5,
+    backgroundColor: 'white',
+    padding: 15,
   },
   nameShop: {
     fontSize: 18,
     color: 'black',
-    fontWeight: 'bold',
+    textTransform: 'uppercase',
   },
-  nameShowShop: {marginLeft: 20, flexDirection: 'column'},
+  nameShowShop: {
+    marginLeft: 20,
+    alignItems: 'flex-start',
+  },
   butonDetailShop: {
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -734,7 +773,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   suggestionsProduct: {
-    marginTop: 20,
+    marginTop: 10,
+    backgroundColor: 'white',
+    paddingVertical: 10,
   },
   butonCartBuy: {
     height: 50,
@@ -768,16 +809,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
-  containerProductdetail: {},
+  containerProductdetail: {
+    backgroundColor: 'white',
+    marginVertical: 5,
+    padding: 10,
+  },
   titleDetail: {
     color: 'black',
     fontSize: 16,
-    fontWeight: 'bold',
     marginHorizontal: 5,
     marginVertical: 5,
   },
   titleContent: {
-    color: 'black',
+    color: 'gray',
     marginHorizontal: 5,
   },
   btnChat: {
@@ -808,9 +852,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   imgShop: {
-    height: 80,
-    width: 80,
-    borderRadius: 40,
+    height: 90,
+    width: 90,
+    borderRadius: 45,
   },
 });
 

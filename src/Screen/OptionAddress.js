@@ -92,6 +92,16 @@ const OptionAddress = () => {
                     {address.nameAddress}
                   </Text>
                   <Text>
+                    {address?.userinfor?.userName
+                      ? `${address.userinfor.userName}`
+                      : ''}
+                  </Text>
+                  <Text>
+                    {address?.userinfor?.phoneNumber
+                      ? `0${address.userinfor.phoneNumber}`
+                      : ''}
+                  </Text>
+                  <Text>
                     {address.customAddress.length > 30
                       ? address.customAddress.slice(0, 30) + '\n'
                       : address.customAddress}

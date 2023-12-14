@@ -24,6 +24,7 @@ const AdressScreen = () => {
     try {
       const res = await apiGet(`${USER_API}/getProfile`);
       setListAddress(res?.message.checkUser.information.address);
+      console.log(res?.message.checkUser.information.address);
     } catch (error) {
       console.log(error);
     }
@@ -60,7 +61,12 @@ const AdressScreen = () => {
             source={require('../../Resource/icon/back.png')}
           />
         </TouchableOpacity>
-        <Text style={{fontSize: 22, marginLeft: 20, fontWeight: 'bold'}}>
+        <Text
+          style={{
+            fontSize: 22,
+            marginLeft: 20,
+            fontWeight: 'bold',
+          }}>
           Địa chỉ
         </Text>
       </View>
@@ -79,6 +85,20 @@ const AdressScreen = () => {
                 source={require('../../Resource/icon/gps.png')}></Image>
               <View>
                 <Text style={{fontWeight: 'bold'}}>{address.nameAddress}</Text>
+                <View style={{flexDirection: 'row', marginVertical: 5}}>
+                  <Text style={{color: 'black'}}>
+                    {address?.userinfor?.userName
+                      ? `${address.userinfor.userName}`
+                      : ''}
+                  </Text>
+                  <Text style={{marginHorizontal: 5}}>|</Text>
+                  <Text>
+                    {address?.userinfor?.phoneNumber
+                      ? `0${address.userinfor.phoneNumber}`
+                      : ''}
+                  </Text>
+                </View>
+
                 <Text>
                   {address.customAddress.length > 30
                     ? address.customAddress.slice(0, 30) + '\n'

@@ -195,6 +195,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     paddingHorizontal: 10,
+    textTransform: 'uppercase',
   },
   shopActions: {
     flexDirection: 'row',

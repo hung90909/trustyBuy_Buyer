@@ -22,6 +22,10 @@ const AddAdress = ({isVisible, onClose}) => {
         {
           nameAddress: name,
           address: detail,
+          userInfor: {
+            userName: username,
+            phoneNumber: phone,
+          },
         },
         {
           headers: {
@@ -36,6 +40,8 @@ const AddAdress = ({isVisible, onClose}) => {
   };
   const [name, setName] = useState('');
   const [detail, setDetail] = useState('');
+  const [username, setUsername] = useState('');
+  const [phone, setphone] = useState('');
   return (
     <Modal visible={isVisible} animationType="slide" transparent={true}>
       <View style={styles.modalContainer}>
@@ -49,6 +55,24 @@ const AddAdress = ({isVisible, onClose}) => {
             onChangeText={text => setName(text)}
             value={name}
             placeholder="Nhập tên địa chỉ"
+          />
+          <Text style={{fontSize: 16, marginBottom: 10, color: 'black'}}>
+            Tên người nhận:
+          </Text>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={text => setUsername(text)}
+            value={username}
+            placeholder="Nhập tên người nhận"
+          />
+          <Text style={{fontSize: 16, marginBottom: 10, color: 'black'}}>
+            Số điện thoại :
+          </Text>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={text => setphone(text)}
+            value={phone}
+            placeholder="Nhập số điện thoại"
           />
           <Text style={{fontSize: 16, marginBottom: 10, color: 'black'}}>
             Chi tiết :
@@ -88,8 +112,8 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     elevation: 5,
-    width: 350,
-    height: 370,
+    width: 400,
+    height: 600,
   },
   modalTitle: {
     fontSize: 25,
@@ -99,6 +123,7 @@ const styles = StyleSheet.create({
 
     color: 'black',
   },
+
   textInput: {
     borderWidth: 1,
     borderColor: '#ccc',

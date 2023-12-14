@@ -25,11 +25,11 @@ const Comment = () => {
       <View style={styles.ratingContainer}>
         <Rating
           startingValue={5}
-          imageSize={24}
+          imageSize={16}
           readonly
           ratingBackgroundColor="#FFD700"
         />
-        <Text style={styles.ratingText}>5/5 (2.005 đánh giá)</Text>
+        <Text style={styles.ratingText}> 5/5 (2.005 đánh giá)</Text>
       </View>
       <ScrollView
         horizontal
@@ -113,13 +113,13 @@ const ReviewItem = ({item}) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: '2%',
+    paddingHorizontal: '2%',
+    backgroundColor: 'white',
   },
   reviewTitle: {
     marginTop: 10,
     color: '#2c3e50',
-    fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 16,
   },
   ratingContainer: {
     flexDirection: 'row',
@@ -128,8 +128,7 @@ const styles = StyleSheet.create({
   },
   ratingText: {
     marginLeft: 8,
-    color: '#2c3e50',
-    fontWeight: 'bold',
+    color: 'gray',
     fontSize: 16,
   },
   ratingFilterContainer: {
@@ -137,10 +136,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   ratingFilterItem: {
-    paddingHorizontal: 25,
-    paddingVertical: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 5,
     marginRight: 10,
-    borderWidth: 1,
+    // borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 10,
     flexDirection: 'row',
@@ -198,8 +197,7 @@ const styles = StyleSheet.create({
   },
   ratingText: {
     marginRight: 5,
-    color: '#f39c12',
-    fontWeight: 'bold',
+    color: 'gray',
   },
 });
 
