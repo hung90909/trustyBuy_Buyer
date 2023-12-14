@@ -41,6 +41,8 @@ import listDiscount from './src/Screen/Discount/listDiscount';
 import success from './src/Screen/success';
 import detailXuLy from './src/Screen/Order/detailOrder';
 import detailOrder from './src/Screen/Order/detailOrder';
+import DetailRating from './src/Screen/Rating/DetailRating';
+import RatingComment from './src/Screen/Rating/RatingComment';
 
 const TabTop = createMaterialTopTabNavigator();
 
@@ -137,7 +139,7 @@ const App = () => {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="Login2"
+          initialRouteName="Welcome"
           screenOptions={{headerShown: false}}>
           <Stack.Screen name="Welcome" component={Welcome} />
           <Stack.Screen name="Welcome1" component={Welcome1} />
@@ -175,6 +177,8 @@ const App = () => {
           <Stack.Screen name="listDiscount" component={listDiscount} />
           <Stack.Screen name="success" component={success} />
           <Stack.Screen name="DetailOrder" component={detailOrder} />
+          <Stack.Screen name="DetailRating" component={DetailRating} />
+          <Stack.Screen name="RatingComment" component={RatingComment} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

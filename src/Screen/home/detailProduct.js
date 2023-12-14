@@ -25,7 +25,7 @@ import {apiGet, apiPost} from '../../utils/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector} from 'react-redux';
 import {chatApi} from '../../redux/actions/chat';
-import Comment from '../../compoment/Comment';
+import Comment from '../Rating/Comment';
 const {width} = Dimensions.get('window');
 const {height} = Dimensions.get('window');
 
@@ -381,7 +381,18 @@ const DetailProducts = ({route, navigation}) => {
                   </Text>
                 </View>
               </View>
-              <Comment />
+
+              {productDetail && (
+                <View
+                  style={{
+                    borderTopWidth: 2,
+                    borderBottomWidth: 2,
+                    borderColor: '#ddd',
+                  }}>
+                  <Comment navigation={navigation} data={productDetail} />
+                </View>
+              )}
+
               <View style={styles.suggestionsProduct}>
                 <Text style={styles.titelSuggestions}>Gợi ý các sản phẩm</Text>
                 <Listproducts />
