@@ -12,8 +12,8 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
-import {API_BASE_URL, SHOP_API} from '../../config/urls';
-import {apiGet} from '../../utils/utils';
+import {API_BASE_URL, SHOP_API, USER_API} from '../../config/urls';
+import {apiGet, getItem} from '../../utils/utils';
 import {formatPrice, formatSoldSP} from '../Format';
 import {useSelector} from 'react-redux';
 import {chatApi} from '../../redux/actions/chat';
@@ -22,15 +22,32 @@ const ShopInformation = ({route}) => {
   const navigation = useNavigation();
   const [isFollowing, setIsFollowing] = useState(false);
   const {shopId} = route.params;
-  const [data, setData] = useState([]);
-  const [selectedProductId, setSelectedProductId] = useState(null);
+  const [data, setData] = useState(null);
+  const [count, setCount] = useState(0);
 
   const chatData = useSelector(state => state?.chat?.chatData);
+
+  const getLike = async () => {
+    try {
+      await apiGet(`${USER_API}/followShop/${shopId}`);
+
+      setCount(prevCount => (isFollowing ? prevCount - 1 : prevCount + 1));
+
+      setIsFollowing(!isFollowing);
+    } catch (error) {
+      console.error('Call api: ' + error.message);
+    }
+  };
 
   const getapi = async () => {
     try {
       const res = await apiGet(`${SHOP_API}/getShop/${shopId}`);
       setData(res?.message);
+
+      const token = await getItem('token');
+      const isCheck = res?.message?.shop?.follower.includes(token.userId);
+      if (isCheck) setIsFollowing(true);
+      setCount(res?.message?.shop?.follower.length);
     } catch (error) {
       console.log('Call api: ', error);
     }
@@ -42,8 +59,6 @@ const ShopInformation = ({route}) => {
 
   const handleProductPress = productId => {
     navigation.navigate('DetailProducts', {productId});
-    // console.log(productId);
-    setSelectedProductId(productId);
   };
 
   const renderSanpham = ({item}) => {
@@ -100,9 +115,7 @@ const ShopInformation = ({route}) => {
           <View style={styles.shopDetails}>
             <Text style={styles.shopName}>{data?.shop?.nameShop}</Text>
             <View style={styles.shopActions}>
-              <Pressable
-                style={styles.shopActionButton}
-                onPress={() => setIsFollowing(!isFollowing)}>
+              <Pressable style={styles.shopActionButton} onPress={getLike}>
                 <AntDesign
                   name={isFollowing ? 'check' : 'plus'}
                   size={16}
@@ -129,11 +142,15 @@ const ShopInformation = ({route}) => {
                 style={styles.starIcon}
                 source={require('../../Resource/Image/star.png')}
               />
-              <Text style={styles.ratingText}>4.9/5.0</Text>
-              <View style={styles.ratingSeparator} />
-              <Text style={styles.followersText}>
-                {data?.shop?.follower.length} Người theo dõi
+              <Text style={styles.ratingText}>
+                {data?.products.reduce(
+                  (count, item) => count + item?.product_ratingAverage,
+                  0,
+                ) / data?.products.length}
+                /5.0
               </Text>
+              <View style={styles.ratingSeparator} />
+              <Text style={styles.followersText}>{count} Người theo dõi</Text>
             </View>
           </View>
         </View>

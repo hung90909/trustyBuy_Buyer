@@ -420,8 +420,7 @@ const DetailProducts = ({route, navigation}) => {
               {productDetail && (
                 <View
                   style={{
-                    borderTopWidth: 2,
-                    borderBottomWidth: 2,
+                    backgroundColor: 'white',
                     borderColor: '#ddd',
                   }}>
                   <Comment navigation={navigation} data={productDetail} />
