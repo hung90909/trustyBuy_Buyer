@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     color: 'black',
     fontSize: 14,
+    textTransform: 'uppercase',
   },
   orderStatus: {
     color: 'black',

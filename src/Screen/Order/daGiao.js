@@ -13,7 +13,7 @@ import {API_BASE_URL, ORDER_API} from '../../config/urls';
 import {apiGet} from '../../utils/utils';
 
 export default function DaGiao() {
-  const nav = useNavigation()
+  const nav = useNavigation();
   const getAllOrderForUser = async () => {
     try {
       const res = await apiGet(`${ORDER_API}/getAllOrderForUser/delivered`);
@@ -54,11 +54,11 @@ export default function DaGiao() {
           keyExtractor={item => item.oderId}
           renderItem={({item}) => {
             return (
-              <Pressable 
-              onPress={() =>{
-                nav.navigate("DetailOrder",{item})
-              }}
-              style={styles.itemOrder}>
+              <Pressable
+                onPress={() => {
+                  nav.navigate('DetailOrder', {item});
+                }}
+                style={styles.itemOrder}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -82,6 +82,7 @@ export default function DaGiao() {
                         marginLeft: 6,
                         color: 'black',
                         fontSize: 14,
+                        textTransform: 'uppercase',
                       }}>
                       {item.name_shop}
                     </Text>

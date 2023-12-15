@@ -13,7 +13,7 @@ import {apiGet} from '../../utils/utils';
 import {API_BASE_URL, ORDER_API} from '../../config/urls';
 
 export default function DaHuy() {
-  const nav = useNavigation()
+  const nav = useNavigation();
   const getAllOrderForUser = async () => {
     try {
       const res = await apiGet(`${ORDER_API}/getAllOrderForUser/cancelled`);
@@ -51,10 +51,10 @@ export default function DaHuy() {
           renderItem={({item}) => {
             return (
               <Pressable
-              onPress={() =>{
-                nav.navigate("DetailOrder",{item})
-              }} 
-              style={styles.itemOrder}>
+                onPress={() => {
+                  nav.navigate('DetailOrder', {item});
+                }}
+                style={styles.itemOrder}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -82,6 +82,7 @@ export default function DaHuy() {
                         marginLeft: 6,
                         color: 'black',
                         fontSize: 14,
+                        textTransform: 'uppercase',
                       }}>
                       {item.name_shop}
                     </Text>
