@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -34,6 +34,7 @@ const CheckoutScreen = ({route}) => {
   const [accessToken, setAccessToken] = useState(null);
   const [paymentProcessed, setPaymentProcessed] = useState(false);
   const [orderData, setOrderData] = useState(null);
+
   console.log(orderDetails);
   const pay = [
     {label: 'Thanh toán khi nhận hàng', value: 'Thanh toán khi nhận hàng'},
@@ -125,7 +126,7 @@ const CheckoutScreen = ({route}) => {
     return formatPrice(total);
   };
 
-  const onOrders = async () => {
+  const onOrders = useCallback(async () => {
     const shopOrderData = route.params.orderDetails.map(item => ({
       shopId: item.product.shopId,
       shop_discounts: [
@@ -200,7 +201,7 @@ const CheckoutScreen = ({route}) => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [value, data, orderData, navigation, itemDiscount, product]);
   const onUrlChange = webviewState => {
     if (webviewState.url.includes('https://example.com/cancel')) {
       clearPaypalState();
@@ -505,8 +506,10 @@ const CheckoutScreen = ({route}) => {
         </Pressable>
       </View>
       <Modal visible={!!paypalUrl}>
-        <TouchableOpacity onPress={clearPaypalState} style={{margin: 24}}>
-          <Text>Closed</Text>
+        <TouchableOpacity
+          onPress={clearPaypalState}
+          style={{marginTop: 20, marginLeft: 20}}>
+          <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
         <View style={{flex: 1}}>
           <WebView

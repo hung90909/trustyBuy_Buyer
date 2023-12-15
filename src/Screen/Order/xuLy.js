@@ -58,11 +58,11 @@ export default function XuLy() {
           keyExtractor={item => item.oderId}
           renderItem={({item}) => {
             return (
-              <Pressable 
-              onPress={() =>{
-                nav.navigate("DetailOrder",{item})
-              }}
-              style={styles.itemOrder}>
+              <Pressable
+                onPress={() => {
+                  nav.navigate('DetailOrder', {item});
+                }}
+                style={styles.itemOrder}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -90,6 +90,7 @@ export default function XuLy() {
                         marginLeft: 6,
                         color: 'black',
                         fontSize: 14,
+                        textTransform: 'uppercase',
                       }}>
                       {item.name_shop}
                     </Text>

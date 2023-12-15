@@ -97,7 +97,7 @@ const Login2 = ({navigation}) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Image
-          source={require('../../Resource/Image/logo.png')}
+          source={require('../../Resource/Image/logo.jpeg')}
           style={styles.image}
         />
         <Text style={styles.heading}>Đăng nhập</Text>
