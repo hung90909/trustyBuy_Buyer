@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,14 +7,48 @@ import {
   StyleSheet,
   Image,
   ScrollView,
+  Alert,
   ToastAndroid,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {apiPut} from '../../utils/utils';
 import {FORGOT_API} from '../../config/urls';
 
+const isValidEmail = email => /^[A-Z0-9._%+-]+@gmail\.com$/i.test(email);
+
 const ForgotScreen = ({navigation}) => {
-  const [isCheck, setIsCheck] = useState(true);
   const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+
+  const handleForgotPassword = async () => {
+    setError('');
+    if (!email) {
+      setError('Vui lòng nhập email!');
+    } else if (!isValidEmail(email)) {
+      setError('Email không đúng định dạng!');
+    } else {
+      try {
+        const res = await apiPut(FORGOT_API, {
+          email,
+        });
+
+        if (res?.message === 'success') {
+          Alert.alert(
+            'Thông báo',
+            'Mật khẩu của bạn đã được thiết lập lại, vui lòng kiểm tra hộp thư đến',
+          );
+          navigation.navigate('Login2');
+        } else {
+          ToastAndroid.show(
+            'Yêu cầu thất bại, vui lòng kiểm tra tài khoản',
+            ToastAndroid.SHORT,
+          );
+        }
+      } catch (error) {
+        console.error('Lỗi trong quá trình gửi yêu cầu:', error.message);
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -28,198 +62,31 @@ const ForgotScreen = ({navigation}) => {
 
       <ScrollView>
         <Image
-          source={require('../../Resource/Image/logo.png')}
+          source={require('../../Resource/Image/logo.jpeg')}
           style={styles.logo}
         />
         <Text style={styles.title}>Xác thực quên mật khẩu</Text>
         <Text style={styles.subtitle}>
-          {isCheck
-            ? 'Nhập email để xác thực quên mật khẩu'
-            : 'Mã xác thực đã được gửi đến địa chỉ email'}
+          Nhập email để xác thực quên mật khẩu
         </Text>
 
-        {isCheck ? (
-          <EmailForgot data={{email, setEmail, setIsCheck}} />
-        ) : (
-          <ScreenOtp navigation={navigation} data={{email, setIsCheck}} />
-        )}
+        <View style={styles.inputContainer}>
+          <TextInput
+            value={email}
+            placeholder="Nhập email xác nhận..."
+            onChangeText={setEmail}
+          />
+        </View>
+
+        {error && <Text style={styles.errorText}>{error}</Text>}
+
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={handleForgotPassword}>
+          <Text style={styles.submitButtonText}>Gửi mã</Text>
+        </TouchableOpacity>
       </ScrollView>
     </View>
-  );
-};
-
-const isValidEmail = email => /^[A-Z0-9._%+-]+@gmail\.com$/i.test(email);
-
-const EmailForgot = ({data}) => {
-  const [error, setError] = useState('');
-
-  const check = () => {
-    setError('');
-    if (!data.email) {
-      setError('Vui lòng nhập email!');
-    } else if (!isValidEmail(data.email)) {
-      setError('Email không đúng định dạng!');
-    } else {
-      data?.setIsCheck(false);
-    }
-  };
-
-  return (
-    <View>
-      <View
-        style={{
-          height: 50,
-          marginHorizontal: '8%',
-          borderRadius: 10,
-          borderWidth: 1,
-          padding: 5,
-          margin: '5%',
-        }}>
-        <TextInput
-          value={data.email}
-          placeholder="Nhập email xác nhận..."
-          onChangeText={data.setEmail}
-        />
-      </View>
-
-      {error && <Text style={styles.errorText}>{error}</Text>}
-
-      <TouchableOpacity style={styles.submitButton} onPress={check}>
-        <Text style={styles.submitButtonText}>Gửi mã</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-const ScreenOtp = ({navigation, data}) => {
-  const otpInputs = useRef(Array(6));
-  const [otp, setOtp] = useState(Array(6).fill(''));
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(59);
-  const [isResendDisabled, setIsResendDisabled] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleOtpChange = (index, value) => {
-    if (isNaN(value)) {
-      return;
-    }
-
-    const newOtp = [...otp];
-    newOtp[index] = value;
-
-    if (index < 5 && value !== '') {
-      otpInputs.current[index + 1]?.focus();
-    }
-
-    setOtp(newOtp);
-
-    if (index === 5 - 1 && value !== '') {
-      setError('');
-    }
-  };
-
-  const handleVerifyOTP = async () => {
-    if (otp.some(item => item === '')) {
-      setError('Vui lòng nhập đầy đủ mã OTP.');
-      return;
-    }
-
-    try {
-      const res = await apiPost(FORGOT_API, {
-        email: data.email,
-        otp: otp.join(''),
-      });
-
-      console.log(res);
-
-      if (res.status === 200) {
-        ToastAndroid.show('Thay đổi password thành công');
-        navigation.replace('login2');
-      }
-    } catch (error) {
-      setError('Mã không chính xác');
-    }
-  };
-
-  const handleResend = async () => {
-    setMinutes(0);
-    setSeconds(59);
-    setError('');
-    setIsResendDisabled(true);
-
-    try {
-      await apiPost(FORGOT_API, {
-        email: data.email,
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (seconds > 0) {
-        setSeconds(prevSeconds => prevSeconds - 1);
-      } else if (minutes > 0) {
-        setMinutes(prevMinutes => prevMinutes - 1);
-        setSeconds(59);
-      } else {
-        clearInterval(intervalId);
-        setIsResendDisabled(false);
-      }
-    }, 1000);
-
-    setIsResendDisabled(true);
-
-    return () => clearInterval(intervalId);
-  }, [minutes, seconds]);
-
-  return (
-    <ScrollView>
-      <Text style={styles.email}>{data.email}</Text>
-      <View style={styles.otpContainer}>
-        {otp.map((item, index) => (
-          <TextInput
-            key={index}
-            style={[
-              styles.otpInput,
-              {borderColor: item !== '' ? 'transparent' : 'black'},
-            ]}
-            onChangeText={value => handleOtpChange(index, value)}
-            value={item}
-            keyboardType="numeric"
-            maxLength={1}
-            ref={input => (otpInputs.current[index] = input)}
-          />
-        ))}
-      </View>
-
-      {error && <Text style={styles.errorText}>{error}</Text>}
-
-      <TouchableOpacity style={styles.submitButton} onPress={handleVerifyOTP}>
-        <Text style={styles.submitButtonText}>Xác nhận</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.timerText}>
-        {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
-      </Text>
-
-      <View style={styles.resendContainer}>
-        <Text>Không nhận được mã ? </Text>
-        <TouchableOpacity
-          style={[styles.resendButton, isResendDisabled && {opacity: 0.2}]}
-          onPress={handleResend}
-          disabled={isResendDisabled}>
-          <Text style={styles.resendButtonText}>Gửi lại mã</Text>
-        </TouchableOpacity>
-      </View>
-
-      <TouchableOpacity
-        onPress={() => data?.setIsCheck(true)}
-        style={[styles.backButton, {alignSelf: 'center', marginTop: '5%'}]}>
-        <AntDesign name="left" size={20} color={'black'} />
-      </TouchableOpacity>
-    </ScrollView>
   );
 };
 
@@ -260,27 +127,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: 'black',
   },
-  email: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 20,
-    textAlign: 'center',
-    color: 'black',
-  },
-  otpContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginVertical: 30,
-  },
-  otpInput: {
-    borderWidth: 1,
-    fontSize: 16,
-    width: 50,
+  inputContainer: {
     height: 50,
-    textAlign: 'center',
-    marginHorizontal: 5,
-    borderRadius: 25,
-    borderColor: 'black',
+    marginHorizontal: '8%',
+    borderRadius: 10,
+    borderWidth: 1,
+    padding: 5,
+    margin: '5%',
   },
   submitButton: {
     backgroundColor: 'black',
@@ -294,27 +147,6 @@ const styles = StyleSheet.create({
   submitButtonText: {
     color: 'white',
     fontSize: 16,
-  },
-  resendContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  resendButton: {
-    borderRadius: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  resendButtonText: {
-    color: 'black',
-    fontWeight: 'bold',
-  },
-  timerText: {
-    marginVertical: 10,
-    fontSize: 14,
-    color: 'black',
-    textAlign: 'center',
   },
   errorText: {
     marginTop: 10,
