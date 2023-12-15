@@ -23,15 +23,6 @@ const Listproducts = ({count}) => {
     getAllProduct();
   }, []);
 
-  //Lỗi loop server
-  // const handleEndReached = () => {
-  //   if (!loadingMore) {
-  //     // Ngăn chặn việc kích hoạt nếu đang tải thêm dữ liệu
-  //     setLoadingMore(true);
-  //     getAllProduct(); // Triển khai hàm để tải thêm dữ liệu
-  //   }
-  // };
-
   const getAllProduct = async () => {
     try {
       const response = await apiGet(`${PRODUCT_API}/getAllProductByUser`);
@@ -48,7 +39,6 @@ const Listproducts = ({count}) => {
     } catch (error) {
       console.error(error.response.data);
     } finally {
-      // Kết thúc việc tải thêm dữ liệu, set loadingMore về false
       setLoadingMore(false);
     }
   };
@@ -121,6 +111,8 @@ const styles = StyleSheet.create({
   nameSp: {
     color: '#1B2028',
     fontSize: 14,
+    flex: 1,
+    marginVertical: 5,
   },
   containerGia: {
     flexDirection: 'row',
@@ -131,6 +123,7 @@ const styles = StyleSheet.create({
   giaSp: {
     color: '#FC6D26',
     fontSize: 14,
+    flex: 1,
   },
   daBan: {
     color: '#1B2028',
