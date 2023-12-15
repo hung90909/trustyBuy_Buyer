@@ -43,6 +43,7 @@ import detailXuLy from './src/Screen/Order/detailOrder';
 import detailOrder from './src/Screen/Order/detailOrder';
 import DetailRating from './src/Screen/Rating/DetailRating';
 import RatingComment from './src/Screen/Rating/RatingComment';
+import ForgotScreen from './src/Screen/Login/ForgotScreen';
 
 const TabTop = createMaterialTopTabNavigator();
 
@@ -179,6 +180,7 @@ const App = () => {
           <Stack.Screen name="DetailOrder" component={detailOrder} />
           <Stack.Screen name="DetailRating" component={DetailRating} />
           <Stack.Screen name="RatingComment" component={RatingComment} />
+          <Stack.Screen name="ForgotScreen" component={ForgotScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

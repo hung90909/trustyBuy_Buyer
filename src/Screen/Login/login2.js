@@ -8,6 +8,7 @@ import {
   TextInput,
   Alert,
   Dimensions,
+  Pressable,
 } from 'react-native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
@@ -147,6 +148,9 @@ const Login2 = ({navigation}) => {
       {errorPassword !== '' && (
         <Text style={styles.errorText}>{errorPassword}</Text>
       )}
+      <Pressable onPress={() => navigation.navigate('ForgotScreen')}>
+        <Text>Quên mật khẩu?</Text>
+      </Pressable>
       <TouchableOpacity onPress={checkValidateLogin} style={styles.loginButton}>
         <Text style={styles.buttonText}>Đăng nhập</Text>
       </TouchableOpacity>

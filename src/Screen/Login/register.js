@@ -6,16 +6,13 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
-  Alert,
   Dimensions,
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {useNavigation} from '@react-navigation/native';
 import {SIGNUP_API} from '../../config/urls';
 import Feather from 'react-native-vector-icons/Feather';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {apiPost} from '../../utils/utils';
 
 const {width, height} = Dimensions.get('window');

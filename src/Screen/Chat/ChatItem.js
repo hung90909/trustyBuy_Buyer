@@ -1,5 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  PermissionsAndroid,
+  Alert,
+} from 'react-native';
+
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
@@ -7,7 +16,7 @@ import {apiGet} from '../../utils/utils';
 import {API_BASE_URL, CHAT_API} from '../../config/urls';
 import {GiftedChat, Send} from 'react-native-gifted-chat';
 import socketServices from '../../utils/socketService';
-import {launchImageLibrary} from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker'; // Removed unused import
 import {saveChatData} from '../../redux/actions/chat';
 
 const MessageItem = ({navigation, route}) => {
@@ -22,7 +31,7 @@ const MessageItem = ({navigation, route}) => {
         user: {
           _id: message?.senderId,
           name: message?.senderId === data?.idShop ? 'Me' : data.useName,
-          avatar: `${API_BASE_URL}${data.avatar}`,
+          avatar: `${API_BASE_URL}${data?.avatar}`,
         },
       }));
       setMessages(mess.reverse());
@@ -31,31 +40,40 @@ const MessageItem = ({navigation, route}) => {
     }
   };
 
-  const openImagePicker = async () => {
+  const openImagePicker = async isCheck => {
     try {
-      const result = await launchImageLibrary({mediaType: 'photo'});
+      await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
+
+      const result = isCheck
+        ? await launchCamera({mediaType: 'photo', includeBase64: true})
+        : await launchImageLibrary({
+            mediaType: 'photo',
+            multiple: true,
+            includeBase64: true,
+          });
 
       if (!result.cancelled) {
         const imageMessage = {
           _id: Math.round(Math.random() * 1000000),
-          image: result.assets[0].uri,
+          text: ' ',
           createdAt: new Date(),
           user: {
             _id: data?.idShop,
           },
+          image: `data:image/jpeg;base64,${result.assets[0].base64}`,
         };
-
-        onSend([imageMessage]);
+        onSend(true, [imageMessage]);
       }
     } catch (error) {
-      console.error('Error selecting image:', error);
+      console.log('Error selecting image:', error);
     }
   };
 
-  const onSend = newMessages => {
+  const onSend = (ischeck, newMessages) => {
     socketServices.emit('chat message', {
       senderId: data?.idShop,
       message: newMessages[0].text,
+      image: ischeck ? newMessages[0].image : null,
       conversationId: data?.idRoom,
     });
   };
@@ -78,73 +96,130 @@ const MessageItem = ({navigation, route}) => {
   }, []);
 
   return (
-    <View style={MessageItemStyles.container}>
-      <View style={MessageItemStyles.header}>
+    <View style={styles.container}>
+      <View style={styles.header}>
         <TouchableOpacity
           onPress={async () => {
             socketServices.emit('leaveRoom', {
               roomName: data?.idRoom,
               userId: data?.idShop,
-            }),
-              await saveChatData(),
-              navigation.goBack();
+            });
+            await saveChatData();
+            navigation.goBack();
           }}
-          style={{
-            width: 40,
-            height: 40,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
+          style={styles.backButton}>
           <AntDesign name="left" size={20} color={'black'} />
         </TouchableOpacity>
-        <View style={MessageItemStyles.userInfo}>
+        <View style={styles.userInfo}>
           <Image
             source={{uri: `${API_BASE_URL}${data?.avatar}`}}
-            style={MessageItemStyles.userAvatar}
+            style={styles.userAvatar}
           />
-          <Text style={MessageItemStyles.userName}>{data?.useName}</Text>
+          <Text style={styles.userName}>{data?.useName}</Text>
         </View>
         <TouchableOpacity onPress={() => {}}>
-          <AntDesign name="ellipsis1" size={25} color={'black'} />
+          <AntDesign name="questioncircleo" size={25} color={'black'} />
         </TouchableOpacity>
       </View>
       <GiftedChat
         messages={messages}
-        onSend={newMessages => onSend(newMessages)}
+        onSend={newMessages => onSend(false, newMessages)}
         placeholder="Nhập tin nhắn..."
         user={{
           _id: data?.idShop,
         }}
-        textInputStyle={MessageItemStyles.input}
+        textInputStyle={styles.input}
         renderSend={props => (
-          <Send {...props} containerStyle={{justifyContent: 'center'}}>
+          <Send {...props} containerStyle={styles.sendContainer}>
             <TouchableOpacity
               onPress={() => props.onSend({text: props.text.trim()}, true)}
-              style={MessageItemStyles.sendButton}>
-              <MaterialIcons name="send" size={24} color={'white'} />
+              style={styles.sendButton}>
+              <MaterialIcons name="send" size={25} color={'white'} />
             </TouchableOpacity>
           </Send>
         )}
+        // isTyping
         isLoadingEarlier
         renderActions={() => (
           <TouchableOpacity
-            onPress={openImagePicker}
-            style={{alignSelf: 'center', marginLeft: '3%'}}>
+            onPress={() => {
+              Alert.alert(
+                'Thông báo',
+                'Bạn muốn lấy ảnh từ 🦘',
+                [
+                  {
+                    text: 'Chụp ảnh',
+                    onPress: () => {
+                      openImagePicker(true);
+                    },
+                  },
+                  {
+                    text: 'Thư viện',
+                    onPress: () => {
+                      openImagePicker(false);
+                    },
+                    style: 'cancel',
+                  },
+                ],
+                {cancelable: true},
+              );
+            }}
+            style={styles.cameraButton}>
             <Feather name="camera" size={25} color="#333" />
           </TouchableOpacity>
         )}
+        renderMessageText={props =>
+          !props.currentMessage.image && (
+            <Text
+              style={[
+                styles.messageText,
+                {
+                  color:
+                    props.currentMessage.user._id == data.idShop
+                      ? 'white'
+                      : 'black',
+                },
+              ]}>
+              {props.currentMessage.text}
+            </Text>
+          )
+        }
         renderMessageImage={props => (
           <Image
             source={{uri: props.currentMessage.image}}
-            style={{width: 200, height: 150}}
+            style={styles.messageImage}
           />
         )}
+        renderTime={props =>
+          !props.currentMessage.image && (
+            <Text
+              style={[
+                styles.messageText,
+                {
+                  fontSize: 10,
+                  paddingVertical: 2,
+                  color:
+                    props.currentMessage.user._id == data.idShop
+                      ? 'white'
+                      : 'black',
+                },
+              ]}>
+              {new Date(props.currentMessage.createdAt).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+              {new Date(props.currentMessage.createdAt).getHours() < 12
+                ? ' AM'
+                : ' PM'}
+            </Text>
+          )
+        }
       />
     </View>
   );
 };
 
-const MessageItemStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
@@ -154,14 +229,22 @@ const MessageItemStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: '3%',
+    justifyContent: 'space-between',
     borderColor: '#D9D9D9',
     borderBottomWidth: 1,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#EEEEEE',
+    borderRadius: 15,
   },
   userInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 1,
-    paddingHorizontal: 20,
+    right: '15%',
   },
   userAvatar: {
     width: 45,
@@ -175,10 +258,15 @@ const MessageItemStyles = StyleSheet.create({
     color: 'black',
   },
   input: {
+    marginTop: 7,
     paddingHorizontal: 12,
+    borderRadius: 20,
     backgroundColor: 'white',
+    borderWidth: 1,
     borderColor: '#999',
-    marginHorizontal: 20,
+  },
+  sendContainer: {
+    justifyContent: 'center',
   },
   sendButton: {
     width: 40,
@@ -188,7 +276,21 @@ const MessageItemStyles = StyleSheet.create({
     borderRadius: 100,
     marginHorizontal: '2%',
     backgroundColor: '#19B9EC',
+  },
+  cameraButton: {
     alignSelf: 'center',
+    marginLeft: '3%',
+  },
+  messageText: {
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    color: 'white',
+    fontWeight: '400',
+  },
+  messageImage: {
+    width: 200,
+    height: 200,
+    borderRadius: 5,
   },
 });
 

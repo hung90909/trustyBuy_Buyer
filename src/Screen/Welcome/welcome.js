@@ -35,7 +35,7 @@ const Welcome = () => {
           console.error('Access token not received from the server');
         }
       } else {
-        nav.replace('Login2');
+        nav.replace('Welcome1');
       }
     } catch (error) {
       // Handle any error that occurred in the try block
