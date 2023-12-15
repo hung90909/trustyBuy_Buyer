@@ -100,7 +100,7 @@ const MessageScreen = ({navigation}) => {
       <View style={styles.header}>
         <Image
           style={styles.logo}
-          source={require('../../Resource/Image/logo.png')}
+          source={require('../../Resource/Image/logo.jpeg')}
         />
         <Text style={styles.title}>Chat box</Text>
       </View>

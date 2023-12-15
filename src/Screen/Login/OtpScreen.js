@@ -148,7 +148,7 @@ const OtpScreen = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={require('../../Resource/Image/logo.png')}
+        source={require('../../Resource/Image/logo.jpeg')}
         style={styles.logo}
       />
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
