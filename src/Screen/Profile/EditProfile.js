@@ -140,7 +140,7 @@ const EditProfile = () => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView style={{backgroundColor: 'white'}}>
       <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
         <View style={{flex: 1}}>
           <View

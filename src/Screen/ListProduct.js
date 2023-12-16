@@ -24,7 +24,7 @@ const ListProduct = () => {
         setProduct(sortedProducts);
         console.log(sortedProducts);
       } else {
-        console.error('Invalid response format:', response);
+        // console.error('Invalid response format:', response);
       }
     } catch (error) {
       console.error('Error fetching products:', error.message);

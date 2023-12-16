@@ -26,6 +26,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector} from 'react-redux';
 import {chatApi} from '../../redux/actions/chat';
 import Comment from '../Rating/Comment';
+import {Rating} from 'react-native-elements';
 const {width} = Dimensions.get('window');
 const {height} = Dimensions.get('window');
 
@@ -354,7 +355,11 @@ const DetailProducts = ({route, navigation}) => {
                   </Text>
                   <View style={styles.ratingSoldPr}>
                     <View style={styles.ratingStar}>
-                      <AntDesign name="star" size={18} color={'#FFCC00'} />
+                      <Rating
+                        readonly
+                        startingValue={productDetail?.product_ratingAverage}
+                        imageSize={14}
+                      />
                       <Text style={styles.titleSold}>
                         {productDetail?.product_ratingAverage}
                       </Text>
@@ -741,6 +746,7 @@ const styles = StyleSheet.create({
   ratingStar: {
     flexDirection: 'row',
     marginRight: 20,
+    alignItems: 'center',
   },
   shopProduct: {
     flexDirection: 'row',

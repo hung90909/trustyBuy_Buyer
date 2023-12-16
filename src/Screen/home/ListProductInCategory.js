@@ -8,15 +8,16 @@ import {
   Image,
   ScrollView,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 import {apiGet} from '../../utils/utils';
 import {API_BASE_URL, PRODUCT_API} from '../../config/urls';
 import {formatPrice, formatSoldSP} from '../Format';
 import {useNavigation} from '@react-navigation/native';
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
 const ListProductInCategory = ({route}) => {
   const navigation = useNavigation();
-  const {categoryId} = route.params;
+  const {categoryId, categoryName} = route.params;
   const [productList, setProductList] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -37,7 +38,7 @@ const ListProductInCategory = ({route}) => {
 
           setProductList(sortedProducts);
         } else {
-          console.warn('No products found for the given category.');
+          console.log('No products found for the given category.');
         }
       } catch (error) {
         console.error(
@@ -83,28 +84,48 @@ const ListProductInCategory = ({route}) => {
   };
 
   return (
-    <ScrollView>
-      {loading ? (
-        <ActivityIndicator size="large" color="#FC6D26" />
-      ) : productList.length === 0 ? (
-        <Text>No products found.</Text>
-      ) : (
-        <FlatList
-          data={productList}
-          keyExtractor={item => item?._id}
-          renderItem={renderSanpham}
-          numColumns={2}
-          scrollEnabled={false}
+    <SafeAreaView>
+      <View
+        style={{
+          height: 60,
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingHorizontal: 15,
+        }}>
+        <Ionicons
+          name="arrow-back"
+          size={24}
+          color="black"
+          onPress={() => navigation.goBack()}
         />
-      )}
-    </ScrollView>
+        <Text style={styles.categoryTitle}>{categoryName}</Text>
+      </View>
+
+      <ScrollView>
+        {loading ? (
+          <ActivityIndicator size="large" color="#FC6D26" />
+        ) : productList.length === 0 ? (
+          <View style={styles.noProductsContainer}>
+            <Text style={styles.noProductsText}>No products found.</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={productList}
+            keyExtractor={item => item?._id}
+            renderItem={renderSanpham}
+            numColumns={2}
+            scrollEnabled={false}
+          />
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: 'white',
     width: '50%',
     justifyContent: 'center',
   },
@@ -130,6 +151,23 @@ const styles = StyleSheet.create({
   daBan: {
     color: '#1B2028',
     fontSize: 10,
+  },
+  noProductsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noProductsText: {
+    fontSize: 16,
+    color: '#1B2028',
+    justifyContent: 'center',
+    alignSelf: 'center',
+  },
+  categoryTitle: {
+    fontSize: 20,
+    color: 'black',
+    fontWeight: 'bold',
+    marginLeft: 20,
   },
 });
 

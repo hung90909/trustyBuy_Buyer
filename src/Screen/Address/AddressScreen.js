@@ -116,23 +116,25 @@ const AdressScreen = () => {
           </View>
         ))}
       </ScrollView>
-      <TouchableOpacity
-        onPress={() => {
-          toggleAddModal();
-        }}
-        style={{
-          width: '100%',
-          backgroundColor: 'black',
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderRadius: 20,
-          elevation: 3,
-          paddingVertical: 15,
-          position: 'absolute',
-          bottom: 0,
-        }}>
-        <Text style={{color: 'white'}}>Thêm mới địa chỉ</Text>
-      </TouchableOpacity>
+      <View>
+        <TouchableOpacity
+          onPress={() => {
+            toggleAddModal();
+          }}
+          style={{
+            width: '100%', // Đặt chiều rộng mong muốn
+            backgroundColor: 'black',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: 20,
+            elevation: 3,
+            paddingVertical: 15,
+            position: 'absolute',
+            bottom: 10,
+          }}>
+          <Text style={{color: 'white'}}>Thêm mới địa chỉ</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -141,10 +143,11 @@ export default AdressScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 15,
-    marginTop: 25,
-    marginBottom: 10,
+    paddingHorizontal: 15,
+    paddingTop: 25,
+    paddingBottom: 10,
     flex: 1,
+    backgroundColor: 'white',
   },
   header: {
     flexDirection: 'row',

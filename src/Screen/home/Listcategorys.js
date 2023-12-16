@@ -8,10 +8,10 @@ const Listcategorys = () => {
   const [data, setData] = useState(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const navigation = useNavigation();
+
   const fetchData = async () => {
     try {
       const response = await apiGet(`${CATEGORY_API}/getAllCategory`);
-      // console.log(response);
       setData(response.message.category);
     } catch (error) {
       console.error(error);
@@ -22,9 +22,12 @@ const Listcategorys = () => {
     fetchData();
   }, []);
 
-  const handleCategoryPress = (categoryId, categoryName) => {
-    navigation.navigate('ListProductInCategory', {categoryId, categoryName});
-    console.log(categoryId);
+  const handleCategoryPress = (categoryId, categoryName, categoryThumb) => {
+    navigation.navigate('ListProductInCategory', {
+      categoryId: categoryId,
+      categoryName: categoryName,
+      categoryThumb: categoryThumb, // Truyền categoryThumb qua ListProductInCategory
+    });
     setSelectedCategoryId(categoryId);
   };
 
@@ -32,7 +35,9 @@ const Listcategorys = () => {
     return (
       <Pressable
         style={styles.categoryItem}
-        onPress={() => handleCategoryPress(item._id, item.category_name)}>
+        onPress={() =>
+          handleCategoryPress(item._id, item.category_name, item.category_thumb)
+        }>
         <Image
           source={{
             uri: `${API_BASE_URL}${item?.category_thumb}`,
@@ -65,9 +70,6 @@ const styles = StyleSheet.create({
     height: 100,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  categoryImage: {
-    // Add any image styling if needed
   },
   categoryText: {
     marginTop: 10,

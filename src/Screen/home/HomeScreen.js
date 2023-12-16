@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   StatusBar,
   StyleSheet,
   TouchableOpacity,
+  RefreshControl,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -23,6 +24,13 @@ const HomeScreen = ({navigation}) => {
   const userAccount = useSelector(state => state?.user?.userData);
   const notifiCount = useSelector(state => state?.chat?.notifi);
   const account = useSelector(state => state?.user?.userData);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = () => {
+    // Perform the data fetching logic here
+    fetchData();
+    setRefreshing(false);
+  };
   useEffect(() => {
     fetchData();
   }, []);
@@ -41,7 +49,11 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <StatusBar />
         <View style={styles.header}>
           <View style={styles.profile}>
