@@ -31,5 +31,7 @@ export const formatMessageTime = time => {
   const now = moment();
   const isToday = targetDate.isSameOrAfter(now.startOf('day'));
 
-  return isToday ? getTimeString(targetDate) : targetDate.format('DD/MM');
+  return isToday
+    ? getTimeString(targetDate)
+    : targetDate.format('DD/MM/YYYY HH:mm');
 };

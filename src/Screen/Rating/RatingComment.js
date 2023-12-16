@@ -7,6 +7,7 @@ import {
   TextInput,
   Alert,
   Image,
+  ToastAndroid,
 } from 'react-native';
 import {Rating} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -20,12 +21,19 @@ const RatingComment = ({navigation, route}) => {
 
   const handleRatingSubmit = async () => {
     if (!rating || !comment.trim()) {
-      Alert.alert('Lỗi', 'Vui lòng nhập đánh giá và bình luận trước khi gửi.');
+      Alert.alert(
+        'Thông báo',
+        'Vui lòng nhập đánh giá và bình luận trước khi gửi.',
+      );
       return;
     }
 
     if (rating < 1 || rating > 5) {
-      Alert.alert('Lỗi', 'Đánh giá phải nằm trong khoảng từ 1 đến 5 sao.');
+      Alert.alert(
+        'Thông báo',
+        'Đánh giá phải nằm trong khoảng từ 1 đến 5 sao.',
+      );
+
       return;
     }
 
@@ -35,7 +43,8 @@ const RatingComment = ({navigation, route}) => {
         comment: comment,
       });
 
-      Alert.alert('Thành công', 'Cảm ơn bạn đã đánh giá sản phẩm!');
+      // Alert.alert('Thành công', 'Cảm ơn bạn đã đánh giá sản phẩm!');
+      ToastAndroid.show('Cảm ơn bạn đã đánh giá sản phẩm ', ToastAndroid.SHORT);
       navigation.goBack();
     } catch (error) {
       console.log('Lỗi', error);

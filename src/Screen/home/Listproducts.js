@@ -21,7 +21,7 @@ const Listproducts = ({count}) => {
 
   useEffect(() => {
     getAllProduct();
-  }, []);
+  }, [selectedProductId]);
 
   const getAllProduct = async () => {
     try {
@@ -69,9 +69,8 @@ const Listproducts = ({count}) => {
     );
   };
   const handleProductPress = productId => {
-    navigation.navigate('DetailProducts', {productId});
-    // console.log(productId);
     setSelectedProductId(productId);
+    navigation.navigate('DetailProducts', {productId});
   };
   return (
     <View>

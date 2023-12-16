@@ -17,6 +17,7 @@ import Listcategorys from './Listcategorys';
 import {API_BASE_URL} from '../../config/urls';
 import {fetchData} from '../../redux/actions/socket';
 import {useSelector} from 'react-redux';
+import ListProduct from '../ListProduct';
 
 const HomeScreen = ({navigation}) => {
   const userAccount = useSelector(state => state?.user?.userData);
@@ -101,7 +102,7 @@ const HomeScreen = ({navigation}) => {
         </View>
         <Slideshow />
         <Listcategorys />
-        <Listproducts />
+        <ListProduct />
       </ScrollView>
     </SafeAreaView>
   );

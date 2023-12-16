@@ -39,20 +39,35 @@ const OrderItem = ({nav, item, onReceived}) => {
           <Text style={styles.productName} numberOfLines={1}>
             {item.product_name}
           </Text>
-          <View style={styles.attributesContainer}>
-            <Text>
-              {item.color}
-              {item.product_attributes.color}
-            </Text>
-            <View style={styles.attributeDivider}></View>
-            <Text>
-              {item.size}
-              {item.product_attributes.size}
-            </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginVertical: 10,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Text>
+                {item.color}
+                {item.product_attributes.color}
+              </Text>
+              <View
+                style={{
+                  backgroundColor: 'black',
+                  width: 1,
+                  height: 10,
+                  marginHorizontal: 5,
+                }}></View>
+              <Text>
+                {item.size}
+                {item.product_attributes.size}
+              </Text>
+            </View>
+            <Text>{item.product_attributes.quantity} sản phẩm</Text>
           </View>
-          <Text style={styles.quantityText}>
-            {item.product_attributes.quantity} sản phẩm
-          </Text>
           <Text style={styles.priceText}>
             {formatPrice(item.order_checkout.totalCheckout)}
           </Text>
@@ -185,8 +200,8 @@ const styles = StyleSheet.create({
   },
   attributesContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     marginVertical: 10,
+    alignItems: 'center',
   },
   attributeDivider: {
     backgroundColor: 'black',
@@ -198,7 +213,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   priceText: {
-    color: 'red',
+    color: '#FC6D26',
     marginTop: 5,
   },
   receiveButton: {

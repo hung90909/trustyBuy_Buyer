@@ -20,13 +20,14 @@ import {formatPrice, formatSoldSP} from './Format';
 import {apiGet} from '../utils/utils';
 import {API_BASE_URL, PRODUCT_API} from '../config/urls';
 import Listproducts from './home/Listproducts';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import ListProduct from './ListProduct';
 
 const SearchScreen = () => {
   const nav = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredSanpham, setFilteredSanpham] = useState([]);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState(data);
   const [isPressed, setIsPressed] = useState(false);
 
   const handlePress = () => {
@@ -83,9 +84,9 @@ const SearchScreen = () => {
   const renderSanpham = ({item}) => {
     return (
       <TouchableOpacity
-      onPress={() =>{
-        nav.navigate("DetailProducts",{productId:item._id})
-      }}
+        onPress={() => {
+          nav.navigate('DetailProducts', {productId: item._id});
+        }}
         style={{
           width: '50%',
           justifyContent: 'center',
@@ -139,11 +140,7 @@ const SearchScreen = () => {
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <BottomSheetModalProvider>
-        <View
-          style={[
-            styles.container,
-            {backgroundColor: isOpen ? 'gray' : 'white'},
-          ]}>
+        <View style={[styles.container]}>
           <StatusBar />
           {/* Thanh tìm kiếm */}
           <View style={styles.textInputContainer}>
@@ -207,17 +204,25 @@ const SearchScreen = () => {
                 style={{fontWeight: 'bold', color: 'black', marginLeft: 10}}>
                 Có thể bạn cũng thích
               </Text>
-              <Listproducts />
+              <ListProduct />
             </ScrollView>
           )}
           {/* FlatList item */}
-          <FlatList
-            data={filteredSanpham}
-            keyExtractor={item => item?._id}
-            renderItem={renderSanpham}
-            numColumns={2}
-            style={{marginBottom: 10}}
-          />
+          {searchQuery !== '' ? (
+            // Hiển thị kết quả tìm kiếm
+            <FlatList
+              data={filteredSanpham}
+              keyExtractor={item => item?._id}
+              renderItem={renderSanpham}
+              numColumns={2}
+              style={{marginBottom: 10}}
+            />
+          ) : (
+            // Hiển thị tất cả sản phẩm khi chưa có tìm kiếm
+            <ScrollView>
+              <ListProduct />
+            </ScrollView>
+          )}
           {/* Bottom Sheet */}
           <BottomSheetModal
             ref={bottomSheetModalRef}

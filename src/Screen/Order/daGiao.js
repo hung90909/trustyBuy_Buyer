@@ -193,16 +193,18 @@ const styles = StyleSheet.create({
   },
   btn: {
     backgroundColor: 'black',
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     borderRadius: 5,
     margin: 10,
-    paddingVertical: 10,
+    paddingVertical: 5,
+    alignSelf: 'center',
   },
   btnReturns: {
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     borderRadius: 5,
     margin: 10,
-    paddingVertical: 10,
+    paddingVertical: 5,
     borderWidth: 1,
+    alignSelf: 'center',
   },
 });

@@ -23,7 +23,7 @@ const ForgotScreen = ({navigation}) => {
   const handleForgotPassword = async () => {
     setError('');
     if (!email) {
-      setError('Vui lòng nhập email!');
+      ToastAndroid.show('Vui lòng nhập email', ToastAndroid.SHORT);
     } else if (!isValidEmail(email)) {
       setError('Email không đúng định dạng!');
     } else {
@@ -97,8 +97,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    marginHorizontal: '8%',
-    marginVertical: '5%',
+    margin: '5%',
     alignItems: 'center',
   },
   backButton: {
@@ -130,7 +129,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     height: 50,
     marginHorizontal: '8%',
-    borderRadius: 10,
+    borderRadius: 5,
     borderWidth: 1,
     padding: 5,
     margin: '5%',

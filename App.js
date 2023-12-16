@@ -54,12 +54,13 @@ const TabOrder = () => (
       tabBarInactiveTintColor: 'gray',
       tabBarLabelStyle: {
         fontSize: 13,
-        // fontWeight: 'bold',
+        color: 'black',
       },
       tabBarItemStyle: {},
       tabBarIndicatorStyle: {
         backgroundColor: 'black',
       },
+      headerTitle: 'Đơn hàng', // Đây là phần được thêm vào cho tất cả các tab
     }}>
     <TabTop.Screen name="XuLy" component={XuLy} options={{title: 'Xử lý'}} />
     <TabTop.Screen

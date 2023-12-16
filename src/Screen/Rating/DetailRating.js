@@ -44,7 +44,7 @@ const DetailRating = ({navigation, route}) => {
           style={styles.backButton}>
           <AntDesign name="left" size={20} color={'black'} />
         </TouchableOpacity>
-        <Text style={styles.title}>Infomation Rating</Text>
+        <Text style={styles.title}>Đánh giá</Text>
       </View>
       <View style={{marginHorizontal: '3%'}}>
         <View style={styles.ratingContainer}>
@@ -162,10 +162,9 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   title: {
-    left: '30%',
-    fontSize: 22,
+    fontSize: 20,
     color: 'black',
-    fontWeight: '600',
+    alignSelf: 'center',
   },
   ratingContainer: {
     flexDirection: 'row',

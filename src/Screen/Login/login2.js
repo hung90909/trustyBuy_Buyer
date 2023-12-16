@@ -148,9 +148,12 @@ const Login2 = ({navigation}) => {
       {errorPassword !== '' && (
         <Text style={styles.errorText}>{errorPassword}</Text>
       )}
-      <Pressable onPress={() => navigation.navigate('ForgotScreen')}>
+      <Pressable
+        onPress={() => navigation.navigate('ForgotScreen')}
+        style={{alignSelf: 'flex-end', marginTop: 20}}>
         <Text>Quên mật khẩu?</Text>
       </Pressable>
+
       <TouchableOpacity onPress={checkValidateLogin} style={styles.loginButton}>
         <Text style={styles.buttonText}>Đăng nhập</Text>
       </TouchableOpacity>

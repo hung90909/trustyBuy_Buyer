@@ -51,7 +51,7 @@ const DetailProducts = ({route, navigation}) => {
         selectedColor,
         selectedSize,
       );
-      if (quantity < 100 && quantity < totalQuantity) {
+      if (quantity < 50 && quantity < totalQuantity) {
         setQuantity(quantity + 1);
       } else {
         Alert.alert('Thông báo', 'Số lượng sản phẩm đặt đã đạt giới hạn');
@@ -82,7 +82,6 @@ const DetailProducts = ({route, navigation}) => {
   };
 
   const getTotalQuantityForColorAndSize = (color, size) => {
-    // Calculate and return the total quantity based on the selected color and size
     const colorOption = productDetail.product_attributes.find(
       item => item.color === color,
     );
@@ -94,12 +93,11 @@ const DetailProducts = ({route, navigation}) => {
         return sizeOption.options_quantity;
       }
     }
-    return 0; // Return 0 if color or size not found
+    return 0;
   };
 
   const handleBuyNow = async () => {
     try {
-      handleIncreaseQuantity();
       if (selectedColor && selectedSize && selectedQuantity !== null) {
         const totalQuantity = getTotalQuantityForColorAndSize(
           selectedColor,
@@ -124,7 +122,6 @@ const DetailProducts = ({route, navigation}) => {
             },
           },
         ];
-        // console.log('ơ day', orderItem);
         const updatedTotalQuantity = getTotalQuantityForColorAndSize(
           selectedColor,
           selectedSize,
@@ -155,7 +152,6 @@ const DetailProducts = ({route, navigation}) => {
         );
         const data = await AsyncStorage.getItem('token');
         const userID = JSON.parse(data).userId;
-        // console.log(userID);
         const cartItem = {
           userId: userID,
           product: {
@@ -174,9 +170,6 @@ const DetailProducts = ({route, navigation}) => {
           cartItem,
         );
 
-        // console.log('Added to cart:', response?.message);
-
-        // Reset selected options after adding to the cart
         setSelectedColor(null);
         setSelectedSize(null);
         setSelectedQuantity(null);
@@ -186,7 +179,6 @@ const DetailProducts = ({route, navigation}) => {
           selectedSize,
         );
 
-        // Alert.alert('Thông báo', `Thêm giỏ hàng thành công`);
         navigation.navigate('Cart');
       } else {
         if (!selectedColor) {
@@ -237,13 +229,8 @@ const DetailProducts = ({route, navigation}) => {
       }
     };
     getDetailProduct();
+    getAllProduct();
   }, [selectedColor, selectedSize, productId]);
-  const navigateToDetail = newProductId => {
-    // Nếu ID sản phẩm mới trùng với ID đang hiển thị, không chuyển hướng
-    if (newProductId !== productId) {
-      navigation.navigate('ProductDetail', {productId: newProductId});
-    }
-  };
   const renderImage = useCallback(({item}) => {
     return (
       <Image
@@ -266,7 +253,7 @@ const DetailProducts = ({route, navigation}) => {
   const handleShopPress = shopId => {
     navigation.navigate('ShopInformation', {shopId});
     // console.log(shopId);
-    // setSelectedProductId(productId);
+    setSelectedProductId(productId);
   };
   const getTotalQuantity = () => {
     // Calculate the total quantity based on all available colors
@@ -285,35 +272,35 @@ const DetailProducts = ({route, navigation}) => {
     selectedSize === null ||
     selectedQuantity === null;
 
-  const ColorOption = ({item}) => (
-    <Pressable
-      style={[
-        {padding: 10, margin: 10, borderRadius: 5},
-        selectedColor === item.color
-          ? {backgroundColor: 'white', borderWidth: 1}
-          : {},
-      ]}
-      onPress={() => handleColorPress(item.color, item.options)}>
-      <Text style={{color: 'black', fontWeight: 'bold', padding: 5}}>
-        {item.color}
-      </Text>
-    </Pressable>
-  );
+  // const ColorOption = ({item}) => (
+  //   <Pressable
+  //     style={[
+  //       {padding: 10, margin: 10, borderRadius: 5},
+  //       selectedColor === item.color
+  //         ? {backgroundColor: 'white', borderWidth: 1}
+  //         : {},
+  //     ]}
+  //     onPress={() => handleColorPress(item.color, item.options)}>
+  //     <Text style={{color: 'black', fontWeight: 'bold', padding: 5}}>
+  //       {item.color}
+  //     </Text>
+  //   </Pressable>
+  // );
 
-  const SizeOption = ({sizeItem}) => (
-    <Pressable
-      style={[
-        {padding: 10, margin: 10, borderRadius: 5},
-        selectedSize === sizeItem.size
-          ? {backgroundColor: 'white', borderWidth: 1, color: 'black'}
-          : {},
-      ]}
-      onPress={() => handleSizePress(sizeItem.size)}>
-      <Text style={{color: 'black', fontWeight: 'bold', padding: 5}}>
-        {sizeItem.size}
-      </Text>
-    </Pressable>
-  );
+  // const SizeOption = ({sizeItem}) => (
+  //   <Pressable
+  //     style={[
+  //       {padding: 10, margin: 10, borderRadius: 5},
+  //       selectedSize === sizeItem.size
+  //         ? {backgroundColor: 'white', borderWidth: 1, color: 'black'}
+  //         : {},
+  //     ]}
+  //     onPress={() => handleSizePress(sizeItem.size)}>
+  //     <Text style={{color: 'black', fontWeight: 'bold', padding: 5}}>
+  //       {sizeItem.size}
+  //     </Text>
+  //   </Pressable>
+  // );
 
   return (
     <GestureHandlerRootView style={{flex: 1}}>

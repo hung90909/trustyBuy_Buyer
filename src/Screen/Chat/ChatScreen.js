@@ -142,7 +142,8 @@ const styles = StyleSheet.create({
     width: '80%',
     fontSize: 20,
     color: 'black',
-    fontWeight: '600',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
   },
   titleContainer: {
     width: '100%',

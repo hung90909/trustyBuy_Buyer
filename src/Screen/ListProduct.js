@@ -1,164 +1,116 @@
-import React, {useMemo} from 'react';
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {danhmucsp, sanphamdanhmuc} from './data';
-import {FlatList} from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
+import {FlatList, Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {Pressable} from 'react-native';
-const formatSoldSP = value => {
-  if (value >= 1000000) {
-    return `${(value / 1000000).toFixed(1)}M`;
-  } else if (value >= 1000) {
-    return `${(value / 1000).toFixed(1)}k`;
-  } else {
-    return value.toString();
-  }
-};
+import {API_BASE_URL, PRODUCT_API} from '../config/urls';
+import {apiGet} from '../utils/utils';
+import {formatPrice, formatSoldSP} from './Format';
 
-const formatPrice = priceSP => {
-  const formatter = new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND',
-    currencyDisplay: 'symbol',
-  });
-  return formatter.format(priceSP);
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  productContainer: {
-    width: '50%',
-    justifyContent: 'center',
-    padding: '3%',
-  },
-  productImage: {
-    height: 200,
-  },
-  productText: {
-    color: '#1B2028',
-    fontSize: 14,
-  },
-  priceText: {
-    color: '#FC6D26',
-    fontSize: 14,
-  },
-  soldText: {
-    color: '#1B2028',
-    fontSize: 10,
-  },
-  textInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: '4%',
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#EDEDED',
-  },
-  inputIconLeft: {
-    marginHorizontal: 10,
-    opacity: 0.5,
-  },
-  textInput: {
-    flex: 1,
-    opacity: 0.5,
-  },
-  inputIconRight: {
-    marginHorizontal: 10,
-  },
-});
-
-const ListProduct = ({
-  route: {
-    params: {danhmucspId},
-  },
-}) => {
-  const danhsachSp = useMemo(() => sanphamdanhmuc[danhmucspId], [danhmucspId]);
-  const danhmucSp = useMemo(
-    () => danhmucsp.find(danhmuc => danhmuc.id === danhmucspId)?.name,
-    [danhmucspId],
-  );
+const ListProduct = () => {
   const navigation = useNavigation();
+  const [product, setProduct] = useState([]);
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
-  return (
-    <View style={styles.container}>
-      <View
-        style={{
-          height: 60,
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingLeft: 10,
-        }}>
-        <Ionicons
-          name="arrow-back"
-          size={22}
-          color="#000000"
-          onPress={() => navigation.goBack()}
+  const getAllProduct = async () => {
+    try {
+      const response = await apiGet(`${PRODUCT_API}/getAllProductByUser`);
+
+      if (response && response.message && response.message.allProduct) {
+        const sortedProducts = response.message.allProduct.sort((a, b) => {
+          const dateA = new Date(a.updatedAt);
+          const dateB = new Date(b.updatedAt);
+          return dateB - dateA;
+        });
+
+        setProduct(sortedProducts);
+        console.log(sortedProducts);
+      } else {
+        console.error('Invalid response format:', response);
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error.message);
+    }
+  };
+
+  useEffect(() => {
+    getAllProduct();
+  }, []);
+  const handleProductPress = productId => {
+    navigation.navigate('DetailProducts', {productId});
+    // console.log(productId);
+    setSelectedProductId(productId);
+  };
+  const renderSanpham = ({item}) => {
+    return (
+      <Pressable
+        onPress={() => handleProductPress(item._id)}
+        style={styles.container}>
+        <Image
+          style={styles.imageSP}
+          source={{
+            uri: `${API_BASE_URL}uploads/${item?.product_thumb[0]}`,
+          }}
+          resizeMode="contain"
         />
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: '600',
-            color: 'black',
-            marginLeft: 20,
-          }}>
-          {danhmucSp}
+
+        <Text style={styles.nameSp} numberOfLines={2}>
+          {item.product_name}
         </Text>
-      </View>
-      <View style={styles.textInputContainer}>
-        <Ionicons
-          name="search-outline"
-          size={20}
-          color="#666"
-          style={styles.inputIconLeft}
-        />
-        <TextInput style={styles.textInput} placeholder="Tìm kiếm" />
-        {/* Ấn hiện bottom tại đây */}
-      </View>
+        <View style={styles.containerGia}>
+          <Text style={styles.giaSp}>{formatPrice(item.product_price)}</Text>
+          <Text style={styles.daBan}>
+            Đã bán {formatSoldSP(item.product_sold)}
+          </Text>
+        </View>
+      </Pressable>
+    );
+  };
+  return (
+    <View>
       <FlatList
+        data={product}
+        renderItem={renderSanpham}
+        scrollEnabled={false}
+        keyExtractor={item => item?._id}
         numColumns={2}
-        data={danhsachSp}
-        renderItem={({item}) => (
-          <TouchableOpacity
-            style={styles.productContainer}
-            onPress={() => navigation.navigate('DetailProducts', {item})}>
-            <Image
-              style={styles.productImage}
-              source={{uri: item.imageSP}}
-              resizeMode="contain"
-            />
-            <Text style={styles.productText} numberOfLines={2}>
-              {item.nameSP}
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginTop: 25,
-                alignItems: 'center',
-              }}>
-              <Text style={styles.priceText}>{formatPrice(item.priceSP)}</Text>
-              <Text style={styles.soldText}>
-                Đã bán {formatSoldSP(item.soldSP)}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )}
-        keyExtractor={item => item.id.toString()}
       />
     </View>
   );
 };
 
 export default ListProduct;
+
+const styles = StyleSheet.create({
+  container: {
+    width: '48%',
+    justifyContent: 'center',
+    padding: '3%',
+    backgroundColor: 'white',
+    marginRight: '1%',
+    marginLeft: '1%',
+  },
+  imageSP: {
+    width: '100%',
+    height: 200,
+  },
+  nameSp: {
+    color: '#1B2028',
+    fontSize: 14,
+    flex: 1,
+    marginVertical: 5,
+  },
+  containerGia: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 25,
+    alignItems: 'center',
+  },
+  giaSp: {
+    color: '#FC6D26',
+    fontSize: 14,
+    flex: 1,
+  },
+  daBan: {
+    color: '#1B2028',
+    fontSize: 10,
+  },
+});

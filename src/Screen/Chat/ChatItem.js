@@ -144,8 +144,8 @@ const MessageItem = ({navigation, route}) => {
           <TouchableOpacity
             onPress={() => {
               Alert.alert(
-                'Thông báo',
-                'Bạn muốn lấy ảnh từ 🦘',
+                'Chọn ảnh',
+                'Bạn muốn lựa chọn ảnh từ đâu?',
                 [
                   {
                     text: 'Chụp ảnh',
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     height: 60,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: '3%',
+    padding: '2%',
     justifyContent: 'space-between',
     borderColor: '#D9D9D9',
     borderBottomWidth: 1,
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
   userInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    right: '15%',
+    right: '20%',
   },
   userAvatar: {
     width: 45,
@@ -254,8 +254,9 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: 'bold',
     color: 'black',
+    textTransform: 'uppercase',
   },
   input: {
     marginTop: 7,

@@ -8,11 +8,13 @@ import {
   Image,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Rating} from 'react-native-elements';
 import {API_BASE_URL} from '../../config/urls';
 import {formatMessageTime} from '../../compoment/DateTime';
 
 const Comment = ({navigation, data}) => {
+  console.log(data?.reviews);
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -24,7 +26,7 @@ const Comment = ({navigation, data}) => {
             <Rating
               readonly
               startingValue={data?.product_ratingAverage}
-              imageSize={20}
+              imageSize={16}
             />
             <Text style={styles.ratingText}>
               {data?.product_ratingAverage}/5 (
@@ -53,7 +55,7 @@ const Comment = ({navigation, data}) => {
             paddingVertical: '20%',
           }}>
           <Text style={{fontSize: 15, marginTop: 20, fontWeight: 'bold'}}>
-            Sản phẩm chưa có đánh giá 👑
+            Sản phẩm chưa có đánh giá nào?
           </Text>
         </View>
       )}
@@ -70,23 +72,25 @@ const ReviewItem = ({item}) => {
             style={styles.avatar}
             source={{uri: `${API_BASE_URL}${item?.user?.information?.avatar}`}}
           />
-          <Text style={styles.reviewItemName}>
-            {item?.user?.information?.fullName}
-          </Text>
-        </View>
-        <View>
-          <Text numberOfLines={2} style={styles.reviewItemComment}>
-            {item?.comment}
-          </Text>
-          <Text style={styles.reviewItemDate}>
-            {formatMessageTime(item?.createdAt)}
-          </Text>
+          <View>
+            <Text style={styles.reviewItemName}>
+              {item?.user?.information?.fullName}
+            </Text>
+            <View>
+              <Text numberOfLines={2} style={styles.reviewItemComment}>
+                {item?.comment}
+              </Text>
+              <Text style={styles.reviewItemDate}>
+                {formatMessageTime(item?.createdAt)}
+              </Text>
+            </View>
+          </View>
         </View>
       </View>
 
       <View style={styles.ratingBadge}>
         <Text style={styles.ratingText}>{item?.rating}</Text>
-        <AntDesign name="star" color={'#f39c12'} size={18} />
+        <Ionicons name="star" color={'#f39c12'} size={12} />
       </View>
     </View>
   );
@@ -106,7 +110,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     color: '#2c3e50',
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 16,
   },
   ratingContainer: {
     flexDirection: 'row',
@@ -117,7 +121,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     color: '#2c3e50',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 12,
   },
   viewAllContainer: {
     flexDirection: 'row',
@@ -139,12 +143,11 @@ const styles = StyleSheet.create({
   },
   reviewItemLeft: {
     flexDirection: 'row',
-    alignItems: 'center',
   },
   avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
     marginRight: 10,
   },
   reviewItemName: {
@@ -154,6 +157,7 @@ const styles = StyleSheet.create({
   reviewItemDate: {
     color: '#7f8c8d',
     marginTop: 5,
+    fontSize: 10,
   },
   reviewItemComment: {
     lineHeight: 20,
@@ -164,16 +168,9 @@ const styles = StyleSheet.create({
     width: 70,
     height: 35,
     flexDirection: 'row',
-    borderWidth: 1,
-    borderColor: '#f39c12',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 18,
-  },
-  ratingText: {
-    marginRight: 5,
-    color: '#f39c12',
-    fontWeight: 'bold',
   },
 });
 
