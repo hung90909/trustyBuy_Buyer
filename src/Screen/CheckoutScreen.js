@@ -91,7 +91,7 @@ const CheckoutScreen = ({route}) => {
           quantity: item.product.quantity,
           unit_amount: {
             currency_code: 'USD',
-            value: convertToUSD(product.price),
+            value: convertToUSD(item.product.price),
           },
         })),
         amount: {
