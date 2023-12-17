@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from 'react-native';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {apiGet, apiPatch} from '../../utils/utils';
@@ -92,6 +93,7 @@ const OrderItem = ({nav, item, onReceived}) => {
 export default function DangGiao() {
   const nav = useNavigation();
   const [listProducts, setListProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getAllOrderForUser = async () => {
     try {
@@ -102,6 +104,8 @@ export default function DangGiao() {
       setListProducts(sortedList);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -126,7 +130,11 @@ export default function DangGiao() {
 
   return (
     <View style={styles.container}>
-      {listProducts.length > 0 ? (
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="black" />
+        </View>
+      ) : listProducts.length > 0 ? (
         <FlatList
           data={listProducts}
           keyExtractor={item => item.oderId}
@@ -150,6 +158,11 @@ export default function DangGiao() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   itemOrder: {
     backgroundColor: 'white',

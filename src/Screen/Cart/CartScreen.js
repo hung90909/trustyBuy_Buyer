@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Alert,
   FlatList,
   Image,
@@ -24,13 +25,23 @@ const CartScreen = () => {
   const [listCart, setListCart] = useState([]);
   const nav = useNavigation();
 
+  const [loading, setLoading] = useState(true);
+
+  //...
+
   const getCart = async () => {
     try {
+      // Khi bắt đầu load dữ liệu, đặt trạng thái loading là true
+      setLoading(true);
+
       const res = await apiGet(ADD_CART_API);
       setListCart(res.message.cart.cart_products);
       console.log(res.message.cart.cart_products);
     } catch (error) {
       console.log(error);
+    } finally {
+      // Khi load xong dữ liệu, đặt trạng thái loading là false
+      setLoading(false);
     }
   };
 
@@ -279,7 +290,11 @@ const CartScreen = () => {
           <Ionicons name="chatbubbles-outline" size={26} color={'black'} />
         </Pressable>
       </View>
-      {listCart.length > 0 ? (
+      {loading ? ( // Kiểm tra trạng thái loading để hiển thị "loading"
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size="large" color="black" />
+        </View>
+      ) : listCart.length > 0 ? (
         <FlatList
           data={listCart}
           keyExtractor={item => item.itemId}

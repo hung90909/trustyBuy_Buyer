@@ -11,6 +11,7 @@ import {
   Image,
   Dimensions,
   ToastAndroid,
+  ActivityIndicator,
 } from 'react-native';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -42,7 +43,7 @@ const DetailProducts = ({route, navigation}) => {
   const [bottomSheetAction, setBottomSheetAction] = useState('addToCart');
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
-
+  const [loading, setLoading] = useState(true);
   console.log(productDetail?.shop_id);
   const chatData = useSelector(state => state?.chat?.chatData);
 
@@ -209,6 +210,7 @@ const DetailProducts = ({route, navigation}) => {
   };
 
   useEffect(() => {
+    setLoading(true);
     const getDetailProduct = async () => {
       try {
         const response = await apiGet(`${PRODUCT_API}/getProduct/${productId}`);
@@ -218,6 +220,7 @@ const DetailProducts = ({route, navigation}) => {
         console.error(error.response.data);
       } finally {
         resetQuantity(); // Reset quantity when product details are loaded
+        setLoading(false);
       }
     };
 
@@ -308,121 +311,135 @@ const DetailProducts = ({route, navigation}) => {
       <BottomSheetModalProvider>
         <SafeAreaView style={{flex: 1}}>
           <ScrollView>
-            <View>
-              <View style={{flex: 1}}>
-                <FlatList
-                  data={productDetail?.product_thumb || []}
-                  renderItem={renderImage}
-                  keyExtractor={(item, index) => index.toString()}
-                  horizontal
-                  pagingEnabled
-                  showsHorizontalScrollIndicator={false}
-                  initialNumToRender={3}
-                  getItemLayout={(data, index) => ({
-                    length: 420, // Độ dài của mỗi mục
-                    offset: 420 * index,
-                    index,
-                  })}
-                  style={{backgroundColor: 'white', position: 'relative'}}
-                />
-                <Ionicons
-                  name="arrow-back"
-                  size={26}
-                  color="black"
-                  onPress={() => navigation.goBack()}
-                  style={{
-                    position: 'absolute',
-                    top: 16, // Adjust the top position as needed
-                    left: 16, // Adjust the left position as needed
-                    zIndex: 1, // Ensure the icon is above the FlatList
-                  }}
-                />
+            {loading ? ( // Kiểm tra trạng thái loading để hiển thị "loading"
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: 'white',
+                }}>
+                <ActivityIndicator size="large" color="black" />
               </View>
+            ) : (
+              <View>
+                <View style={{flex: 1}}>
+                  <FlatList
+                    data={productDetail?.product_thumb || []}
+                    renderItem={renderImage}
+                    keyExtractor={(item, index) => index.toString()}
+                    horizontal
+                    pagingEnabled
+                    showsHorizontalScrollIndicator={false}
+                    initialNumToRender={3}
+                    getItemLayout={(data, index) => ({
+                      length: 420, // Độ dài của mỗi mục
+                      offset: 420 * index,
+                      index,
+                    })}
+                    style={{backgroundColor: 'white', position: 'relative'}}
+                  />
+                  <Ionicons
+                    name="arrow-back"
+                    size={26}
+                    color="black"
+                    onPress={() => navigation.goBack()}
+                    style={{
+                      position: 'absolute',
+                      top: 16, // Adjust the top position as needed
+                      left: 16, // Adjust the left position as needed
+                      zIndex: 1, // Ensure the icon is above the FlatList
+                    }}
+                  />
+                </View>
 
-              <View style={styles.container}>
+                <View style={styles.container}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      paddingHorizontal: 15,
+                      marginVertical: 5,
+                      paddingVertical: 20,
+                    }}>
+                    <Text style={styles.nameProduct}>
+                      {productDetail?.product_name}
+                    </Text>
+                    <Text style={styles.priceProduct}>
+                      {formatPrice(productDetail?.product_price)}
+                    </Text>
+                    <View style={styles.ratingSoldPr}>
+                      <View style={styles.ratingStar}>
+                        <Rating
+                          readonly
+                          startingValue={productDetail?.product_ratingAverage}
+                          imageSize={14}
+                        />
+                        <Text style={styles.titleSold}>
+                          {productDetail?.product_ratingAverage}
+                        </Text>
+                      </View>
+
+                      <Text style={styles.titleSold}>
+                        Đã bán {formatSoldSP(productDetail?.product_sold)}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerProductdetail}>
+                    <Text style={styles.titleDetail}>Mô tả sản phẩm</Text>
+                    <Text style={styles.titleContent}>
+                      {productDetail?.product_description}
+                    </Text>
+                  </View>
+                </View>
                 <View
                   style={{
+                    flexDirection: 'row',
+                    flex: 1,
                     backgroundColor: 'white',
-                    paddingHorizontal: 15,
-                    marginVertical: 5,
-                    paddingVertical: 20,
+                    padding: 15,
+                    alignItems: 'center',
                   }}>
-                  <Text style={styles.nameProduct}>
-                    {productDetail?.product_name}
-                  </Text>
-                  <Text style={styles.priceProduct}>
-                    {formatPrice(productDetail?.product_price)}
-                  </Text>
-                  <View style={styles.ratingSoldPr}>
-                    <View style={styles.ratingStar}>
-                      <Rating
-                        readonly
-                        startingValue={productDetail?.product_ratingAverage}
-                        imageSize={14}
-                      />
-                      <Text style={styles.titleSold}>
-                        {productDetail?.product_ratingAverage}
+                  <Image
+                    style={styles.imgShop}
+                    source={{
+                      uri: `${API_BASE_URL}${productDetail?.shop_avatar}`,
+                    }}
+                  />
+                  <View style={styles.nameShowShop}>
+                    <View style={{}}>
+                      <Text style={styles.nameShop}>
+                        {productDetail?.shop_name}
                       </Text>
                     </View>
 
-                    <Text style={styles.titleSold}>
-                      Đã bán {formatSoldSP(productDetail?.product_sold)}
-                    </Text>
+                    <View>
+                      <Pressable
+                        onPress={() => handleShopPress(productDetail?.shop_id)}
+                        style={styles.butonDetailShop}>
+                        <Text style={styles.titleButon}>Xem cửa hàng</Text>
+                      </Pressable>
+                    </View>
                   </View>
                 </View>
-                <View style={styles.containerProductdetail}>
-                  <Text style={styles.titleDetail}>Mô tả sản phẩm</Text>
-                  <Text style={styles.titleContent}>
-                    {productDetail?.product_description}
+
+                {productDetail && (
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      borderColor: '#ddd',
+                    }}>
+                    <Comment navigation={navigation} data={productDetail} />
+                  </View>
+                )}
+
+                <View style={styles.suggestionsProduct}>
+                  <Text style={styles.titelSuggestions}>
+                    Gợi ý các sản phẩm
                   </Text>
+                  <Listproducts />
                 </View>
               </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  flex: 1,
-                  backgroundColor: 'white',
-                  padding: 15,
-                  alignItems: 'center',
-                }}>
-                <Image
-                  style={styles.imgShop}
-                  source={{
-                    uri: `${API_BASE_URL}${productDetail?.shop_avatar}`,
-                  }}
-                />
-                <View style={styles.nameShowShop}>
-                  <View style={{}}>
-                    <Text style={styles.nameShop}>
-                      {productDetail?.shop_name}
-                    </Text>
-                  </View>
-
-                  <View>
-                    <Pressable
-                      onPress={() => handleShopPress(productDetail?.shop_id)}
-                      style={styles.butonDetailShop}>
-                      <Text style={styles.titleButon}>Xem cửa hàng</Text>
-                    </Pressable>
-                  </View>
-                </View>
-              </View>
-
-              {productDetail && (
-                <View
-                  style={{
-                    backgroundColor: 'white',
-                    borderColor: '#ddd',
-                  }}>
-                  <Comment navigation={navigation} data={productDetail} />
-                </View>
-              )}
-
-              <View style={styles.suggestionsProduct}>
-                <Text style={styles.titelSuggestions}>Gợi ý các sản phẩm</Text>
-                <Listproducts />
-              </View>
-            </View>
+            )}
           </ScrollView>
           <View style={styles.butonCartBuy}>
             <Pressable
