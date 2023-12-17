@@ -22,7 +22,7 @@ const AddAdress = ({isVisible, onClose}) => {
         {
           nameAddress: name,
           address: detail,
-          userInfor: {
+          userinfor: {
             userName: username,
             phoneNumber: phone,
           },
@@ -37,6 +37,16 @@ const AddAdress = ({isVisible, onClose}) => {
       .then(res => {
         onClose(false);
       });
+    console.log(username), console.log(phone);
+    const form = {
+      nameAddress: name,
+      address: detail,
+      userInfor: {
+        userName: username,
+        phoneNumber: phone,
+      },
+    };
+    console.log(form);
   };
   const [name, setName] = useState('');
   const [detail, setDetail] = useState('');

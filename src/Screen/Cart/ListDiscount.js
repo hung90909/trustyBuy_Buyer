@@ -33,13 +33,14 @@ import {RadioButton} from 'react-native-paper';
 const ListDiscount = () => {
   const nav = useNavigation();
   const route = useRoute();
-  const {itemProduct, itemAddress, totalProduct, product} = route.params;
+  const {itemProduct, itemAddress, shopId, product} = route.params;
   const [listVoucher, setListVoucher] = useState([]);
   const [checked, setChecked] = useState(null);
+  console.log(shopId);
 
   const getDisCount = async () => {
     try {
-      const res = await apiGet(DISCOUNT_API);
+      const res = await apiGet(DISCOUNT_API + `/${shopId}`);
       setListVoucher(res.message);
     } catch (error) {
       throw error;
