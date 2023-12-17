@@ -199,7 +199,7 @@ const DetailProducts = ({route, navigation}) => {
     setSelectedSize(size);
     resetQuantity(); // Reset quantity when size is selected
   };
-  const snapPoints = ['100%'];
+  const snapPoints = ['80%'];
   const handlePresentModal = action => {
     setBottomSheetAction(action);
     bottomSheetModalRef.current?.present();
