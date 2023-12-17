@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState, useRef} from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import {
   Text,
   View,
@@ -10,13 +10,13 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {Alert} from 'react-native';
-import {formatPrice, formatSoldSP} from '../Format';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Alert } from 'react-native';
+import { formatPrice, formatSoldSP } from '../Format';
 import {
   ADD_CART_API,
   API_BASE_URL,
@@ -24,24 +24,24 @@ import {
   GET_ADDRESS_API,
   PRODUCT_API,
 } from '../../config/urls';
-import {apiGet, apiPost} from '../../utils/utils';
+import { apiGet, apiPost } from '../../utils/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {ScrollView} from 'react-native-virtualized-view';
-import {RadioButton} from 'react-native-paper';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { ScrollView } from 'react-native-virtualized-view';
+import { RadioButton } from 'react-native-paper';
 
 const ListDiscount = () => {
   const nav = useNavigation();
   const route = useRoute();
-  const {itemProduct, itemAddress, shopId, product} = route.params;
+  const { orderDetails, itemAddress, shopId } = route.params;
   const [listVoucher, setListVoucher] = useState([]);
   const [checked, setChecked] = useState(null);
-  console.log(shopId);
 
   const getDisCount = async () => {
     try {
       const res = await apiGet(DISCOUNT_API + `/${shopId}`);
       setListVoucher(res.message);
+      // console.log(res.message);
     } catch (error) {
       throw error;
     }
@@ -57,7 +57,7 @@ const ListDiscount = () => {
     getDisCount();
   }, []);
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <View
         style={{
           flexDirection: 'row',
@@ -73,12 +73,12 @@ const ListDiscount = () => {
           }}>
           <Ionicons name="arrow-back-outline" size={30} />
         </TouchableOpacity>
-        <Text style={{fontSize: 20, marginLeft: 20}}>Chọn Voucher</Text>
+        <Text style={{ fontSize: 20, marginLeft: 20 }}>Chọn Voucher</Text>
       </View>
-      <FlatList
+      {listVoucher.length > 0 ? <FlatList
         data={listVoucher}
         keyExtractor={item => item._id}
-        renderItem={({item}) => {
+        renderItem={({ item }) => {
           return (
             <TouchableOpacity
               style={{
@@ -101,7 +101,7 @@ const ListDiscount = () => {
                   uri: `${API_BASE_URL}` + item.thumb,
                 }}
               />
-              <View style={{width: '60%'}}>
+              <View style={{ width: '60%' }}>
                 <Text
                   style={{
                     fontWeight: 'bold',
@@ -110,7 +110,7 @@ const ListDiscount = () => {
                   }}>
                   {item.discount_name}
                 </Text>
-                <Text style={{fontSize: 12}}>
+                <Text style={{ fontSize: 12 }}>
                   Đơn tối thiểu {formatPrice(item.discount_min_order_value)}
                 </Text>
                 <Text>Giảm giá {item.discount_value}%</Text>
@@ -121,9 +121,9 @@ const ListDiscount = () => {
                 status={checked === item._id ? 'checked' : 'unchecked'} // Trạng thái của nút radio
                 onPress={() => {
                   setChecked(item._id);
-                  nav.goBack({
+                  nav.navigate("Checkout", {
                     itemDiscount: item,
-                    item: itemProduct,
+                    orderDetails: orderDetails,
                     itemAddress: itemAddress,
                   });
                 }}
@@ -131,7 +131,16 @@ const ListDiscount = () => {
             </TouchableOpacity>
           );
         }}
-      />
+      /> :
+        <View style={{justifyContent:"center", alignItems:"center",
+         flex:1}}>
+          <Image style={{
+            width:100, height:100 , tintColor:"gray"
+          }} source={require("../../Resource/icon/disc.png")}/>
+           <Text style={{fontSize:20}}>
+               Không có mã voucher
+           </Text>
+        </View>}
     </View>
   );
 };

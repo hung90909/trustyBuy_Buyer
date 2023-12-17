@@ -12,7 +12,7 @@ import {apiGet} from '../../utils/utils';
 import {DISCOUNT_API} from '../../config/urls';
 export default ListDiscount = ({route}) => {
   const {shopId} = route.params;
-  console.log(shopId);
+ 
   const getAllDiscount = async () => {
     try {
       const res = await apiGet(`${DISCOUNT_API}/${shopId}`);

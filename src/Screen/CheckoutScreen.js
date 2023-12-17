@@ -59,6 +59,28 @@ const CheckoutScreen = ({route}) => {
     const exchangeRate = 24000;
     return (amountInVND / exchangeRate).toFixed(2);
   };
+  const totalPriceBill = () => {
+    let total = 0;
+    product.map(item => {
+      total += item.product.price * item.product.quantity;
+    });
+
+    if (itemDiscount) {
+      const discountAmount = total * (itemDiscount.discount_value / 100);
+      const totalBill = total - discountAmount;
+      return formatPrice(totalBill);
+    }
+    return formatPrice(total);
+  };
+
+  const totalDiscount = () => {
+    const total = orderDetails?.reduce(
+      (total, item) => item.product.price * item.product.quantity + total,
+      0,
+    );
+    const discountAmount = total * (itemDiscount.discount_value / 100);
+    return formatPrice(discountAmount);
+  };
   const orderDetail = {
     intent: 'CAPTURE',
     purchase_units: [
@@ -69,7 +91,7 @@ const CheckoutScreen = ({route}) => {
           quantity: item.product.quantity,
           unit_amount: {
             currency_code: 'USD',
-            value: convertToUSD(item.product.price),
+            value: convertToUSD(product.price),
           },
         })),
         amount: {
@@ -117,14 +139,6 @@ const CheckoutScreen = ({route}) => {
   };
 
   const groupedProducts = groupProductsByShop(orderDetails);
-  const totalPriceBill = () => {
-    let total = 0;
-    product.map(item => {
-      total += item.product.price * item.product.quantity;
-    });
-
-    return formatPrice(total);
-  };
 
   const onOrders = useCallback(async () => {
     const shopOrderData = route.params.orderDetails.map(item => ({
@@ -355,6 +369,8 @@ const CheckoutScreen = ({route}) => {
                   onPress={() =>
                     navigation.navigate('ListDiscount', {
                       shopId: groupedProducts[shopId][0].product.shopId,
+                      orderDetails: orderDetails,
+                      itemAddress: address,
                     })
                   }>
                   <View style={styles.voucherContainer}>
@@ -444,9 +460,11 @@ const CheckoutScreen = ({route}) => {
                 marginVertical: 5,
               }}>
               <Text style={styles.chitietThanhtoan}>Tiền khuyến mãi:</Text>
-              <Text style={styles.chitietThanhtoan}>
-                <Text>0</Text>
-              </Text>
+              {itemDiscount ? (
+                <Text style={styles.chitietThanhtoan}>{totalDiscount()}</Text>
+              ) : (
+                <Text style={styles.chitietThanhtoan}>0</Text>
+              )}
             </View>
             <View
               style={{
