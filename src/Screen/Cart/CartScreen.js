@@ -28,6 +28,7 @@ const CartScreen = () => {
     try {
       const res = await apiGet(ADD_CART_API);
       setListCart(res.message.cart.cart_products);
+      
     } catch (error) {
       console.log(error);
     }
@@ -65,10 +66,12 @@ const CartScreen = () => {
     }
   };
 
-  const onDeleteItemCart = async productId => {
+  const onDeleteItemCart = async (productId, size, color) => {
+    console.log("productID: ",productId.replace(/-/g, ''));
+   
     try {
-      const res = await apiPost(ADD_CART_API + '/delete', {
-        productId,
+        await apiPost(ADD_CART_API + '/delete', {
+          productId, size , color
       });
 
       getCart();
@@ -240,7 +243,7 @@ const CartScreen = () => {
                 {
                   text: 'Ok',
                   onPress: () => {
-                    onDeleteItemCart(item.productId);
+                    onDeleteItemCart(item.productId, item.size, item.color);
                   },
                 },
               ]);

@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import Logout from './Logout';
-import {API_BASE_URL} from '../../config/urls';
-import {useSelector} from 'react-redux';
+import { API_BASE_URL } from '../../config/urls';
+import { useSelector } from 'react-redux';
 
-const ProfileScreen = ({navigation}) => {
+const ProfileScreen = ({ navigation }) => {
   const account = useSelector(state => state?.user?.userData);
   console.log(account);
   const [showLogout, setShowLogout] = useState(false);
@@ -57,25 +57,31 @@ const ProfileScreen = ({navigation}) => {
   return (
     <View style={styles.container_profile}>
       <View style={styles.header_profile}>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           <Image
             source={require('../../Resource/Image/shopping-bag.png')}
-            style={[styles.icon_profile, {marginRight: 10}]}
+            style={[styles.icon_profile, { marginRight: 10 }]}
           />
-          <Text style={{color: 'black', fontWeight: '500', fontSize: 18}}>
+          <Text style={{ color: 'black', fontWeight: '500', fontSize: 18 }}>
             Profile
           </Text>
         </View>
       </View>
       <View style={styles.infor_profile}>
         <View style={styles.avatar_container}>
-          <Image
+          {account.avatar ? <Image
             style={styles.avatar}
             source={{
               uri: `${API_BASE_URL}${account?.avatar}`,
             }}
             resizeMode="contain"
-          />
+          /> : <Image
+            style={styles.avatar}
+            source={{
+              uri: 'https://www.murrayglass.com/wp-content/uploads/2020/10/avatar-scaled.jpeg',
+            }}
+            resizeMode="contain"
+          />}
         </View>
 
         <Text
@@ -94,30 +100,30 @@ const ProfileScreen = ({navigation}) => {
           key={index}
           onPress={() => handleFeatureClick(item.name)}>
           <View key={index} style={styles.feature_item}>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <Image
                 source={item.image}
-                style={[styles.icon_profile, {marginRight: 15}]}
+                style={[styles.icon_profile, { marginRight: 15 }]}
               />
-              <Text style={{color: 'black', fontWeight: '500', fontSize: 15}}>
+              <Text style={{ color: 'black', fontWeight: '500', fontSize: 15 }}>
                 {item.name}
               </Text>
             </View>
             <Image
               source={require('../../Resource/icon/next.png')}
-              style={{width: 15, height: 15}}
+              style={{ width: 15, height: 15 }}
             />
           </View>
         </TouchableOpacity>
       ))}
       <TouchableOpacity onPress={() => setShowLogout(!showLogout)}>
         <View style={styles.feature_item}>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             <Image
               source={require('../../Resource/icon/logout.png')}
-              style={[styles.icon_profile, {marginRight: 15}]}
+              style={[styles.icon_profile, { marginRight: 15 }]}
             />
-            <Text style={{color: 'red', fontWeight: '500', fontSize: 16}}>
+            <Text style={{ color: 'red', fontWeight: '500', fontSize: 16 }}>
               Logout
             </Text>
           </View>

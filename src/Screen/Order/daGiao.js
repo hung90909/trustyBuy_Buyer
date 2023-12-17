@@ -146,9 +146,14 @@ export default function DaGiao() {
                       </View>
                       <Text>{item.product_attributes.quantity} sản phẩm</Text>
                     </View>
-                    <Text style={{color: 'red', marginTop: 5}}>
-                      {formatPrice(item.order_checkout.totalCheckout)}
-                    </Text>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text style={{ color: 'gray', marginTop: 5,  textDecorationLine: 'line-through',}}>
+                        {formatPrice(item.order_checkout.totalPrice)}
+                      </Text>
+                      <Text style={{ color: 'red', marginTop: 5 , marginLeft:6}}>
+                        {formatPrice(item.order_checkout.totalCheckout)}
+                      </Text>
+                    </View>
                   </View>
                 </View>
                 <View

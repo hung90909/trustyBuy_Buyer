@@ -133,7 +133,7 @@ const CheckoutScreen = ({route}) => {
 
   const totalDiscount = () => {
     const total = orderDetails?.reduce(
-      (total, item) => item.product.price * item.product.quantity + total,
+      (total, item) => item.productprice * item.product.quantity + total,
       0,
     );
     const discountAmount = total * (itemDiscount.discount_value / 100);

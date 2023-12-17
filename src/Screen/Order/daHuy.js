@@ -7,10 +7,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useState} from 'react';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {apiGet} from '../../utils/utils';
-import {API_BASE_URL, ORDER_API} from '../../config/urls';
+import React, { useCallback, useState } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { apiGet } from '../../utils/utils';
+import { API_BASE_URL, ORDER_API } from '../../config/urls';
 
 export default function DaHuy() {
   const nav = useNavigation();
@@ -48,11 +48,11 @@ export default function DaHuy() {
         <FlatList
           data={listProducts}
           keyExtractor={item => item.oderId}
-          renderItem={({item}) => {
+          renderItem={({ item }) => {
             return (
               <Pressable
                 onPress={() => {
-                  nav.navigate('DetailOrder', {item});
+                  nav.navigate('DetailOrder', { item });
                 }}
                 style={styles.itemOrder}>
                 <View
@@ -87,7 +87,7 @@ export default function DaHuy() {
                       {item.name_shop}
                     </Text>
                   </View>
-                  <Text style={{color: 'black'}}>Đã hủy</Text>
+                  <Text style={{ color: 'black' }}>Đã hủy</Text>
                 </View>
 
                 <View
@@ -149,20 +149,26 @@ export default function DaHuy() {
                       </View>
                       <Text>{item.product_attributes.quantity} sản phẩm</Text>
                     </View>
-                    <Text style={{color: 'red', marginTop: 5}}>
-                      {formatPrice(item.order_checkout.totalCheckout)}
-                    </Text>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text style={{ color: 'gray', marginTop: 5,  textDecorationLine: 'line-through',}}>
+                        {formatPrice(item.order_checkout.totalPrice)}
+                      </Text>
+                      <Text style={{ color: 'red', marginTop: 5 , marginLeft:6}}>
+                        {formatPrice(item.order_checkout.totalCheckout)}
+                      </Text>
+                    </View>
+
                   </View>
                 </View>
                 <TouchableOpacity style={styles.btn}>
-                  <Text style={{color: 'white'}}>Mua lại</Text>
+                  <Text style={{ color: 'white' }}>Mua lại</Text>
                 </TouchableOpacity>
               </Pressable>
             );
           }}
         />
       ) : (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Image
             style={{
               width: 100,
@@ -171,7 +177,7 @@ export default function DaHuy() {
             }}
             source={require('../../Resource/Image/order.png')}
           />
-          <Text style={{fontSize: 20, marginTop: 10}}>Chưa có đơn hàng</Text>
+          <Text style={{ fontSize: 20, marginTop: 10 }}>Chưa có đơn hàng</Text>
         </View>
       )}
     </View>

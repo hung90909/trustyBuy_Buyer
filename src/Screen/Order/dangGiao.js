@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   FlatList,
   Image,
@@ -8,22 +8,22 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {apiGet, apiPatch} from '../../utils/utils';
-import {API_BASE_URL, ORDER_API} from '../../config/urls';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { apiGet, apiPatch } from '../../utils/utils';
+import { API_BASE_URL, ORDER_API } from '../../config/urls';
 
-const OrderItem = ({nav, item, onReceived}) => {
+const OrderItem = ({ nav, item, onReceived }) => {
   const formatPrice = priceSP => `₫${priceSP?.toLocaleString('vi-VN')}`;
   console.log(item);
   return (
     <Pressable
-      onPress={() => nav.navigate('DetailOrder', {item})}
+      onPress={() => nav.navigate('DetailOrder', { item })}
       style={styles.itemOrder}>
       <View style={styles.headerContainer}>
         <View style={styles.shopInfo}>
           <Image
             style={styles.shopAvatar}
-            source={{uri: `${API_BASE_URL}${item.avatar_shop}`}}
+            source={{ uri: `${API_BASE_URL}${item.avatar_shop}` }}
           />
           <Text style={styles.shopName}>{item.name_shop}</Text>
         </View>
@@ -33,7 +33,7 @@ const OrderItem = ({nav, item, onReceived}) => {
       <View style={styles.productInfo}>
         <Image
           style={styles.productImage}
-          source={{uri: `${API_BASE_URL}uploads/${item.product_thumb[0]}`}}
+          source={{ uri: `${API_BASE_URL}uploads/${item.product_thumb[0]}` }}
         />
         <View style={styles.detailsContainer}>
           <Text style={styles.productName} numberOfLines={1}>
@@ -68,9 +68,14 @@ const OrderItem = ({nav, item, onReceived}) => {
             </View>
             <Text>{item.product_attributes.quantity} sản phẩm</Text>
           </View>
-          <Text style={styles.priceText}>
-            {formatPrice(item.order_checkout.totalCheckout)}
-          </Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={{ color: 'gray', marginTop: 5, textDecorationLine: 'line-through', }}>
+              {formatPrice(item.order_checkout.totalPrice)}
+            </Text>
+            <Text style={{ color: 'red', marginTop: 5, marginLeft: 6 }}>
+              {formatPrice(item.order_checkout.totalCheckout)}
+            </Text>
+          </View>
         </View>
       </View>
 
@@ -130,7 +135,7 @@ export default function DangGiao() {
         <FlatList
           data={listProducts}
           keyExtractor={item => item.oderId}
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <OrderItem nav={nav} item={item} onReceived={onReceived} />
           )}
         />

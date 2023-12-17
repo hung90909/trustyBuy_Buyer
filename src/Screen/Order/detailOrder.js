@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState, useRef} from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import {
   Text,
   View,
@@ -13,14 +13,15 @@ import {
   ToastAndroid,
   TouchableOpacity,
 } from 'react-native';
-import {API_BASE_URL, DETAIL_ORDER} from '../../config/urls';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {apiGet} from '../../utils/utils';
+import { API_BASE_URL, DETAIL_ORDER } from '../../config/urls';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { apiGet } from '../../utils/utils';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default DetailOrder = () => {
   const route = useRoute();
-  const {item} = route.params;
+  const { item } = route.params;
+  console.log(item);
   const nav = useNavigation();
 
   const formatPrice = priceSP => {
@@ -36,15 +37,14 @@ export default DetailOrder = () => {
       return number < 10 ? `0${number}` : `${number}`;
     }
     const dateTimeObject = new Date(date);
-    return `${dateTimeObject.getDate()}-${
-      dateTimeObject.getMonth() + 1
-    }-${dateTimeObject.getFullYear()} ${dateTimeObject.getHours()}:${addLeadingZero(
-      dateTimeObject.getMinutes(),
-    )}`;
+    return `${dateTimeObject.getDate()}-${dateTimeObject.getMonth() + 1
+      }-${dateTimeObject.getFullYear()} ${dateTimeObject.getHours()}:${addLeadingZero(
+        dateTimeObject.getMinutes(),
+      )}`;
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <View
         style={{
           flexDirection: 'row',
@@ -60,13 +60,13 @@ export default DetailOrder = () => {
           color="#000000"
           onPress={() => nav.goBack()}
         />
-        <View style={{flex: 1, marginLeft: 15}}>
-          <Text style={{color: '#000000', fontWeight: '600', fontSize: 18}}>
+        <View style={{ flex: 1, marginLeft: 15 }}>
+          <Text style={{ color: '#000000', fontWeight: '600', fontSize: 18 }}>
             Thông tin đơn hàng
           </Text>
         </View>
       </View>
-      <View style={{width: '100%', height: 50, alignItems: 'flex-end'}}>
+      <View style={{ width: '100%', height: 50, alignItems: 'flex-end' }}>
         <View
           style={{
             width: 180,
@@ -77,7 +77,7 @@ export default DetailOrder = () => {
             borderRadius: 5,
             alignItems: 'center',
           }}>
-          <Text style={{fontSize: 15, color: 'gray', padding: 5}}>
+          <Text style={{ fontSize: 15, color: 'gray', padding: 5 }}>
             Trạng thái: {item.status}
           </Text>
         </View>
@@ -93,7 +93,7 @@ export default DetailOrder = () => {
         }}>
         <Image
           source={require('../../Resource/Image/placeholder.png')}
-          style={{height: 24, width: 24, marginRight: 10}}
+          style={{ height: 24, width: 24, marginRight: 10 }}
         />
         <View>
           <Text
@@ -106,7 +106,7 @@ export default DetailOrder = () => {
           </Text>
 
           <Text>{item.order_shipping?.Home}</Text>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             <Text>{item.order_shipping?.Username} | </Text>
             <Text>
               {item.order_shipping?.Phonenumber
@@ -127,7 +127,7 @@ export default DetailOrder = () => {
         }}>
         <TouchableOpacity
           onPress={() => {
-            nav.navigate('ShopInformation', {shopId: item.shopId});
+            nav.navigate('ShopInformation', { shopId: item.shopId });
           }}
           style={{
             flexDirection: 'row',
@@ -144,7 +144,7 @@ export default DetailOrder = () => {
             }}>
             {item.name_shop}
           </Text>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             <Ionicons name="chevron-forward-outline" size={20} />
           </View>
         </TouchableOpacity>
@@ -173,15 +173,20 @@ export default DetailOrder = () => {
               numberOfLines={1}>
               {item.product_name}
             </Text>
-            <Text style={{color: 'black', marginVertical: 10}}>
+            <Text style={{ color: 'black', marginVertical: 10 }}>
               x{item.product_attributes.quantity}
             </Text>
-            <Text style={{color: 'red'}}>
-              {formatPrice(item.product_attributes.price)}
-            </Text>
+            <View style={{ flexDirection: "row" }}>
+             {item.order_checkout.totalDiscount > 0 ? <Text style={{ color: 'gray', marginTop: 5, textDecorationLine: 'line-through', }}>
+                {formatPrice(item.order_checkout.totalPrice)}
+              </Text>: null }
+              <Text style={{ color: 'red', marginTop: 5, marginLeft: 6 }}>
+                {formatPrice(item.order_checkout.totalCheckout)}
+              </Text>
+            </View>
           </View>
         </View>
-        <Text style={{fontSize: 13}}>
+        <Text style={{ fontSize: 13 }}>
           Thời gian đặt hàng: {formatDate(item.crateDate)}{' '}
         </Text>
       </View>
