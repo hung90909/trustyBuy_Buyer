@@ -143,10 +143,12 @@ const ShopInformation = ({route}) => {
                 source={require('../../Resource/Image/star.png')}
               />
               <Text style={styles.ratingText}>
-                {data?.products.reduce(
-                  (count, item) => count + item?.product_ratingAverage,
-                  0,
-                ) / data?.products.length}
+                {(
+                  data?.products.reduce(
+                    (count, item) => count + item?.product_ratingAverage,
+                    0,
+                  ) / data?.products.length
+                ).toFixed(1)}
                 /5.0
               </Text>
               <View style={styles.ratingSeparator} />
