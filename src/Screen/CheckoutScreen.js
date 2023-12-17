@@ -123,7 +123,21 @@ const CheckoutScreen = ({route}) => {
       total += item.product.price * item.product.quantity;
     });
 
+    if (itemDiscount) {
+      const discountAmount = total * (itemDiscount.discount_value / 100);
+      const totalBill = total - discountAmount;
+      return formatPrice(totalBill);
+    }
     return formatPrice(total);
+  };
+
+  const totalDiscount = () => {
+    const total = orderDetails?.reduce(
+      (total, item) => item.product.price * item.product.quantity + total,
+      0,
+    );
+    const discountAmount = total * (itemDiscount.discount_value / 100);
+    return formatPrice(discountAmount);
   };
 
   const onOrders = useCallback(async () => {
@@ -355,6 +369,8 @@ const CheckoutScreen = ({route}) => {
                   onPress={() =>
                     navigation.navigate('ListDiscount', {
                       shopId: groupedProducts[shopId][0].product.shopId,
+                      orderDetails:orderDetails,
+                      itemAddress:address
                     })
                   }>
                   <View style={styles.voucherContainer}>
@@ -444,9 +460,11 @@ const CheckoutScreen = ({route}) => {
                 marginVertical: 5,
               }}>
               <Text style={styles.chitietThanhtoan}>Tiền khuyến mãi:</Text>
-              <Text style={styles.chitietThanhtoan}>
-                <Text>0</Text>
-              </Text>
+              {itemDiscount ? (
+              <Text style={styles.chitietThanhtoan}>{totalDiscount()}</Text>
+            ) : (
+              <Text style={styles.chitietThanhtoan}>0</Text>
+            )}
             </View>
             <View
               style={{

@@ -91,7 +91,7 @@ const Checkouts = ({navigation}) => {
       const discountAmount = total * (itemDiscount.discount_value / 100);
       const totalBill = total - discountAmount;
       return formatPrice(totalBill);
-    }
+    } 
     return formatPrice(total);
   };
 
