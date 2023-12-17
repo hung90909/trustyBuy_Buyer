@@ -10,15 +10,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { CheckBox } from '@rneui/themed';
+import React, {useEffect, useState} from 'react';
+import {CheckBox} from '@rneui/themed';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { useNavigation } from '@react-navigation/native';
-import { ADD_CART_API, API_BASE_URL } from '../../config/urls';
-import { apiDelete, apiGet, apiPost, getItem } from '../../utils/utils';
+import {useNavigation} from '@react-navigation/native';
+import {ADD_CART_API, API_BASE_URL} from '../../config/urls';
+import {apiDelete, apiGet, apiPost, getItem} from '../../utils/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Swipeable } from 'react-native-gesture-handler';
+import {Swipeable} from 'react-native-gesture-handler';
 
 const CartScreen = () => {
   const [listCart, setListCart] = useState([]);
@@ -28,6 +28,7 @@ const CartScreen = () => {
     try {
       const res = await apiGet(ADD_CART_API);
       setListCart(res.message.cart.cart_products);
+      console.log(res.message.cart.cart_products);
     } catch (error) {
       console.log(error);
     }
@@ -92,14 +93,14 @@ const CartScreen = () => {
     setSelectedItems(item =>
       item.map(product =>
         product.itemId === itemId
-          ? { ...product, quantity: product.quantity - 1 }
+          ? {...product, quantity: product.quantity - 1}
           : product,
       ),
     );
     setListCart(item =>
       item.map(product =>
         product.itemId === itemId
-          ? { ...product, quantity: product.quantity - 1 }
+          ? {...product, quantity: product.quantity - 1}
           : product,
       ),
     );
@@ -109,20 +110,20 @@ const CartScreen = () => {
     setSelectedItems(item =>
       item.map(product =>
         product.itemId === itemId
-          ? { ...product, quantity: product.quantity + 1 }
+          ? {...product, quantity: product.quantity + 1}
           : product,
       ),
     );
     setListCart(item =>
       item.map(product =>
         product.itemId === itemId
-          ? { ...product, quantity: product.quantity + 1 }
+          ? {...product, quantity: product.quantity + 1}
           : product,
       ),
     );
   };
 
-  const renderSanpham = ({ item }) => {
+  const renderSanpham = ({item}) => {
     return (
       <View style={styles.product}>
         <View
@@ -147,7 +148,7 @@ const CartScreen = () => {
             // borderWidth: 1,
             paddingVertical: 20,
           }}>
-          <View style={{ justifyContent: 'center' }}>
+          <View style={{justifyContent: 'center'}}>
             <CheckBox
               checkedColor="black"
               value={selectedItems.includes(item)}
@@ -171,8 +172,8 @@ const CartScreen = () => {
               uri: `${API_BASE_URL}uploads/` + item.product_thumb,
             }}
           />
-          <View style={{ marginStart: 10, flex: 1 }}>
-            <Text style={{ fontSize: 16, color: 'black' }} numberOfLines={2}>
+          <View style={{marginStart: 10, flex: 1}}>
+            <Text style={{fontSize: 16, color: 'black'}} numberOfLines={2}>
               {item.name}
             </Text>
             <View
@@ -181,14 +182,14 @@ const CartScreen = () => {
                 flex: 1,
                 alignItems: 'center',
               }}>
-              <Text style={{ textTransform: 'uppercase' }}>{item.color}</Text>
+              <Text style={{textTransform: 'uppercase'}}>{item.color}</Text>
               <AntDesign
                 name="minus"
                 size={8}
                 color={'black'}
-                style={{ marginHorizontal: 5 }}
+                style={{marginHorizontal: 5}}
               />
-              <Text style={{ textTransform: 'uppercase' }}>{item.size}</Text>
+              <Text style={{textTransform: 'uppercase'}}>{item.size}</Text>
             </View>
             <Text
               style={{
@@ -278,20 +279,31 @@ const CartScreen = () => {
           <Ionicons name="chatbubbles-outline" size={26} color={'black'} />
         </Pressable>
       </View>
-      {listCart.length > 0 ? <FlatList
-        data={listCart}
-        keyExtractor={item => item.itemId}
-        renderItem={renderSanpham}
-      /> :
-        <View style={{flex:1, justifyContent:"center",
-        alignItems:"center"}}>
-           <Image style={{
-            width:100, height:100, tintColor:"gray"
-           }} source={require("../../Resource/Image/shopping.png")}/>
-           <Text style={{
-            fontSize:20, marginTop:5
-           }}>Giỏ hàng không có sản phẩm</Text>
-        </View>}
+      {listCart.length > 0 ? (
+        <FlatList
+          data={listCart}
+          keyExtractor={item => item.itemId}
+          renderItem={renderSanpham}
+        />
+      ) : (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Image
+            style={{
+              width: 100,
+              height: 100,
+              tintColor: 'gray',
+            }}
+            source={require('../../Resource/Image/shopping.png')}
+          />
+          <Text
+            style={{
+              fontSize: 20,
+              marginTop: 5,
+            }}>
+            Giỏ hàng không có sản phẩm
+          </Text>
+        </View>
+      )}
       <View
         style={{
           height: 60,
@@ -308,7 +320,7 @@ const CartScreen = () => {
             alignItems: 'center',
             flex: 1,
           }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <CheckBox
               checkedColor="black"
               onValueChange={() => setSelection(!isSelected)}
@@ -324,13 +336,13 @@ const CartScreen = () => {
                 }
               }}
             />
-            <Text style={{ color: 'black', fontSize: 13, marginLeft: -15 }}>
+            <Text style={{color: 'black', fontSize: 13, marginLeft: -15}}>
               Tất cả
             </Text>
           </View>
         </View>
-        <View style={{ marginHorizontal: 10 }}>
-          <Text style={{ fontSize: 13, color: 'black' }}>Tổng thanh toán</Text>
+        <View style={{marginHorizontal: 10}}>
+          <Text style={{fontSize: 13, color: 'black'}}>Tổng thanh toán</Text>
           <Text
             style={{
               marginLeft: 5,
@@ -358,7 +370,7 @@ const CartScreen = () => {
                 },
               }));
 
-              nav.navigate('Checkout', { orderDetails: formattedData });
+              nav.navigate('Checkout', {orderDetails: formattedData});
             } else {
               ToastAndroid.show('Vui lòng chọn sản phẩm', ToastAndroid.LONG);
             }
@@ -370,7 +382,7 @@ const CartScreen = () => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Text style={{ color: 'white', fontWeight: 'bold' }}>Mua hàng</Text>
+          <Text style={{color: 'white', fontWeight: 'bold'}}>Mua hàng</Text>
         </TouchableOpacity>
       </View>
     </View>

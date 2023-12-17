@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
-  Alert, // Import Alert
+  Alert,
+  ToastAndroid, // Import Alert
 } from 'react-native';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -37,21 +38,10 @@ export default ChangePassword = () => {
       });
 
       console.log(res);
-      if (res && res.data && res.data.success) {
+      if (res.message.message == 'Đổi mật khẩu thành công') {
         console.log('Password change successful');
-        // Show success alert
-        Alert.alert('Success', 'Password changed successfully', [
-          {
-            text: 'OK',
-            onPress: () => {
-              // Clear input fields
-              setOldPassword('');
-              setPassword('');
-              setPasswordConfirm('');
-              setErrorPassword('');
-            },
-          },
-        ]);
+        ToastAndroid.show('Đổi mật khẩu thành công', ToastAndroid.SHORT);
+        nav.goBack();
       } else {
         console.log('Password change failed');
       }
