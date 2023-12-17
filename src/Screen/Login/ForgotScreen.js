@@ -85,7 +85,7 @@ const EmailForgot = ({data}) => {
         style={{
           height: 50,
           marginHorizontal: '8%',
-          borderRadius: 10,
+          borderRadius: 5,
           borderWidth: 1,
           padding: 5,
           margin: '5%',
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    marginHorizontal: '8%',
+    marginHorizontal: '2%',
     marginVertical: '5%',
     alignItems: 'center',
   },
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     height: 200,
-    width: 250,
+    width: 200,
     alignSelf: 'center',
   },
   title: {
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
   submitButton: {
     backgroundColor: 'black',
     height: 50,
-    marginHorizontal: '10%',
+    marginHorizontal: '8%',
     borderRadius: 5,
     marginVertical: 20,
     alignItems: 'center',

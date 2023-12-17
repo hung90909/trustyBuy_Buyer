@@ -13,7 +13,7 @@ import {ListItem, Avatar} from '@rneui/themed';
 import {Icon} from 'react-native-elements';
 import {useSelector} from 'react-redux';
 import {API_BASE_URL} from '../../config/urls';
-import {formatMessageTime} from '../../compoment/DateTime';
+import {formatMessageTime, formatTime} from '../../compoment/DateTime';
 
 const MessageScreen = ({navigation}) => {
   const data = useSelector(state => state?.chat?.chatData);
@@ -70,7 +70,7 @@ const MessageScreen = ({navigation}) => {
               {item?.chat?.messagers[item?.chat?.messagers.length - 1]}
             </ListItem.Subtitle>
             <ListItem.Subtitle style={styles.timeText}>
-              {formatMessageTime(item?.chat?.updatedAt)}
+              {formatTime(item?.chat?.updatedAt)}
             </ListItem.Subtitle>
           </View>
         </ListItem.Content>
