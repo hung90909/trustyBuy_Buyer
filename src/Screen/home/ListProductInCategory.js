@@ -85,25 +85,28 @@ const ListProductInCategory = ({route}) => {
 
   return (
     <SafeAreaView>
-      <View
-        style={{
-          height: 60,
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 15,
-        }}>
-        <Ionicons
-          name="arrow-back"
-          size={24}
-          color="black"
-          onPress={() => navigation.goBack()}
-        />
-        <Text style={styles.categoryTitle}>{categoryName}</Text>
-      </View>
-
       <ScrollView>
+        <View
+          style={{
+            height: 60,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingHorizontal: 15,
+          }}>
+          <Ionicons
+            name="arrow-back"
+            size={24}
+            color="black"
+            onPress={() => navigation.goBack()}
+          />
+          <Text style={styles.categoryTitle}>{categoryName}</Text>
+        </View>
         {loading ? (
-          <ActivityIndicator size="large" color="#FC6D26" />
+          <ActivityIndicator
+            size="large"
+            color="#FC6D26"
+            style={{justifyContent: 'center', alignItems: 'center', flex: 1}}
+          />
         ) : productList.length === 0 ? (
           <View style={styles.noProductsContainer}>
             <Text style={styles.noProductsText}>No products found.</Text>

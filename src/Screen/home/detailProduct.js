@@ -370,42 +370,41 @@ const DetailProducts = ({route, navigation}) => {
                     </Text>
                   </View>
                 </View>
-
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    flex: 1,
-                    backgroundColor: 'white',
-                    padding: 15,
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    style={styles.imgShop}
-                    source={{
-                      uri: `${API_BASE_URL}${productDetail?.shop_avatar}`,
-                    }}
-                  />
-                  <View style={styles.nameShowShop}>
-                    <View style={{}}>
-                      <Text style={styles.nameShop}>
-                        {productDetail?.shop_name}
-                      </Text>
-                    </View>
-
-                    <View>
-                      <Pressable
-                        onPress={() => handleShopPress(productDetail?.shop_id)}
-                        style={styles.butonDetailShop}>
-                        <Text style={styles.titleButon}>Xem cửa hàng</Text>
-                      </Pressable>
-                    </View>
-                  </View>
-                </View>
                 <View style={styles.containerProductdetail}>
                   <Text style={styles.titleDetail}>Mô tả sản phẩm</Text>
                   <Text style={styles.titleContent}>
                     {productDetail?.product_description}
                   </Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flex: 1,
+                  backgroundColor: 'white',
+                  padding: 15,
+                  alignItems: 'center',
+                }}>
+                <Image
+                  style={styles.imgShop}
+                  source={{
+                    uri: `${API_BASE_URL}${productDetail?.shop_avatar}`,
+                  }}
+                />
+                <View style={styles.nameShowShop}>
+                  <View style={{}}>
+                    <Text style={styles.nameShop}>
+                      {productDetail?.shop_name}
+                    </Text>
+                  </View>
+
+                  <View>
+                    <Pressable
+                      onPress={() => handleShopPress(productDetail?.shop_id)}
+                      style={styles.butonDetailShop}>
+                      <Text style={styles.titleButon}>Xem cửa hàng</Text>
+                    </Pressable>
+                  </View>
                 </View>
               </View>
 
