@@ -1,3 +1,4 @@
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,8 +11,8 @@ import {
   ScrollView,
   Pressable,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {formatPrice, formatSoldSP} from './Format';
@@ -20,30 +21,20 @@ import {API_BASE_URL, PRODUCT_API} from '../config/urls';
 import {useNavigation} from '@react-navigation/native';
 import ListProduct from './ListProduct';
 import {Rating} from 'react-native-elements';
-
 const SearchScreen = () => {
   const nav = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredSanpham, setFilteredSanpham] = useState([]);
-  const [data, setData] = useState(data);
-  const [loading, setLoading] = useState(true);
-  const handlePress = () => {
-    setIsPressed(!isPressed);
-  };
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedSortOption, setSelectedSortOption] =
+    useState('Giá thấp đến cao');
+  const [sortBySales, setSortBySales] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedStarFilter, setSelectedStarFilter] = useState(null);
 
-  const formatCurrency = value => {
-    const numericValue = value.replace(/\D/g, '');
-
-    let intValue = parseInt(numericValue, 10);
-
-    const formattedValue = intValue.toLocaleString('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-    });
-
-    return formattedValue;
-  };
   useEffect(() => {
     const getAllProduct = async () => {
       try {
@@ -60,81 +51,207 @@ const SearchScreen = () => {
     getAllProduct();
   }, []);
 
-  const handleInputChange = text => {
+  const handleInputChange = useCallback(text => {
     setInputValue(formatCurrency(text));
-  };
-  const handleRetrySearch = () => {
+  }, []);
+
+  const handleRetrySearch = useCallback(() => {
     setSearchQuery('');
-  };
+  }, []);
 
-  const handleSearch = query => {
-    setSearchQuery(query);
-
-    if (query === '') {
-      // Nếu không có tìm kiếm, ẩn danh sách sản phẩm
-      setFilteredSanpham([]);
-    } else {
-      // Nếu có tìm kiếm, lọc danh sách sản phẩm theo tên thông minh hơn
+  const handleSearch = useCallback(
+    query => {
+      setSearchQuery(query);
       const formattedQuery = query.toLowerCase();
-      const filteredProducts = data.filter(product =>
-        product.product_name.toLowerCase().includes(formattedQuery),
-      );
+      const filteredProducts =
+        query === ''
+          ? []
+          : data.filter(product =>
+              product.product_name.toLowerCase().includes(formattedQuery),
+            );
       setFilteredSanpham(filteredProducts);
-    }
-  };
+    },
+    [data],
+  );
 
-  const renderSanpham = ({item}) => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          nav.navigate('DetailProducts', {productId: item._id});
-        }}
-        style={{
-          width: '50%',
-          justifyContent: 'center',
-          padding: '3%',
-        }}>
-        <Image
+  const handleSortToggle = useCallback(() => {
+    setModalVisible(true);
+  }, []);
+
+  const handleSortOptionSelect = useCallback(
+    option => {
+      setSelectedOption(option);
+      setSortBySales(option === 'Bán chạy');
+      setSelectedSortOption(option);
+      setModalVisible(false);
+
+      let sortedProducts;
+
+      if (option === 'Giá thấp đến cao' || option === 'Giá cao đến thấp') {
+        // Sort by price logic
+        sortedProducts = [...filteredSanpham].sort((a, b) => {
+          const priceA = a.product_price;
+          const priceB = b.product_price;
+
+          return option === 'Giá thấp đến cao'
+            ? priceA - priceB
+            : priceB - priceA;
+        });
+      } else if (option === 'Bán chạy') {
+        // Sort by sales logic
+        sortedProducts = [...filteredSanpham].sort((a, b) => {
+          return sortBySales
+            ? a.product_sold - b.product_sold
+            : b.product_sold - a.product_sold;
+        });
+      }
+
+      setFilteredSanpham(sortedProducts);
+    },
+    [filteredSanpham, sortBySales],
+  );
+
+  const formatCurrency = useCallback(value => {
+    const numericValue = value.replace(/\D/g, '');
+    const intValue = parseInt(numericValue, 10);
+    const formattedValue = intValue.toLocaleString('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    });
+
+    return formattedValue;
+  }, []);
+
+  const handleStarFilterSelect = useCallback(
+    starFilter => {
+      setSelectedStarFilter(starFilter);
+      setModalVisible(false);
+
+      let filteredProducts = data;
+
+      if (starFilter) {
+        // Filter products based on star rating
+        filteredProducts = data.filter(
+          product => product.product_ratingAverage === parseInt(starFilter, 10),
+        );
+      }
+
+      setFilteredSanpham(filteredProducts);
+    },
+    [data],
+  );
+
+  const renderSanpham = useCallback(
+    ({item}) => {
+      return (
+        <TouchableOpacity
+          onPress={() => {
+            nav.navigate('DetailProducts', {productId: item._id});
+          }}
           style={{
-            height: 200,
-          }}
-          source={{
-            uri: `${API_BASE_URL}uploads/${item.product_thumb[0]}`,
-          }}
-          resizeMode="contain"
-        />
-        <Text style={{color: '#1B2028', fontSize: 14}} numberOfLines={2}>
-          {item.product_name}
-        </Text>
-        <View style={{marginTop: 10}}>
-          <Text style={{color: '#FC6D26', fontSize: 14}}>
-            {formatPrice(item.product_price)}
-          </Text>
-          <View
+            width: '50%',
+            justifyContent: 'center',
+            padding: '3%',
+          }}>
+          <Image
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginTop: 25,
-              alignItems: 'center',
-            }}>
-            <Rating
-              readonly
-              startingValue={item.product_ratingAverage}
-              imageSize={10}
-            />
-            <Text style={{color: '#1B2028', fontSize: 10}}>
-              Đã bán {formatSoldSP(item.product_sold)}
+              height: 200,
+            }}
+            source={{
+              uri: `${API_BASE_URL}uploads/${item.product_thumb[0]}`,
+            }}
+            resizeMode="contain"
+          />
+          <Text style={{color: '#1B2028', fontSize: 14}} numberOfLines={2}>
+            {item.product_name}
+          </Text>
+          <View style={{marginTop: 10}}>
+            <Text style={{color: '#FC6D26', fontSize: 14}}>
+              {formatPrice(item.product_price)}
             </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: 25,
+                alignItems: 'center',
+              }}>
+              <Rating
+                readonly
+                startingValue={item.product_ratingAverage}
+                imageSize={10}
+              />
+              <Text style={{color: '#1B2028', fontSize: 10}}>
+                Đã bán {formatSoldSP(item.product_sold)}
+              </Text>
+            </View>
           </View>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      );
+    },
+    [nav],
+  );
+
+  const renderSortOptions = useCallback(() => {
+    const sortOptions = ['Giá thấp đến cao', 'Giá cao đến thấp', 'Bán chạy'];
+
+    return (
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        {sortOptions.map(option => (
+          <TouchableOpacity
+            key={option}
+            onPress={() => handleSortOptionSelect(option)}
+            style={[
+              styles.sortOption,
+              {backgroundColor: selectedOption == option ? 'black' : 'white'},
+            ]}>
+            <Text
+              style={{color: selectedOption === option ? 'white' : 'black'}}>
+              {option}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     );
-  };
+  }, [handleSortOptionSelect, selectedOption]);
+
+  const renderStarFilters = useCallback(() => {
+    const starFilters = ['1', '2', '3', '4', '5'];
+
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginTop: 10,
+        }}>
+        {starFilters.map(starFilter => (
+          <TouchableOpacity
+            key={starFilter}
+            onPress={() => handleStarFilterSelect(starFilter)}
+            style={[
+              styles.sortOption,
+              {
+                backgroundColor:
+                  selectedStarFilter === starFilter ? 'black' : 'white',
+              },
+            ]}>
+            <Text
+              style={{
+                color: selectedStarFilter === starFilter ? 'white' : 'black',
+              }}>
+              {starFilter}
+            </Text>
+            <Ionicons name="star" color={'#f39c12'} size={12} />
+          </TouchableOpacity>
+        ))}
+      </View>
+    );
+  }, [handleStarFilterSelect, selectedStarFilter]);
 
   return (
     <View style={[styles.container]}>
       <StatusBar />
-      {/* Thanh tìm kiếm */}
       <View style={styles.textInputContainer}>
         <Ionicons
           name="search-outline"
@@ -148,8 +265,7 @@ const SearchScreen = () => {
           value={searchQuery}
           onChangeText={handleSearch}
         />
-        {/* Ấn hiện bottom tại đây */}
-        <Pressable onPress={() => console.log('hihihi')}>
+        <Pressable onPress={handleSortToggle}>
           <FontAwesome
             name="unsorted"
             size={22}
@@ -160,10 +276,8 @@ const SearchScreen = () => {
       </View>
 
       {loading ? (
-        // Show loading indicator while data is being fetched
         <ActivityIndicator style={{flex: 1}} size="large" color="#0000ff" />
       ) : searchQuery !== '' && filteredSanpham.length === 0 ? (
-        // Show no results message and other content
         <ScrollView>
           <View style={styles.noResultsContainer}>
             <Image
@@ -200,10 +314,8 @@ const SearchScreen = () => {
           <ListProduct />
         </ScrollView>
       ) : (
-        // Show search results or all products
         <ScrollView>
           {searchQuery !== '' ? (
-            // Hiển thị kết quả tìm kiếm
             <FlatList
               data={filteredSanpham}
               keyExtractor={item => item?._id}
@@ -213,11 +325,29 @@ const SearchScreen = () => {
               scrollEnabled={false}
             />
           ) : (
-            // Hiển thị tất cả sản phẩm khi chưa có tìm kiếm
             <ListProduct />
           )}
         </ScrollView>
       )}
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContentContainer}>
+            <Text style={styles.modalHeader}>Tùy chọn lọc</Text>
+            {renderSortOptions()}
+            {renderStarFilters()}
+          </View>
+          <Pressable
+            onPress={() => setModalVisible(false)}
+            style={styles.closeModalButton}>
+            <Text style={{color: 'white'}}>Đóng</Text>
+          </Pressable>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -241,32 +371,6 @@ const styles = StyleSheet.create({
   inputIconRight: {
     marginHorizontal: 10,
   },
-  productContainer: {
-    margin: 10,
-    padding: 10,
-    borderWidth: 0.8,
-    borderRadius: 10,
-    borderColor: '#878787',
-    width: '50%',
-  },
-  productImage: {
-    width: 100,
-    height: 100,
-    resizeMode: 'cover',
-  },
-  productName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 10,
-  },
-  productPrice: {
-    fontSize: 14,
-    color: 'green',
-  },
-  productSold: {
-    fontSize: 12,
-    color: '#878787',
-  },
   noResultsContainer: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -286,45 +390,35 @@ const styles = StyleSheet.create({
     opacity: 0.5,
     marginVertical: 10,
   },
-  butonSheetl: {
-    borderWidth: 1,
-    borderRadius: 10,
-    height: 40,
-    width: 120,
-    justifyContent: 'center',
-    alignItems: 'center',
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  textSheet: {
+  modalContentContainer: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    padding: 20,
+  },
+  modalHeader: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 10,
     color: 'black',
-    marginHorizontal: 20,
-    marginVertical: 10,
-  },
-  textButonShet: {
-    color: 'black',
-    fontWeight: 'bold',
-  },
-  edtGia: {
-    borderWidth: 1,
-    width: 150,
-    height: 40,
-    borderRadius: 10,
-    padding: 10,
     textAlign: 'center',
   },
-  butonSheetl1: {
-    borderWidth: 1,
-    borderRadius: 10,
-    height: 40,
-    width: 120,
-    justifyContent: 'center',
+  sortOption: {
+    paddingVertical: 10,
+    borderRadius: 8,
+    flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'black',
+    paddingHorizontal: 20,
   },
-  textButonShet1: {
-    fontWeight: 'bold',
-    color: 'white',
+  closeModalButton: {
+    backgroundColor: 'black',
+    padding: 15,
+    alignItems: 'center',
   },
 });
 
