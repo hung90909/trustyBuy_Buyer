@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   FlatList,
   Image,
@@ -9,9 +9,9 @@ import {
   View,
   ActivityIndicator,
 } from 'react-native';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {apiGet} from '../../utils/utils';
-import {API_BASE_URL, ORDER_API} from '../../config/urls';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { apiGet } from '../../utils/utils';
+import { API_BASE_URL, ORDER_API } from '../../config/urls';
 
 export default function DaGiao() {
   const nav = useNavigation();
@@ -61,10 +61,10 @@ export default function DaGiao() {
         <FlatList
           data={listProducts}
           keyExtractor={item => item.oderId}
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <Pressable
               onPress={() => {
-                nav.navigate('DetailOrder', {item});
+                nav.navigate('DetailOrder', { item });
               }}
               style={styles.itemOrder}>
               <View
@@ -74,7 +74,7 @@ export default function DaGiao() {
                   justifyContent: 'space-between',
                   padding: 10,
                 }}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image
                     style={{
                       width: 30,
@@ -95,7 +95,7 @@ export default function DaGiao() {
                     {item.name_shop}
                   </Text>
                 </View>
-                <Text style={{color: 'black'}}>Đang giao</Text>
+                <Text style={{ color: 'black' }}>Đang giao</Text>
               </View>
 
               <View
@@ -152,16 +152,8 @@ export default function DaGiao() {
                         }}></View>
                       <Text>{item.product_attributes.size}</Text>
                     </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Text style={{ color: 'gray', marginTop: 5,  textDecorationLine: 'line-through',}}>
-                        {formatPrice(item.order_checkout.totalPrice)}
-                      </Text>
-                      <Text style={{ color: 'red', marginTop: 5 , marginLeft:6}}>
-                        {formatPrice(item.order_checkout.totalCheckout)}
-                      </Text>
-                    </View>
                   </View>
-                  <Text style={{color: 'red', marginTop: 5}}>
+                  <Text style={{ color: 'red', marginTop: 5 }}>
                     {formatPrice(item.order_checkout.totalCheckout)}
                   </Text>
                 </View>
@@ -171,18 +163,22 @@ export default function DaGiao() {
                   flexDirection: 'row',
                   alignSelf: 'flex-end',
                 }}>
-                <TouchableOpacity style={styles.btnReturns}>
-                  <Text style={{color: 'black'}}>Yêu cầu trả hàng</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btn}>
-                  <Text style={{color: 'white'}}>Mua lại</Text>
+                {/* <TouchableOpacity style={styles.btnReturns}>
+                  <Text style={{ color: 'black' }}>Yêu cầu trả hàng</Text>
+                </TouchableOpacity> */}
+                <TouchableOpacity 
+                onPress={() =>{
+                  nav.navigate("DetailProducts",{productId:item.product_attributes.productId})
+                }}
+                style={styles.btn}>
+                  <Text style={{ color: 'white' }}>Mua lại</Text>
                 </TouchableOpacity>
               </View>
             </Pressable>
           )}
         />
       ) : (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Image
             style={{
               width: 100,
@@ -191,7 +187,7 @@ export default function DaGiao() {
             }}
             source={require('../../Resource/Image/order.png')}
           />
-          <Text style={{fontSize: 20, marginTop: 10}}>Chưa có đơn hàng</Text>
+          <Text style={{ fontSize: 20, marginTop: 10 }}>Chưa có đơn hàng</Text>
         </View>
       )}
     </View>
@@ -216,7 +212,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 5,
     margin: 10,
-    paddingVertical: 5,
+    paddingVertical: 10,
     alignSelf: 'center',
   },
   btnReturns: {

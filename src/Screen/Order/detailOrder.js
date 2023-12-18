@@ -21,15 +21,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 export default DetailOrder = () => {
   const route = useRoute();
   const { item } = route.params;
-  console.log(item);
+  console.log(item)
   const nav = useNavigation();
-  const [oderDetail, setoderDetail] = useState(null);
-  // console.log(oderDetail[0].order_status);
-  // console.log(oderDetail[0].order_shipping.Address);
-  // console.log(oderDetail[0].order_shipping.Username);
-  // console.log(oderDetail[0].shopdetailInOrder[0].nameShop);
-  // console.log(oderDetail[0].shopdetailInOrder[0].avatarShop);
-  // console.log(oderDetail[0].productInfo.product_thumb[0]);
+  const [oderDetail, setoderDetail] = useState([]);
   const statusTranslations = {
     pending: 'Phê duyệt',
     shipped: 'Đang vận chuyển',
@@ -62,8 +56,7 @@ export default DetailOrder = () => {
     try {
       const response = await apiGet(`${DETAIL_ORDER}${item.oderId}`);
 
-      setoderDetail(response.message.getTradeing);
-      // console.log(response.message.getTradeing);
+      setoderDetail(response.message.getTradeing[0]);
     } catch (error) {
       console.error(error);
     }
@@ -173,7 +166,10 @@ export default DetailOrder = () => {
             <Ionicons name="chevron-forward-outline" size={20} />
           </View>
         </TouchableOpacity>
-        <View
+        <TouchableOpacity
+        onPress={() =>{
+          nav.navigate("DetailProducts",{productId:item.product_attributes.productId})
+        }}
           style={{
             borderTopWidth: 0.5,
             borderColor: 'gray',
@@ -198,22 +194,30 @@ export default DetailOrder = () => {
               numberOfLines={1}>
               {item.product_name}
             </Text>
-            <Text style={{ color: 'black', marginVertical: 10 }}>
+            <View style={{flexDirection:"row", marginTop:4}}>
+               <Text>{item.product_attributes.color} |</Text>
+               <Text> {item.product_attributes.size}</Text>
+            </View>
+            <Text style={{ color: 'black', marginVertical: 5 }}>
               x{item.product_attributes.quantity}
             </Text>
             <View style={{ flexDirection: "row" }}>
-             {item.order_checkout.totalDiscount > 0 ? <Text style={{ color: 'gray', marginTop: 5, textDecorationLine: 'line-through', }}>
-                {formatPrice(item.order_checkout.totalPrice)}
-              </Text>: null }
-              <Text style={{ color: 'red', marginTop: 5, marginLeft: 6 }}>
+              <Text style={{ color: 'red', marginTop: 2 }}>
                 {formatPrice(item.order_checkout.totalCheckout)}
               </Text>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
         <Text style={{ fontSize: 13 }}>
           Thời gian đặt hàng: {formatDate(item.crateDate)}{' '}
         </Text>
+      </View>
+      <View style={{
+        width: '100%', backgroundColor:"white", marginTop:10,
+        padding:10
+      }}>
+        <Text style={{fontWeight:"bold", fontSize:15,color:"black"}}>Phương thức thanh toán</Text>
+        <Text style={{marginTop:5}}>{oderDetail.order_payment}</Text>
       </View>
     </View>
   );

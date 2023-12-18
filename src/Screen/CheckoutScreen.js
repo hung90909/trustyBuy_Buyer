@@ -57,20 +57,6 @@ const CheckoutScreen = ({ route }) => {
   }, [address]);
 
 
-
-  const checkVoucher = () => {
-    const discountForShop = orderDetails?.find(item => item.product.shopId === itemDiscount?.discount_shopId)
-    console.log("discountForShop: ", discountForShop)
-    if (discountForShop) {
-      console.log(true)
-    } else {
-      console.log(false)
-    }
-  }
-
-  useEffect(() =>{
-     checkVoucher()
-  },[itemDiscount])
   const clearPaypalState = () => {
     setPaypalUrl(null);
     setAccessToken(null);
@@ -408,7 +394,7 @@ const CheckoutScreen = ({ route }) => {
                         const isDiscountApplied = itemDiscount?.discount_shopId === item.product.shopId;
                         return (
                           <View key={index}>
-                            {isDiscountApplied && <Text>giam gia</Text>}
+                            {isDiscountApplied && <Text>Giảm {itemDiscount.discount_value}%</Text>}
                           </View>
                         )
                       })}

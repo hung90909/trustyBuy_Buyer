@@ -9,7 +9,6 @@ import {
   View,
   ActivityIndicator,
 } from 'react-native';
-import React, {useCallback, useState} from 'react';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {apiGet} from '../../utils/utils';
 import {API_BASE_URL, ORDER_API} from '../../config/urls';
@@ -17,6 +16,7 @@ import {API_BASE_URL, ORDER_API} from '../../config/urls';
 export default function DaHuy() {
   const nav = useNavigation();
   const [listProducts, setListProducts] = useState([]);
+  console.log("listProducts", listProducts)
   const [loading, setLoading] = useState(true);
 
   const getAllOrderForUser = async () => {
@@ -159,7 +159,11 @@ export default function DaHuy() {
                     </Text>
                   </View>
                 </View>
-                <TouchableOpacity style={styles.btn}>
+                <TouchableOpacity 
+                onPress={() =>{
+                  nav.navigate("DetailProducts",{productId:item.product_attributes.productId})
+                }}
+                style={styles.btn}>
                   <Text style={{color: 'white'}}>Mua lại</Text>
                 </TouchableOpacity>
               </Pressable>

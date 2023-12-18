@@ -33,7 +33,8 @@ import { RadioButton } from 'react-native-paper';
 const ListDiscount = () => {
   const nav = useNavigation();
   const route = useRoute();
-  const { orderDetails, itemAddress, shopId } = route.params;
+  const { orderDetails, itemAddress, shopId, dataProduct } = route.params;
+
   const [listVoucher, setListVoucher] = useState([]);
   const [checked, setChecked] = useState(null);
 
@@ -41,7 +42,7 @@ const ListDiscount = () => {
     try {
       const res = await apiGet(DISCOUNT_API + `/${shopId}`);
       setListVoucher(res.message);
-      // console.log(res.message);
+      console.log(res.message);
     } catch (error) {
       throw error;
     }
@@ -56,6 +57,20 @@ const ListDiscount = () => {
   useEffect(() => {
     getDisCount();
   }, []);
+
+  const handleNavigation = (shopID) => {
+    if (dataProduct) {
+      dataProduct.map(item => {
+        if (item.discount_shopId === shopID) {
+          nav.navigate("Checkout", {
+            itemDiscount: item,
+            orderDetails: orderDetails,
+            itemAddress: itemAddress,
+          })
+        }
+      })
+    }
+  }
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -132,14 +147,16 @@ const ListDiscount = () => {
           );
         }}
       /> :
-        <View style={{justifyContent:"center", alignItems:"center",
-         flex:1}}>
+        <View style={{
+          justifyContent: "center", alignItems: "center",
+          flex: 1
+        }}>
           <Image style={{
-            width:100, height:100 , tintColor:"gray"
-          }} source={require("../../Resource/icon/disc.png")}/>
-           <Text style={{fontSize:20}}>
-               Không có mã voucher
-           </Text>
+            width: 100, height: 100, tintColor: "gray"
+          }} source={require("../../Resource/icon/disc.png")} />
+          <Text style={{ fontSize: 20 }}>
+            Không có mã voucher
+          </Text>
         </View>}
     </View>
   );
