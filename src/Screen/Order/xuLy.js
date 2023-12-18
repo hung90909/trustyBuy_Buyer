@@ -87,18 +87,26 @@ export default function XuLy() {
                   <Text style={styles.productName} numberOfLines={1}>
                     {item.product_name}
                   </Text>
-                  <View style={styles.productAttributes}>
-                    <Text>
-                      {item.color}
-                      {item.product_attributes.color}
-                    </Text>
-                    <View style={styles.attributeSeparator}></View>
-                    <Text>
-                      {item.size}
-                      {item.product_attributes.size}
-                    </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}>
+                    <View style={styles.productAttributes}>
+                      <Text>
+                        {item.color}
+                        {item.product_attributes.color}
+                      </Text>
+                      <View style={styles.attributeSeparator}></View>
+                      <Text>
+                        {item.size}
+                        {item.product_attributes.size}
+                      </Text>
+                    </View>
+                    <Text>{item.product_attributes.quantity} sản phẩm</Text>
                   </View>
-                  <Text>{item.product_attributes.quantity} sản phẩm</Text>
+
                   <Text style={styles.productTotal}>
                     {formatPrice(item.order_checkout.totalCheckout)}
                   </Text>
