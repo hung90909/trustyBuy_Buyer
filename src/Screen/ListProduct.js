@@ -4,10 +4,11 @@ import {useNavigation} from '@react-navigation/native';
 import {API_BASE_URL, PRODUCT_API} from '../config/urls';
 import {apiGet} from '../utils/utils';
 import {formatPrice, formatSoldSP} from './Format';
+import {Rating} from 'react-native-elements';
 
 const ListProduct = () => {
   const navigation = useNavigation();
-  const [product, setProduct] = useState([]);
+  const [products, setProducts] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
   const getAllProduct = async () => {
@@ -21,10 +22,9 @@ const ListProduct = () => {
           return dateB - dateA;
         });
 
-        setProduct(sortedProducts);
-        console.log(sortedProducts);
+        setProducts(sortedProducts);
       } else {
-        // console.error('Invalid response format:', response);
+        console.error('Invalid response format:', response);
       }
     } catch (error) {
       console.error('Error fetching products:', error.message);
@@ -34,12 +34,13 @@ const ListProduct = () => {
   useEffect(() => {
     getAllProduct();
   }, []);
+
   const handleProductPress = productId => {
     navigation.navigate('DetailProducts', {productId});
-    // console.log(productId);
     setSelectedProductId(productId);
   };
-  const renderSanpham = ({item}) => {
+
+  const renderProduct = ({item}) => {
     return (
       <Pressable
         onPress={() => handleProductPress(item._id)}
@@ -55,20 +56,30 @@ const ListProduct = () => {
         <Text style={styles.nameSp} numberOfLines={2}>
           {item.product_name}
         </Text>
-        <View style={styles.containerGia}>
-          <Text style={styles.giaSp}>{formatPrice(item.product_price)}</Text>
-          <Text style={styles.daBan}>
-            Đã bán {formatSoldSP(item.product_sold)}
-          </Text>
+
+        <View style={styles.containerInfo}>
+          <Text style={styles.priceSp}>{formatPrice(item.product_price)}</Text>
+
+          <View style={styles.ratingContainer}>
+            <Rating
+              readonly
+              startingValue={item?.product_ratingAverage}
+              imageSize={10}
+            />
+            <Text style={styles.soldText}>
+              Đã bán {formatSoldSP(item.product_sold)}
+            </Text>
+          </View>
         </View>
       </Pressable>
     );
   };
+
   return (
     <View>
       <FlatList
-        data={product}
-        renderItem={renderSanpham}
+        data={products}
+        renderItem={renderProduct}
         scrollEnabled={false}
         keyExtractor={item => item?._id}
         numColumns={2}
@@ -96,20 +107,23 @@ const styles = StyleSheet.create({
     color: '#1B2028',
     fontSize: 14,
     flex: 1,
-    marginVertical: 5,
   },
-  containerGia: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 25,
-    alignItems: 'center',
+  containerInfo: {
+    marginTop: 10,
   },
-  giaSp: {
+  priceSp: {
     color: '#FC6D26',
     fontSize: 14,
     flex: 1,
+    marginVertical: 10,
   },
-  daBan: {
+  ratingContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  soldText: {
     color: '#1B2028',
     fontSize: 10,
   },

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -18,14 +19,18 @@ import {NOTIFICATION_API} from '../../config/urls';
 const NotificationScreen = () => {
   const navigation = useNavigation();
   const [listNotification, setListNotification] = useState();
-
+  const [loading, setLoading] = useState(true);
   const getNotification = async () => {
+    setLoading(true);
     try {
       const res = await apiGet(NOTIFICATION_API);
       console.log(res);
       setListNotification(res?.message.reverse());
     } catch (err) {
       console.log(err);
+    } finally {
+      // Khi load xong dữ liệu, đặt trạng thái loading là false
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -97,12 +102,18 @@ const NotificationScreen = () => {
         />
         <Text style={styles.headerText}>Thông báo</Text>
       </View>
-      <FlatList
-        data={listNotification}
-        keyExtractor={item => item._id}
-        renderItem={renderItem}
-        style={styles.notificationList}
-      />
+      {loading ? (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size="large" color="black" />
+        </View>
+      ) : (
+        <FlatList
+          data={listNotification}
+          keyExtractor={item => item._id}
+          renderItem={renderItem}
+          style={styles.notificationList}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -144,11 +155,13 @@ const styles = StyleSheet.create({
   notificationTitle: {
     fontSize: 15,
     color: 'black',
+    textTransform: 'uppercase',
   },
   notificationContent: {
     fontSize: 13,
     color: '#333333',
     marginVertical: 10,
+    textTransform: 'uppercase',
   },
   notificationTime: {
     fontSize: 12,

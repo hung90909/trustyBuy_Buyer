@@ -23,7 +23,19 @@ export default DetailOrder = () => {
   const { item } = route.params;
   console.log(item);
   const nav = useNavigation();
-
+  const [oderDetail, setoderDetail] = useState(null);
+  // console.log(oderDetail[0].order_status);
+  // console.log(oderDetail[0].order_shipping.Address);
+  // console.log(oderDetail[0].order_shipping.Username);
+  // console.log(oderDetail[0].shopdetailInOrder[0].nameShop);
+  // console.log(oderDetail[0].shopdetailInOrder[0].avatarShop);
+  // console.log(oderDetail[0].productInfo.product_thumb[0]);
+  const statusTranslations = {
+    pending: 'Phê duyệt',
+    shipped: 'Đang vận chuyển',
+    delivered: 'Đã giao hàng',
+    cancelled: 'Đã hủy',
+  };
   const formatPrice = priceSP => {
     if (typeof priceSP === 'number') {
       return `₫${priceSP.toLocaleString('vi-VN')}`;
@@ -32,6 +44,9 @@ export default DetailOrder = () => {
     }
   };
 
+  useEffect(() => {
+    getDetailOrder();
+  }, []);
   const formatDate = date => {
     function addLeadingZero(number) {
       return number < 10 ? `0${number}` : `${number}`;
@@ -43,6 +58,16 @@ export default DetailOrder = () => {
       )}`;
   };
 
+  const getDetailOrder = async () => {
+    try {
+      const response = await apiGet(`${DETAIL_ORDER}${item.oderId}`);
+
+      setoderDetail(response.message.getTradeing);
+      // console.log(response.message.getTradeing);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -77,8 +102,8 @@ export default DetailOrder = () => {
             borderRadius: 5,
             alignItems: 'center',
           }}>
-          <Text style={{ fontSize: 15, color: 'gray', padding: 5 }}>
-            Trạng thái: {item.status}
+          <Text style={{fontSize: 15, color: 'gray', padding: 5}}>
+            Trạng thái: {statusTranslations[item.order_status]}
           </Text>
         </View>
       </View>

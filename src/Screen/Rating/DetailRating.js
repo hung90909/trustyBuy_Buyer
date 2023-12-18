@@ -9,6 +9,7 @@ import {
   Image,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Rating} from 'react-native-elements';
 import {API_BASE_URL} from '../../config/urls';
 import {formatMessageTime} from '../../compoment/DateTime';
@@ -51,7 +52,7 @@ const DetailRating = ({navigation, route}) => {
           <Rating
             readonly
             startingValue={data?.product_ratingAverage}
-            imageSize={23}
+            imageSize={16}
           />
           <Text style={styles.ratingText}>
             {data?.product_ratingAverage}/5 (
@@ -82,7 +83,7 @@ const DetailRating = ({navigation, route}) => {
                   {item}
                 </Text>
                 {item !== 'Tất cả' && (
-                  <AntDesign name="star" size={20} color={'#f39c12'} />
+                  <Ionicons name="star" color={'#f39c12'} size={12} />
                 )}
               </TouchableOpacity>
             ))}
@@ -140,7 +141,7 @@ const ReviewItem = ({item}) => {
 
       <View style={styles.ratingBadge}>
         <Text style={styles.ratingText}>{item?.rating}</Text>
-        <AntDesign name="star" color={'#f39c12'} size={18} />
+        <Ionicons name="star" color={'#f39c12'} size={12} />
       </View>
     </View>
   );
@@ -149,7 +150,7 @@ const ReviewItem = ({item}) => {
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
-    marginHorizontal: '5%',
+    marginHorizontal: '1%',
     marginVertical: '2%',
     alignItems: 'center',
   },
@@ -190,7 +191,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
   },
   ratingFilterText: {
     fontWeight: 'bold',
@@ -234,8 +234,6 @@ const styles = StyleSheet.create({
     width: 70,
     height: 35,
     flexDirection: 'row',
-    borderWidth: 1,
-    borderColor: '#f39c12',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 18,
@@ -243,7 +241,7 @@ const styles = StyleSheet.create({
   },
   ratingText: {
     marginRight: 5,
-    color: '#f39c12',
+    color: 'black',
     fontWeight: 'bold',
   },
 });

@@ -35,3 +35,14 @@ export const formatMessageTime = time => {
     ? getTimeString(targetDate)
     : targetDate.format('DD/MM/YYYY HH:mm');
 };
+export const formatTime = time => {
+  const targetDate = moment(time);
+  const now = moment();
+  const isToday = targetDate.isSameOrAfter(now.startOf('day'));
+
+  return isToday ? gettimeMess(targetDate) : targetDate.format('HH:mm'); // Thay 'DD/MM/YYYY HH:mm' bằng 'HH:mm'
+};
+
+const gettimeMess = date => {
+  return date.format('HH:mm');
+};

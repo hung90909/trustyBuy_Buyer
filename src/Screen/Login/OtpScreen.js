@@ -24,7 +24,6 @@ const OtpScreen = () => {
   const route = useRoute();
   const {email, password, role} = route.params || {};
 
-  // Log email, password, and role when they change
   useEffect(() => {
     console.log('Email:', email);
     console.log('Password:', password);
@@ -95,7 +94,6 @@ const OtpScreen = () => {
   };
 
   const handleVerifyOTP = async () => {
-    // Check if any of the OTP digits is empty
     if (otp.some(digit => digit === '')) {
       setError('Vui lòng nhập đầy đủ mã OTP.');
       return;

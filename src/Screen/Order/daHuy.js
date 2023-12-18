@@ -1,3 +1,4 @@
+import React, {useCallback, useState} from 'react';
 import {
   FlatList,
   Image,
@@ -6,27 +7,29 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from 'react-native';
-import React, { useCallback, useState } from 'react';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { apiGet } from '../../utils/utils';
-import { API_BASE_URL, ORDER_API } from '../../config/urls';
+import React, {useCallback, useState} from 'react';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {apiGet} from '../../utils/utils';
+import {API_BASE_URL, ORDER_API} from '../../config/urls';
 
 export default function DaHuy() {
   const nav = useNavigation();
+  const [listProducts, setListProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const getAllOrderForUser = async () => {
     try {
       const res = await apiGet(`${ORDER_API}/getAllOrderForUser/cancelled`);
-      const sortedList = res.message.orderRes.user.sort((a, b) => {
-        // Assuming 'purchaseDate' is the property representing the order purchase date
-        const dateA = new Date(a.crateDate);
-        const dateB = new Date(b.crateDate);
-        // Sort in descending order (newest first)
-        return dateB - dateA;
-      });
+      const sortedList = res.message.orderRes.user.sort(
+        (a, b) => new Date(b.crateDate) - new Date(a.crateDate),
+      );
       setListProducts(sortedList);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -36,23 +39,25 @@ export default function DaHuy() {
     }, []),
   );
 
-  const [listProducts, setListProducts] = useState([]);
-
   const formatPrice = priceSP => {
     return `₫${priceSP?.toLocaleString('vi-VN')}`;
   };
 
   return (
     <View style={styles.container}>
-      {listProducts.length > 0 ? (
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="black" />
+        </View>
+      ) : listProducts.length > 0 ? (
         <FlatList
           data={listProducts}
           keyExtractor={item => item.oderId}
-          renderItem={({ item }) => {
+          renderItem={({item}) => {
             return (
               <Pressable
                 onPress={() => {
-                  nav.navigate('DetailOrder', { item });
+                  nav.navigate('DetailOrder', {item});
                 }}
                 style={styles.itemOrder}>
                 <View
@@ -87,7 +92,7 @@ export default function DaHuy() {
                       {item.name_shop}
                     </Text>
                   </View>
-                  <Text style={{ color: 'black' }}>Đã hủy</Text>
+                  <Text style={{color: 'black'}}>Đã hủy</Text>
                 </View>
 
                 <View
@@ -149,19 +154,13 @@ export default function DaHuy() {
                       </View>
                       <Text>{item.product_attributes.quantity} sản phẩm</Text>
                     </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Text style={{ color: 'gray', marginTop: 5,  textDecorationLine: 'line-through',}}>
-                        {formatPrice(item.order_checkout.totalPrice)}
-                      </Text>
-                      <Text style={{ color: 'red', marginTop: 5 , marginLeft:6}}>
-                        {formatPrice(item.order_checkout.totalCheckout)}
-                      </Text>
-                    </View>
-
+                    <Text style={{color: 'red', marginTop: 5}}>
+                      {formatPrice(item.order_checkout.totalCheckout)}
+                    </Text>
                   </View>
                 </View>
                 <TouchableOpacity style={styles.btn}>
-                  <Text style={{ color: 'white' }}>Mua lại</Text>
+                  <Text style={{color: 'white'}}>Mua lại</Text>
                 </TouchableOpacity>
               </Pressable>
             );
@@ -183,9 +182,15 @@ export default function DaHuy() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   itemOrder: {
     backgroundColor: 'white',

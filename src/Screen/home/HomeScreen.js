@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,30 +9,73 @@ import {
   StyleSheet,
   TouchableOpacity,
   RefreshControl,
+  FlatList,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Slideshow from './Slideshow';
 import Listproducts from './Listproducts';
 import Listcategorys from './Listcategorys';
-import { API_BASE_URL } from '../../config/urls';
-import { fetchData } from '../../redux/actions/socket';
-import { useSelector } from 'react-redux';
+import {API_BASE_URL, PRODUCT_API} from '../../config/urls';
+import {fetchData} from '../../redux/actions/socket';
+import {useSelector} from 'react-redux';
 import ListProduct from '../ListProduct';
+import {apiGet, setItem} from '../../utils/utils';
+import {saveNotiData} from '../../redux/actions/chat';
+import {formatPrice, formatSoldSP} from '../Format';
+import {Rating} from 'react-native-elements';
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({navigation}) => {
   const userAccount = useSelector(state => state?.user?.userData);
   const notifiCount = useSelector(state => state?.chat?.notifi);
   const account = useSelector(state => state?.user?.userData);
   const [refreshing, setRefreshing] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [selectedProductId, setSelectedProductId] = useState(null);
+  const [page, setPage] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
 
+  const getAllProduct = async pageNumber => {
+    try {
+      const response = await apiGet(
+        `${PRODUCT_API}/getAllProductByUser?page=${pageNumber}`,
+      );
+
+      if (response && response.message && response.message.allProduct) {
+        const sortedProducts = response.message.allProduct.sort((a, b) => {
+          const dateA = new Date(a.updatedAt);
+          const dateB = new Date(b.updatedAt);
+          return dateB - dateA;
+        });
+        setProducts(prevProducts =>
+          pageNumber === 1
+            ? sortedProducts
+            : [...prevProducts, ...sortedProducts],
+        );
+      } else {
+        console.error('Invalid response format:', response);
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error.message);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
   const onRefresh = () => {
-    // Perform the data fetching logic here
     fetchData();
+    getAllProduct(1); // Refresh the data by loading the first page
     setRefreshing(false);
+  };
+
+  const onEndReached = () => {
+    if (!loadingMore) {
+      setPage(prevPage => prevPage + 1);
+      setLoadingMore(true);
+    }
   };
   useEffect(() => {
     fetchData();
+    getAllProduct(1); // Load the initial page
   }, []);
 
   const navigateToProfile = () => {
@@ -40,11 +83,52 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const navigateToNotification = () => {
+    saveNotiData(0);
+    setItem('notifi', 0);
     navigation.navigate('NotificationScreen');
   };
 
   const navigateToSearch = () => {
     navigation.navigate('Search');
+  };
+  const handleProductPress = productId => {
+    navigation.navigate('DetailProducts', {productId});
+    setSelectedProductId(productId);
+  };
+
+  const renderProduct = ({item}) => {
+    return (
+      <Pressable
+        onPress={() => handleProductPress(item._id)}
+        style={styles.container1}>
+        <Image
+          style={styles.imageSP}
+          source={{
+            uri: `${API_BASE_URL}uploads/${item?.product_thumb[0]}`,
+          }}
+          resizeMode="contain"
+        />
+
+        <Text style={styles.nameSp} numberOfLines={2}>
+          {item.product_name}
+        </Text>
+
+        <View style={styles.containerInfo}>
+          <Text style={styles.priceSp}>{formatPrice(item.product_price)}</Text>
+
+          <View style={styles.ratingContainer}>
+            <Rating
+              readonly
+              startingValue={item?.product_ratingAverage}
+              imageSize={10}
+            />
+            <Text style={styles.soldText}>
+              Đã bán {formatSoldSP(item.product_sold)}
+            </Text>
+          </View>
+        </View>
+      </Pressable>
+    );
   };
 
   return (
@@ -61,7 +145,7 @@ const HomeScreen = ({ navigation }) => {
               <Image
                 style={styles.profileImage}
                 source={{
-                  uri: `${API_BASE_URL}${userAccount?.avatar}`
+                  uri: `${API_BASE_URL}${userAccount?.avatar}`,
                 }}
                 resizeMode="cover"
               />
@@ -95,7 +179,7 @@ const HomeScreen = ({ navigation }) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}>
-                  <Text style={{ color: 'white', fontSize: 12 }}>
+                  <Text style={{color: 'white', fontSize: 12}}>
                     {notifiCount > 9 ? '9+' : notifiCount}
                   </Text>
                 </View>
@@ -114,7 +198,15 @@ const HomeScreen = ({ navigation }) => {
         </View>
         <Slideshow />
         <Listcategorys />
-        <ListProduct />
+        <FlatList
+          data={products}
+          renderItem={renderProduct}
+          keyExtractor={item => item?._id}
+          numColumns={2}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={0.1} // Adjust the threshold as needed
+          scrollEnabled={false}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -182,6 +274,42 @@ const styles = StyleSheet.create({
   },
   searchText: {
     marginLeft: 10,
+  },
+  imageSP: {
+    width: '100%',
+    height: 200,
+  },
+  nameSp: {
+    color: '#1B2028',
+    fontSize: 14,
+    flex: 1,
+  },
+  containerInfo: {
+    marginTop: 10,
+  },
+  priceSp: {
+    color: '#FC6D26',
+    fontSize: 14,
+    flex: 1,
+    marginVertical: 10,
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  soldText: {
+    color: '#1B2028',
+    fontSize: 10,
+  },
+  container1: {
+    width: '48%',
+    justifyContent: 'center',
+    padding: '3%',
+    backgroundColor: 'white',
+    marginRight: '1%',
+    marginLeft: '1%',
   },
 });
 
