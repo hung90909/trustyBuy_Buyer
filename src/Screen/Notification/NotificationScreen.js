@@ -155,11 +155,13 @@ const styles = StyleSheet.create({
   notificationTitle: {
     fontSize: 15,
     color: 'black',
+    textTransform: 'uppercase',
   },
   notificationContent: {
     fontSize: 13,
     color: '#333333',
     marginVertical: 10,
+    textTransform: 'uppercase',
   },
   notificationTime: {
     fontSize: 12,

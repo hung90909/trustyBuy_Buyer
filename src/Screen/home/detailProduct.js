@@ -318,6 +318,7 @@ const DetailProducts = ({route, navigation}) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   backgroundColor: 'white',
+                  marginTop: '100%',
                 }}>
                 <ActivityIndicator size="large" color="black" />
               </View>

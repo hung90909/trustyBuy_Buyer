@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,23 +11,24 @@ import {
   RefreshControl,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Slideshow from './Slideshow';
 import Listproducts from './Listproducts';
 import Listcategorys from './Listcategorys';
-import { API_BASE_URL } from '../../config/urls';
-import { fetchData } from '../../redux/actions/socket';
-import { useSelector } from 'react-redux';
+import {API_BASE_URL} from '../../config/urls';
+import {fetchData} from '../../redux/actions/socket';
+import {useSelector} from 'react-redux';
 import ListProduct from '../ListProduct';
+import {setItem} from '../../utils/utils';
+import {saveNotiData} from '../../redux/actions/chat';
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({navigation}) => {
   const userAccount = useSelector(state => state?.user?.userData);
   const notifiCount = useSelector(state => state?.chat?.notifi);
   const account = useSelector(state => state?.user?.userData);
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = () => {
-    // Perform the data fetching logic here
     fetchData();
     setRefreshing(false);
   };
@@ -40,6 +41,8 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const navigateToNotification = () => {
+    saveNotiData(0);
+    setItem('notifi', 0);
     navigation.navigate('NotificationScreen');
   };
 
@@ -61,7 +64,7 @@ const HomeScreen = ({ navigation }) => {
               <Image
                 style={styles.profileImage}
                 source={{
-                  uri: `${API_BASE_URL}${userAccount?.avatar}`
+                  uri: `${API_BASE_URL}${userAccount?.avatar}`,
                 }}
                 resizeMode="cover"
               />
@@ -95,7 +98,7 @@ const HomeScreen = ({ navigation }) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}>
-                  <Text style={{ color: 'white', fontSize: 12 }}>
+                  <Text style={{color: 'white', fontSize: 12}}>
                     {notifiCount > 9 ? '9+' : notifiCount}
                   </Text>
                 </View>

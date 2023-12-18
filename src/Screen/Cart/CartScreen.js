@@ -77,10 +77,12 @@ const CartScreen = () => {
     }
   };
 
-  const onDeleteItemCart = async productId => {
+  const onDeleteItemCart = async (productId, color, size) => {
     try {
       const res = await apiPost(ADD_CART_API + '/delete', {
         productId,
+        color,
+        size,
       });
 
       getCart();
@@ -252,7 +254,7 @@ const CartScreen = () => {
                 {
                   text: 'Ok',
                   onPress: () => {
-                    onDeleteItemCart(item.productId);
+                    onDeleteItemCart(item.productId, item.color, item.size);
                   },
                 },
               ]);

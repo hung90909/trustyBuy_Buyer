@@ -104,8 +104,13 @@ const ListProductInCategory = ({route}) => {
         {loading ? (
           <ActivityIndicator
             size="large"
-            color="#FC6D26"
-            style={{justifyContent: 'center', alignItems: 'center', flex: 1}}
+            color="black"
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              flex: 1,
+              marginTop: '80%',
+            }}
           />
         ) : productList.length === 0 ? (
           <View style={styles.noProductsContainer}>

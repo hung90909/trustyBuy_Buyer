@@ -23,32 +23,6 @@ const Bottomsheet = () => {
           </Text>
         </View>
         <View>
-          <Text style={styles.textSheet}>Theo mùa</Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-            }}>
-            <Pressable style={styles.butonSheetl}>
-              <Text style={styles.textButonShet}>Mùa xuân</Text>
-            </Pressable>
-            <Pressable style={styles.butonSheetl}>
-              <Text style={styles.textButonShet}>Mùa hạ</Text>
-            </Pressable>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              marginVertical: 10,
-            }}>
-            <Pressable style={styles.butonSheetl}>
-              <Text style={styles.textButonShet}>Mùa thu</Text>
-            </Pressable>
-            <Pressable style={styles.butonSheetl}>
-              <Text style={styles.textButonShet}>Mùa đông</Text>
-            </Pressable>
-          </View>
           <View>
             <Text style={styles.textSheet}>Sắp xếp</Text>
             <View
