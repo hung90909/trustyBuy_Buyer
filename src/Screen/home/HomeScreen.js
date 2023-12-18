@@ -47,9 +47,6 @@ const HomeScreen = ({navigation}) => {
           const dateB = new Date(b.updatedAt);
           return dateB - dateA;
         });
-
-        // If it's the first page, replace the existing products
-        // Otherwise, append the new products to the existing list
         setProducts(prevProducts =>
           pageNumber === 1
             ? sortedProducts
