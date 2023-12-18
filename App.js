@@ -44,6 +44,7 @@ import detailOrder from './src/Screen/Order/detailOrder';
 import DetailRating from './src/Screen/Rating/DetailRating';
 import RatingComment from './src/Screen/Rating/RatingComment';
 import ForgotScreen from './src/Screen/Login/ForgotScreen';
+import AddAddress from './src/Screen/Address/Components/AddAddress';
 
 const TabTop = createMaterialTopTabNavigator();
 
@@ -182,6 +183,7 @@ const App = () => {
           <Stack.Screen name="DetailRating" component={DetailRating} />
           <Stack.Screen name="RatingComment" component={RatingComment} />
           <Stack.Screen name="ForgotScreen" component={ForgotScreen} />
+          <Stack.Screen name="AddAddressNew" component={AddAddress} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

@@ -80,7 +80,6 @@ const Listproducts = ({count}) => {
         keyExtractor={item => item?._id}
         renderItem={renderSanpham}
         numColumns={2}
-        // onEndReached={handleEndReached}
         onEndReachedThreshold={0.1} // Có thể điều chỉnh ngưỡng tùy thuộc vào yêu cầu
         ListFooterComponent={() =>
           loadingMore ? (

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -11,20 +11,32 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {API_BASE_URL, ORDERS_API} from '../config/urls';
-import {formatPrice} from './Format';
-import {useNavigation} from '@react-navigation/native';
-import {ScrollView} from 'react-native';
-import {Pressable} from 'react-native';
-import {useSelector} from 'react-redux';
-import {Dropdown} from 'react-native-element-dropdown';
-import {apiPost} from '../utils/utils';
+import { API_BASE_URL, ORDERS_API } from '../config/urls';
+import { formatPrice } from './Format';
+import { useNavigation } from '@react-navigation/native';
+import { ScrollView } from 'react-native';
+import { Pressable } from 'react-native';
+import { useSelector } from 'react-redux';
+import { Dropdown } from 'react-native-element-dropdown';
+import { apiPost } from '../utils/utils';
 import paypalApi from '../config/paypalApi';
 import WebView from 'react-native-webview';
 import queryString from 'query-string';
-const CheckoutScreen = ({route}) => {
-  const {orderDetails, itemDiscount} = route.params;
+const CheckoutScreen = ({ route }) => {
+  const { orderDetails, itemDiscount } = route.params;
+
   const product = orderDetails;
+
+  // console.log("discount: " + itemDiscount.discount_value)
+
+  // product.map(item =>{
+  //   if(item.product.shopId === itemDiscount?.discount_shopId){
+  //     console.log("giam")
+  //   }else{
+  //     console.log("ko giam")
+  //   }
+
+  // })
   const navigation = useNavigation();
   const address = useSelector(state => state?.address?.addressData);
   const [data, setData] = useState(address);
@@ -34,15 +46,31 @@ const CheckoutScreen = ({route}) => {
   const [accessToken, setAccessToken] = useState(null);
   const [paymentProcessed, setPaymentProcessed] = useState(false);
   const [orderData, setOrderData] = useState(null);
+  const [isCheckVoucher, setIsCheckVoucher] = useState(false)
 
-  console.log(orderDetails);
   const pay = [
-    {label: 'Thanh toán khi nhận hàng', value: 'Thanh toán khi nhận hàng'},
-    {label: 'Thanh toán bằng PayPal', value: 'Thanh toán bằng PayPal'},
+    { label: 'Thanh toán khi nhận hàng', value: 'Thanh toán khi nhận hàng' },
+    { label: 'Thanh toán bằng PayPal', value: 'Thanh toán bằng PayPal' },
   ];
   useEffect(() => {
     setData(address);
   }, [address]);
+
+
+
+  const checkVoucher = () => {
+    const discountForShop = orderDetails?.find(item => item.product.shopId === itemDiscount?.discount_shopId)
+    console.log("discountForShop: ", discountForShop)
+    if (discountForShop) {
+      console.log(true)
+    } else {
+      console.log(false)
+    }
+  }
+
+  useEffect(() =>{
+     checkVoucher()
+  },[itemDiscount])
   const clearPaypalState = () => {
     setPaypalUrl(null);
     setAccessToken(null);
@@ -58,6 +86,27 @@ const CheckoutScreen = ({route}) => {
   const convertToUSD = amountInVND => {
     const exchangeRate = 24000;
     return (amountInVND / exchangeRate).toFixed(2);
+  };
+  const totalPriceBill = () => {
+    let total = 0;
+    product.map(item => {
+      total += item.product.price * item.product.quantity;
+    });
+
+    if (itemDiscount) {
+      const discountAmount = total * (itemDiscount.discount_value / 100);
+      const totalBill = total - discountAmount;
+      return formatPrice(totalBill);
+    }
+    return formatPrice(total);
+  };
+  const totalDiscount = () => {
+    const total = orderDetails?.reduce(
+      (total, item) => item.product.price * item.product.quantity + total,
+      0,
+    );
+    const discountAmount = total * (itemDiscount.discount_value / 100);
+    return formatPrice(discountAmount);
   };
   const orderDetail = {
     intent: 'CAPTURE',
@@ -117,28 +166,6 @@ const CheckoutScreen = ({route}) => {
   };
 
   const groupedProducts = groupProductsByShop(orderDetails);
-  const totalPriceBill = () => {
-    let total = 0;
-    product.map(item => {
-      total += item.product.price * item.product.quantity;
-    });
-
-    if (itemDiscount) {
-      const discountAmount = total * (itemDiscount.discount_value / 100);
-      const totalBill = total - discountAmount;
-      return formatPrice(totalBill);
-    }
-    return formatPrice(total);
-  };
-
-  const totalDiscount = () => {
-    const total = orderDetails?.reduce(
-      (total, item) => item.productprice * item.product.quantity + total,
-      0,
-    );
-    const discountAmount = total * (itemDiscount.discount_value / 100);
-    return formatPrice(discountAmount);
-  };
 
   const onOrders = useCallback(async () => {
     const shopOrderData = route.params.orderDetails.map(item => ({
@@ -195,12 +222,12 @@ const CheckoutScreen = ({route}) => {
               },
             },
           ],
-          {cancelable: false},
+          { cancelable: false },
         );
       } else if (value === 'Thanh toán bằng PayPal') {
         try {
           const token = await paypalApi.generateToken();
-          const {links} = await paypalApi.createOrder(token, orderDetail);
+          const { links } = await paypalApi.createOrder(token, orderDetail);
 
           setAccessToken(token);
 
@@ -226,7 +253,7 @@ const CheckoutScreen = ({route}) => {
       webviewState.url.includes('https://example.com/return') &&
       !paymentProcessed
     ) {
-      const {token} = queryString.parseUrl(webviewState.url).query;
+      const { token } = queryString.parseUrl(webviewState.url).query;
 
       if (token) {
         setPaymentProcessed(true); // Set the flag to true to indicate payment has been processed
@@ -242,7 +269,6 @@ const CheckoutScreen = ({route}) => {
 
     try {
       const response = await paypalApi.capturePayment(id, accessToken);
-      console.log('Capture Payment Response:', response);
       ToastAndroid.show('Thanh toán thành công đơn hàng', ToastAndroid.SHORT);
       setPaymentProcessed(true);
       clearPaypalState();
@@ -262,13 +288,13 @@ const CheckoutScreen = ({route}) => {
           color="black"
           onPress={() => navigation.goBack()}
         />
-        <View style={{justifyContent: 'center', flex: 1}}>
+        <View style={{ justifyContent: 'center', flex: 1 }}>
           <Text style={styles.titleHeader}>Thanh toán</Text>
         </View>
       </View>
 
       <ScrollView>
-        <View style={{paddingHorizontal: 20}}>
+        <View style={{ paddingHorizontal: 20 }}>
           <Pressable
             style={{
               justifyContent: 'center',
@@ -280,21 +306,21 @@ const CheckoutScreen = ({route}) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <Image
                   source={require('../Resource/Image/placeholder.png')}
-                  style={{height: 24, width: 24, marginRight: 10}}
+                  style={{ height: 24, width: 24, marginRight: 10 }}
                 />
 
-                <View style={{width: '90%'}}>
+                <View style={{ width: '90%' }}>
                   <Text
-                    style={{color: 'black', fontSize: 16, fontWeight: '500'}}>
+                    style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>
                     Địa chỉ nhận hàng
                   </Text>
                   {data ? (
                     <View>
                       <Text>{data?.nameAddress}</Text>
-                      <View style={{flexDirection: 'row'}}>
+                      <View style={{ flexDirection: 'row' }}>
                         <Text>{data?.userinfor?.userName} | </Text>
                         <Text>
                           {address?.userinfor?.phoneNumber
@@ -316,7 +342,7 @@ const CheckoutScreen = ({route}) => {
           </Pressable>
         </View>
         {Object.keys(groupedProducts).map(shopId => (
-          <View style={{flex: 1}} key={shopId}>
+          <View style={{ flex: 1 }} key={shopId}>
             <ScrollView>
               <View style={styles.content}>
                 <View
@@ -369,18 +395,23 @@ const CheckoutScreen = ({route}) => {
                   onPress={() =>
                     navigation.navigate('ListDiscount', {
                       shopId: groupedProducts[shopId][0].product.shopId,
-                      orderDetails:orderDetails,
-                      itemAddress:address
+                      orderDetails: orderDetails,
+                      itemAddress: address,
+                      dataProduct: itemDiscount || [],
                     })
                   }>
                   <View style={styles.voucherContainer}>
                     <Text style={styles.voucherText}>Voucher của shop</Text>
                     <View style={styles.voucherInputContainer}>
-                      {itemDiscount ? (
-                        <Text>Giảm {itemDiscount.discount_value}%</Text>
-                      ) : (
-                        <Text style={{}}>Chọn hoặc nhập mã </Text>
-                      )}
+
+                      {product.map((item, index) => {
+                        const isDiscountApplied = itemDiscount?.discount_shopId === item.product.shopId;
+                        return (
+                          <View key={index}>
+                            {isDiscountApplied && <Text>giam gia</Text>}
+                          </View>
+                        )
+                      })}
                       <MaterialIcons
                         name="navigate-next"
                         size={30}
@@ -414,7 +445,7 @@ const CheckoutScreen = ({route}) => {
           </View>
         ))}
 
-        <View style={{padding: 10}}>
+        <View style={{ padding: 10 }}>
           <View
             style={{
               flexDirection: 'row',
@@ -423,7 +454,7 @@ const CheckoutScreen = ({route}) => {
               flex: 1,
               borderRadius: 10,
             }}>
-            <Text style={{color: 'black', fontSize: 15}}>
+            <Text style={{ color: 'black', fontSize: 15 }}>
               Phương thức thanh toán
             </Text>
             <Dropdown
@@ -437,14 +468,14 @@ const CheckoutScreen = ({route}) => {
               onChange={item => {
                 setValue(item.value);
               }}
-              itemTextStyle={{fontSize: 14}}
-              selectedTextStyle={{fontSize: 14}}
+              itemTextStyle={{ fontSize: 14 }}
+              selectedTextStyle={{ fontSize: 14 }}
             />
           </View>
-          <Text style={{fontSize: 16, fontWeight: 'bold', color: 'black'}}>
+          <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'black' }}>
             Chi tiết thanh toán
           </Text>
-          <View style={{marginVertical: 10}}>
+          <View style={{ marginVertical: 10 }}>
             <View
               style={{
                 flexDirection: 'row',
@@ -461,10 +492,10 @@ const CheckoutScreen = ({route}) => {
               }}>
               <Text style={styles.chitietThanhtoan}>Tiền khuyến mãi:</Text>
               {itemDiscount ? (
-              <Text style={styles.chitietThanhtoan}>{totalDiscount()}</Text>
-            ) : (
-              <Text style={styles.chitietThanhtoan}>0</Text>
-            )}
+                <Text style={styles.chitietThanhtoan}>{totalDiscount()}</Text>
+              ) : (
+                <Text style={styles.chitietThanhtoan}>0</Text>
+              )}
             </View>
             <View
               style={{
@@ -472,7 +503,7 @@ const CheckoutScreen = ({route}) => {
                 justifyContent: 'space-between',
               }}>
               <Text style={styles.chitietThanhtoan}>Tổng tiền hàng:</Text>
-              <Text style={{fontWeight: 'bold', color: 'black'}}>
+              <Text style={{ fontWeight: 'bold', color: 'black' }}>
                 {totalPriceBill()}
               </Text>
             </View>
@@ -488,8 +519,8 @@ const CheckoutScreen = ({route}) => {
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-        <View style={{flex: 1, paddingLeft: 100}}>
-          <Text style={{fontWeight: 'bold', color: 'black', fontSize: 16}}>
+        <View style={{ flex: 1, paddingLeft: 100 }}>
+          <Text style={{ fontWeight: 'bold', color: 'black', fontSize: 16 }}>
             Tổng thanh toán:
           </Text>
           <Text
@@ -526,12 +557,12 @@ const CheckoutScreen = ({route}) => {
       <Modal visible={!!paypalUrl}>
         <TouchableOpacity
           onPress={clearPaypalState}
-          style={{marginTop: 20, marginLeft: 20}}>
+          style={{ marginTop: 20, marginLeft: 20 }}>
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <WebView
-            source={{uri: paypalUrl}}
+            source={{ uri: paypalUrl }}
             onNavigationStateChange={onUrlChange}
           />
         </View>

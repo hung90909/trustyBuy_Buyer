@@ -20,5 +20,7 @@ export const DETAILSHOP_API = getApiUrl('v1/shop/getShop/');
 export const NOTIFICATION_API = getApiUrl('v1/api/notification');
 export const ORDERS_API = getApiUrl('v1/api/checkout/oder');
 export const OTP_API = getApiUrl('v1/api/access/verifyOtp');
-export const FORGOT_API = getApiUrl('v1/api/access/forgotPassword');
 export const DETAIL_ORDER = getApiUrl('v1/api/admin/tradingHistory/');
+
+export const OTP_FORGOT_API = getApiUrl('v1/api/access/verifyOtpForgot');
+export const FORGOT_API = getApiUrl('v1/api/access/forgotPassword');
