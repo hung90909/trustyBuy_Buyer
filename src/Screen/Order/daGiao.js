@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   FlatList,
   Image,
@@ -9,9 +9,9 @@ import {
   View,
   ActivityIndicator,
 } from 'react-native';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { apiGet } from '../../utils/utils';
-import { API_BASE_URL, ORDER_API } from '../../config/urls';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {apiGet} from '../../utils/utils';
+import {API_BASE_URL, ORDER_API} from '../../config/urls';
 
 export default function DaGiao() {
   const nav = useNavigation();
@@ -21,7 +21,10 @@ export default function DaGiao() {
   const getAllOrderForUser = async () => {
     try {
       const res = await apiGet(`${ORDER_API}/getAllOrderForUser/delivered`);
-      setListProducts(res.message.orderRes.user);
+      const sortedList = res.message.orderRes.user.sort(
+        (a, b) => new Date(b.crateDate) - new Date(a.crateDate),
+      );
+      setListProducts(sortedList);
     } catch (error) {
       console.log(error);
     } finally {
@@ -61,10 +64,10 @@ export default function DaGiao() {
         <FlatList
           data={listProducts}
           keyExtractor={item => item.oderId}
-          renderItem={({ item }) => (
+          renderItem={({item}) => (
             <Pressable
               onPress={() => {
-                nav.navigate('DetailOrder', { item });
+                nav.navigate('DetailOrder', {item});
               }}
               style={styles.itemOrder}>
               <View
@@ -74,7 +77,7 @@ export default function DaGiao() {
                   justifyContent: 'space-between',
                   padding: 10,
                 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Image
                     style={{
                       width: 30,
@@ -95,7 +98,7 @@ export default function DaGiao() {
                     {item.name_shop}
                   </Text>
                 </View>
-                <Text style={{ color: 'black' }}>Đang giao</Text>
+                <Text style={{color: 'black'}}>Đang giao</Text>
               </View>
 
               <View
@@ -153,7 +156,7 @@ export default function DaGiao() {
                       <Text>{item.product_attributes.size}</Text>
                     </View>
                   </View>
-                  <Text style={{ color: 'red', marginTop: 5 }}>
+                  <Text style={{color: 'red', marginTop: 5}}>
                     {formatPrice(item.order_checkout.totalCheckout)}
                   </Text>
                 </View>
@@ -166,19 +169,21 @@ export default function DaGiao() {
                 {/* <TouchableOpacity style={styles.btnReturns}>
                   <Text style={{ color: 'black' }}>Yêu cầu trả hàng</Text>
                 </TouchableOpacity> */}
-                <TouchableOpacity 
-                onPress={() =>{
-                  nav.navigate("DetailProducts",{productId:item.product_attributes.productId})
-                }}
-                style={styles.btn}>
-                  <Text style={{ color: 'white' }}>Mua lại</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    nav.navigate('DetailProducts', {
+                      productId: item.product_attributes.productId,
+                    });
+                  }}
+                  style={styles.btn}>
+                  <Text style={{color: 'white'}}>Mua lại</Text>
                 </TouchableOpacity>
               </View>
             </Pressable>
           )}
         />
       ) : (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Image
             style={{
               width: 100,
@@ -187,7 +192,7 @@ export default function DaGiao() {
             }}
             source={require('../../Resource/Image/order.png')}
           />
-          <Text style={{ fontSize: 20, marginTop: 10 }}>Chưa có đơn hàng</Text>
+          <Text style={{fontSize: 20, marginTop: 10}}>Chưa có đơn hàng</Text>
         </View>
       )}
     </View>

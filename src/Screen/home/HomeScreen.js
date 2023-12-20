@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -10,37 +10,69 @@ import {
   TouchableOpacity,
   RefreshControl,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Slideshow from './Slideshow';
-import Listproducts from './Listproducts';
 import Listcategorys from './Listcategorys';
 import {API_BASE_URL, PRODUCT_API} from '../../config/urls';
-import {fetchData} from '../../redux/actions/socket';
-import {useSelector} from 'react-redux';
-import ListProduct from '../ListProduct';
 import {apiGet, setItem} from '../../utils/utils';
 import {saveNotiData} from '../../redux/actions/chat';
 import {formatPrice, formatSoldSP} from '../Format';
 import {Rating} from 'react-native-elements';
+import {useSelector} from 'react-redux';
+import {fetchData} from '../../redux/actions/socket';
+import {debounce} from 'lodash';
+
+const RenderProduct = React.memo(({item, onPress}) => {
+  return (
+    <Pressable onPress={() => onPress(item._id)} style={styles.container1}>
+      <Image
+        style={styles.imageSP}
+        source={{
+          uri: `${API_BASE_URL}uploads/${item?.product_thumb[0]}`,
+        }}
+        resizeMode="contain"
+      />
+
+      <Text style={styles.nameSp} numberOfLines={2}>
+        {item.product_name}
+      </Text>
+
+      <View style={styles.containerInfo}>
+        <Text style={styles.priceSp}>{formatPrice(item.product_price)}</Text>
+
+        <View style={styles.ratingContainer}>
+          <Rating
+            readonly
+            startingValue={item?.product_ratingAverage}
+            imageSize={10}
+          />
+          <Text style={styles.soldText}>
+            Đã bán {formatSoldSP(item.product_sold)}
+          </Text>
+        </View>
+      </View>
+    </Pressable>
+  );
+});
 
 const HomeScreen = ({navigation}) => {
   const userAccount = useSelector(state => state?.user?.userData);
   const notifiCount = useSelector(state => state?.chat?.notifi);
-  const account = useSelector(state => state?.user?.userData);
   const [refreshing, setRefreshing] = useState(false);
   const [products, setProducts] = useState([]);
-  const [selectedProductId, setSelectedProductId] = useState(null);
   const [page, setPage] = useState(1);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const getAllProduct = async pageNumber => {
     try {
       const response = await apiGet(
         `${PRODUCT_API}/getAllProductByUser?page=${pageNumber}`,
       );
-
       if (response && response.message && response.message.allProduct) {
         const sortedProducts = response.message.allProduct.sort((a, b) => {
           const dateA = new Date(a.updatedAt);
@@ -58,78 +90,65 @@ const HomeScreen = ({navigation}) => {
     } catch (error) {
       console.error('Error fetching products:', error.message);
     } finally {
+      setLoading(false); // Kết thúc tải dữ liệu
       setLoadingMore(false);
     }
   };
-  const onRefresh = () => {
-    fetchData();
-    getAllProduct(1); // Refresh the data by loading the first page
-    setRefreshing(false);
-  };
 
-  const onEndReached = () => {
-    if (!loadingMore) {
-      setPage(prevPage => prevPage + 1);
-      setLoadingMore(true);
-    }
-  };
-  useEffect(() => {
+  const onRefresh = useCallback(() => {
     fetchData();
-    getAllProduct(1); // Load the initial page
+    getAllProduct(1);
+    setRefreshing(false);
   }, []);
 
-  const navigateToProfile = () => {
-    navigation.navigate('Profile');
-  };
+  const memoizedProducts = useMemo(() => products, [products]);
 
-  const navigateToNotification = () => {
+  const onEndReached = debounce(() => {
+    if (!loadingMore && !loading) {
+      setPage(prevPage => prevPage + 1);
+      setLoadingMore(true);
+      setLoading(true); // Bắt đầu tải dữ liệu
+    }
+  }, [loadingMore, loading]);
+
+  useEffect(() => {
+    fetchData();
+    getAllProduct(1);
+  }, []);
+
+  const navigateToProfile = useCallback(() => {
+    navigation.navigate('Profile');
+  }, [navigation]);
+
+  const navigateToNotification = useCallback(() => {
     saveNotiData(0);
     setItem('notifi', 0);
     navigation.navigate('NotificationScreen');
-  };
+  }, [navigation]);
 
-  const navigateToSearch = () => {
+  const navigateToSearch = useCallback(() => {
     navigation.navigate('Search');
-  };
-  const handleProductPress = productId => {
-    navigation.navigate('DetailProducts', {productId});
-    setSelectedProductId(productId);
-  };
+  }, [navigation]);
 
-  const renderProduct = ({item}) => {
-    return (
-      <Pressable
-        onPress={() => handleProductPress(item._id)}
-        style={styles.container1}>
-        <Image
-          style={styles.imageSP}
-          source={{
-            uri: `${API_BASE_URL}uploads/${item?.product_thumb[0]}`,
-          }}
-          resizeMode="contain"
+  const handleProductPress = useCallback(
+    productId => {
+      navigation.navigate('DetailProducts', {productId});
+      setSelectedProductId(productId);
+    },
+    [navigation],
+  );
+
+  const renderProduct = useCallback(
+    ({item}) => {
+      return (
+        <RenderProduct
+          item={item}
+          onPress={productId => handleProductPress(productId)}
         />
-
-        <Text style={styles.nameSp} numberOfLines={2}>
-          {item.product_name}
-        </Text>
-
-        <View style={styles.containerInfo}>
-          <Text style={styles.priceSp}>{formatPrice(item.product_price)}</Text>
-
-          <View style={styles.ratingContainer}>
-            <Rating
-              readonly
-              startingValue={item?.product_ratingAverage}
-              imageSize={10}
-            />
-            <Text style={styles.soldText}>
-              Đã bán {formatSoldSP(item.product_sold)}
-            </Text>
-          </View>
-        </View>
-      </Pressable>
-    );
-  };
+      );
+    },
+    [handleProductPress],
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -199,14 +218,17 @@ const HomeScreen = ({navigation}) => {
         <Slideshow />
         <Listcategorys />
         <FlatList
-          data={products}
+          data={memoizedProducts}
           renderItem={renderProduct}
           keyExtractor={item => item?._id}
           numColumns={2}
           onEndReached={onEndReached}
-          onEndReachedThreshold={0.1} // Adjust the threshold as needed
+          onEndReachedThreshold={0.1}
           scrollEnabled={false}
+          initialNumToRender={2} // Số lượng mục ban đầu cần render
+          maxToRenderPerBatch={2} // Số lượng mục tối đa được render trong mỗi lần
         />
+        {loading && <ActivityIndicator size="large" color="#FC6D26" />}
       </ScrollView>
     </SafeAreaView>
   );

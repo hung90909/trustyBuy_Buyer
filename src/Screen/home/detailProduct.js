@@ -44,7 +44,6 @@ const DetailProducts = ({route, navigation}) => {
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [loading, setLoading] = useState(true);
-  console.log(productDetail?.shop_id);
   const chatData = useSelector(state => state?.chat?.chatData);
 
   const handleIncreaseQuantity = () => {
@@ -100,7 +99,12 @@ const DetailProducts = ({route, navigation}) => {
 
   const handleBuyNow = async () => {
     try {
-      if (selectedColor && selectedSize && selectedQuantity !== null) {
+      if (
+        selectedColor &&
+        selectedSize &&
+        selectedQuantity !== null &&
+        selectedQuantity > 0
+      ) {
         const totalQuantity = getTotalQuantityForColorAndSize(
           selectedColor,
           selectedSize,
@@ -137,8 +141,8 @@ const DetailProducts = ({route, navigation}) => {
           Alert.alert('Vui lòng chọn màu sắc của sản phẩm');
         } else if (!selectedSize) {
           Alert.alert('Vui lòng chọn kích thước của sản phẩm');
-        } else {
-          Alert.alert('Sản phẩm này hiện không có sẵn');
+        } else if (selectedQuantity <= 0) {
+          ToastAndroid.show('Sản phẩm không có sẵn', ToastAndroid.LONG);
         }
       }
     } catch (error) {
@@ -147,7 +151,7 @@ const DetailProducts = ({route, navigation}) => {
   };
   const handleAddToCart = async quantity => {
     try {
-      if (selectedColor && selectedSize && quantity !== null) {
+      if (selectedColor && selectedSize && quantity !== null && quantity > 0) {
         const totalQuantity = getTotalQuantityForColorAndSize(
           selectedColor,
           selectedSize,
@@ -187,8 +191,8 @@ const DetailProducts = ({route, navigation}) => {
           Alert.alert('Vui lòng chọn màu sắc của sản phẩm');
         } else if (!selectedSize) {
           Alert.alert('Vui lòng chọn kích thước của sản phẩm');
-        } else {
-          Alert.alert('Sản phẩm này hiện không có sẵn');
+        } else if (quantity <= 0) {
+          ToastAndroid.show('Sản phẩm không có sẵn', ToastAndroid.LONG);
         }
       }
     } catch (error) {
@@ -256,7 +260,6 @@ const DetailProducts = ({route, navigation}) => {
   };
   const handleShopPress = shopId => {
     navigation.navigate('ShopInformation', {shopId});
-    // console.log(shopId);
     setSelectedProductId(productId);
   };
   const getTotalQuantity = () => {
@@ -317,10 +320,13 @@ const DetailProducts = ({route, navigation}) => {
                   flex: 1,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  backgroundColor: 'white',
                   marginTop: '100%',
                 }}>
-                <ActivityIndicator size="large" color="black" />
+                <ActivityIndicator
+                  size="large"
+                  color="black"
+                  style={{backgroundColor: 'white', flex: 1}}
+                />
               </View>
             ) : (
               <View>
@@ -492,7 +498,11 @@ const DetailProducts = ({route, navigation}) => {
                       {(selectedQuantity !== undefined ||
                         selectedColor === null) && (
                         <Text>
-                          Kho: {selectedQuantity || getTotalQuantity()}
+                          {/* Kho: {selectedQuantity  || getTotalQuantity()} */}
+                          Kho:
+                          {selectedQuantity !== undefined
+                            ? selectedQuantity
+                            : 0 || getTotalQuantity()}
                         </Text>
                       )}
                     </View>
